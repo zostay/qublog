@@ -1,0 +1,461 @@
+body {
+    font-family: Optima;
+    color: #333;
+}
+
+pre {
+    overflow: auto;
+}
+
+#content {
+    width: 900px;
+}
+
+.day-summary {
+    text-align: right;
+    padding: 3px;
+    margin: 1em;
+}
+
+.day-summary p {
+    display: inline;
+}
+
+.day-summary .time,
+.day-summary .number {
+    border: 2px inset #222;
+    color: #ee5;
+    background-color: #222;
+    margin-left: 1em;
+    padding: 3px;
+    font-family: "Synchro LET";
+}
+
+.today .time,
+.today .number {
+    color: #5e5;
+}
+
+.top-spacer {
+    height: 1.5em;
+}
+
+.button-group {
+    margin-left: 15%;
+}
+
+.button-group .submit_button {
+    display: inline;
+}
+
+.button-group .submit_button input {
+    margin-left: 0.5em;
+}
+
+#goto_date {
+    width: 240px;
+    height: 2em;
+    float: right;
+}
+
+#goto_date p,
+#goto_date div,
+#goto_date label,
+#goto_date input {
+    width: auto;
+    display: inline;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.new_comment_entry {
+    width: 660px;
+}
+
+.new_comment_entry div.form_field label.argument-task_entry {
+    width: 20px;
+    padding: 2px 3px 0 3px;
+}
+
+.new_comment_entry div.form_field input.argument-task_entry {
+    width: 162px;
+    padding: 2px;
+    margin: 0 3px;
+}
+
+.new_comment_entry div.form_field textarea.argument-comment {
+    width: 350px;
+    padding: 2px;
+    margin: 0 3px;
+
+    min-height: 1em;
+}
+
+.new_comment_entry div.form_field {
+    padding-top: 0;
+    float: left;
+    clear: none;
+}
+
+.new_comment_entry div.form_field label.argument-comment {
+    display: none;
+}
+
+.new_comment_entry div.submit_button {
+    float: left;
+    clear: none;
+}
+
+.new_comment_entry {
+    overflow: auto;
+}
+
+.new_entry,
+.new_task {
+    white-space: nowrap;
+}
+
+.new_entry p,
+.new_entry div,
+.new_entry label,
+.new_entry input,
+.new_task p,
+.new_task div,
+.new_task label,
+.new_task input {
+    display: inline;
+    margin: 0;
+}
+
+.new_entry label,
+.new_task label {
+    display: none;
+    white-space: nowrap;
+}
+
+.new_entry .argument-name,
+.new_task .argument-name {
+    width: 35em;
+}
+
+.journal .entry {
+    width: 900px;
+    border-width: 1px 1px 1px 5px;
+    border-style: solid;
+    border-color: #333;
+    overflow: auto;
+    margin: 5px 0;
+    background: white url(/images/journal-background.png) top right repeat-y;
+}
+
+.journal .entry input.argument-name,
+.journal .entry input.argument-primary_link,
+.journal .entry select.argument-project {
+    width: 35em;
+}
+
+.journal .entry .body {
+    padding-left: 10px;
+    width: 670px;
+    overflow: hidden;
+}
+
+.journal .entry .related-tasks {
+    font-size: 0.7em;
+    width: 160px;
+    overflow: hidden;
+    margin-right: 20px;
+    float: right;
+    clear: right;
+}
+
+.journal .entry .related-tasks ul,
+.journal .entry .related-tasks li {
+    margin: 0.5em 0;
+    padding: 0;
+    display: block;
+    overflow: auto;
+}
+
+.related-tasks .project-summary {
+    width: 100%;
+    clear: both;
+}
+
+.journal .entry .related-tasks .nickname {
+    font-size: 2em;
+    padding-right: 3px;
+    display: block;
+    float: left;
+    clear: left;
+}
+
+.journal .entry .hours-summary {
+    width: 200px;
+    float: right;
+}
+
+.journal .entry p.project {
+    margin-top: -1.5em;
+    margin-left: 2em;
+    font-size: 0.8em;
+    color: #666;
+    font-weight: bold;
+}
+
+.hours-summary .duration {
+    border: 2px inset #222;
+    color: #ee5;
+    background-color: #222;
+    margin: 0.5em auto;
+    padding: 0 0 1em 0;
+    width: 60%;
+    font-family: "Synchro LET"
+}
+
+.span-running .elapsed,
+.entry-running .total {
+    color: #5e5;
+}
+
+.hours-summary .duration .number,
+.hours-summary .duration .unit {
+    display: block;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.2em;
+}
+
+.hours-summary .duration .number {
+    font-size: 2.5em;
+}
+
+.hours-summary .duration .unit {
+    margin-top: -0.5em;
+    font-size: 0.9em;
+}
+
+textarea.argument-name {
+    min-height: 5em;
+}
+
+.comment:hover {
+    background-color: #eee;
+}
+
+.comment:hover > .actions {
+    display: block;
+}
+
+.comment {
+    background-image: url(/images/icons/comment.png);
+    background-repeat: no-repeat;
+    background-position: 90px 2px;
+}
+
+.comment.start-time {
+    background-image: url(/images/icons/clock_play.png);
+}
+
+.comment.stop-time {
+    background-image: url(/images/icons/clock_stop.png);
+}
+
+.comment .date {
+    float: left;
+    width: 90px;
+}
+
+.comment .comment_text {
+    width: 460px;
+    margin-left: 110px;
+}
+
+.comment .actions {
+    float: right;
+    display: none;
+    font-size: 0.8em;
+    margin: 0.1em 0;
+    width: 70px;
+}
+
+a.action.open {
+    padding-left: 16px;
+    background: url(/images/icons/lightbulb.png) no-repeat top left;
+}
+
+a.group.open {
+    padding-left: 16px;
+    background: url(/images/icons/folder_lightbulb.png) no-repeat top left;
+}
+
+a.project.open {
+    padding-left: 16px;
+    background: url(/images/icons/briefcase.png) no-repeat top left;
+}
+
+a.done {
+    padding-left: 16px;
+    background: url(/images/icons/tick.png) no-repeat top left;
+    text-decoration: line-through;
+}
+
+a.nix {
+    padding-left: 16px;
+    background: url(/images/icons/cross.png) no-repeat top left;
+    text-decoration: line-through;
+}
+
+span.task-reference.create {
+    padding-left: 16px;
+    background: url(/images/icons/add.png) no-repeat top left;
+}
+
+span.task-reference.update {
+    padding-left: 16px;
+    background: url(/images/icons/pencil.png) no-repeat top left;
+}
+
+span.task-reference.link {
+    padding-left: 16px;
+    background: url(/images/icons/link.png) no-repeat top left;
+}
+
+.actions {
+    padding: 0 3px;
+}
+
+.actions a.icon {
+    padding-left: 16px;
+    background-repeat: no-repeat;
+    background-attachment: top left;
+}
+
+.actions a.icon-only {
+    display: block;
+    overflow: hidden;
+    padding-left: 16px;
+    width: 0;
+    background-repeat: no-repeat;
+    background-attachment: top left;
+    float: right;
+}
+
+.actions a.change-time {
+    background-image: url(/images/icons/clock_edit.png);
+}
+
+.actions a.open {
+    background-image: url(/images/icons/door_open.png);
+}
+
+.actions a.done {
+    background-image: url(/images/icons/accept.png);
+}
+
+.actions a.nix {
+    background-image: url(/images/icons/delete.png);
+}
+
+.actions a.edit {
+    background-image: url(/images/icons/pencil.png);
+}
+
+.task .task {
+    width: 95%;
+    margin-left: 5%;
+}
+
+.done .name {
+    color: #666;
+    text-decoration: line-through;
+}
+
+.nix .name {
+    color: #933;
+    text-decoration: line-through;
+}
+
+.nickname {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.task .subject {
+    margin: 0;
+}
+
+.task h2.subject {
+    background-color: silver;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+
+    padding: 0 0.5em;
+}
+
+.task h3.subject {
+    font-weight: bold;
+
+    display: list-item;
+    list-style-type: disc;
+}
+
+.task h4.subject {
+    display: list-item;
+    list-style-type: circle;
+}
+
+.subject p {
+    display: inline;
+}
+
+.task .actions {
+    float: right;
+    width: 70px;
+    display: none;
+    font-size: 0.8em;
+    padding: 0.1em;
+}
+
+.group:hover {
+    background: #eee;
+}
+
+.action:hover {
+    background: #ddd;
+}
+
+.task:hover > .actions {
+    display: block;
+}
+
+.top_level {
+    text-align: center;
+    color: white;
+    border: 3px dashed white;
+    margin: 3px;
+    padding: 3px;
+}
+
+.top_level.dropbox {
+    display: block;
+    border: 3px dashed #666;
+    color: #333;
+}
+
+.hoverbox.subject,
+.hoverbox.top_level {
+    background-color: #ccc;
+}
+
+h2.subject.hoverbox {
+    background-color: #aaa;
+}
+
+.project-view .form_field.argument-name {
+    width: 80%;
+}
+
+.project-view .text {
+    width: 100%;
+}

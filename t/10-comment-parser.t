@@ -6,15 +6,21 @@ use Jifty::Everything;
 Jifty->new;
 
 use Test::MockModule;
-use Test::More tests => 67;
+use Test::More tests => 73;
+use Jifty::Test;
 
+Jifty::Test->web;
 use_ok('Qublog::Util::CommentParser');
 
 # Simple test of the class using an empty comment
 {
     my $parser = Qublog::Util::CommentParser->new( comment => '' );
 
+    can_ok($parser, 'project');
     can_ok($parser, 'comment');
+    can_ok($parser, 'created_tasks');
+    can_ok($parser, 'updated_tasks');
+    can_ok($parser, 'linked_tasks');
     can_ok($parser, 'tasks');
     can_ok($parser, 'parse');
 
@@ -35,10 +41,6 @@ use_ok('Qublog::Util::CommentParser');
     }
 }
 
-# Mocking Qublog::Module::Task
-my $module = Test::MockModule->new('Qublog::Model::Task');
-$module->mock( 'id'  => undef );
-
 # Add a simple comment and a single task
 {
     my $comment = qq/This is a test.\n\n/;
@@ -57,20 +59,17 @@ $module->mock( 'id'  => undef );
     $parser->parse;
 
     {
-        is($parser->comment, $comment, 'comment is now missing the task');
+        like($parser->comment, qr/\Q$comment\E\s*#2\s*/, 
+            'comment is now missing the task');
 
-        my @tasks = $parser->tasks;
-        is(scalar @tasks, 1, 'found one task');
+        my @tasks = $parser->created_tasks;
+        my @all_tasks = $parser->tasks;
+        is(scalar @tasks, 1, 'found one task created');
+        is(scalar @all_tasks, 1, 'found one task');
 
-        can_ok($tasks[0], 'record');
-        can_ok($tasks[0], 'is_update');
-        can_ok($tasks[0], 'arguments');
-
-        ok(!$tasks[0]->is_update, 'task 0 is not an update');
-        is_deeply($tasks[0]->arguments, {
-            status => 'open',
-            name   => 'Create a new task',
-        }, 'task 0 has status and name arguments');
+        is($tasks[0]->nickname, '2', 'new nickname #2');
+        is($tasks[0]->status, 'open', 'open task');
+        is($tasks[0]->name, 'Create a new task', 'task name new');
     }
 }
 
@@ -99,28 +98,26 @@ $module->mock( 'id'  => undef );
     $parser->parse;
 
     {
-        is($parser->comment, $comment, 'comment is now missing the tasks');
+        like($parser->comment, qr/\Q$comment\E\s*#3\s*#4\s*#5\s*/, 
+            'comment is now missing the tasks');
 
-        my @task_objs = $parser->tasks;
-        is(scalar @task_objs, scalar @tasks, 'found three tasks');
+        my @task_objs = $parser->created_tasks;
+        my @all_tasks = $parser->tasks;
+        is(scalar @task_objs, scalar @tasks, 'found three tasks created');
+        is(scalar @task_objs, scalar @all_tasks, 'found three tasks');
 
-        ok(!$task_objs[0]->is_update, "task 0 is not an update");
-        is_deeply($task_objs[0]->arguments, {
-            status => 'done',
-            name   => 'Create a done task',
-        }, 'task 0 has status and name arguments');
+        is($task_objs[0]->nickname, '3', 'new nickname #3');
+        is($task_objs[0]->status, 'done', 'done task');
+        is($task_objs[0]->name, 'Create a done task', 'task name done');
 
-        ok(!$task_objs[1]->is_update, "task 1 is not an update");
-        is_deeply($task_objs[1]->arguments, {
-            status             => 'nix',
-            name               => 'Create a nixed task',
-            alternate_nickname => 'testing',
-        }, 'task 1 has status, nickname, and name arguments');
+        is($task_objs[1]->nickname, '4', 'new nickname #4');
+        is($task_objs[1]->status, 'nix', 'nixed task');
+        is($task_objs[1]->name, 'Create a nixed task', 'task name nixed');
 
-        ok(!$task_objs[2]->is_update, "task 2 is not an update");
-        is_deeply($task_objs[2]->arguments, {
-            name   => 'Create a task without a specified status',
-        }, 'task 1 has name argument');
+        is($task_objs[2]->nickname, '5', 'new nickname #5');
+        is($task_objs[2]->status, 'open', 'open task');
+        is($task_objs[2]->name, 'Create a task without a specified status', 
+            'task name unspecified');
     }
 }
 
@@ -198,14 +195,6 @@ $module->mock( 'id'  => undef );
         }, 'task 5 has name, status, and parent="task 1" arguments');
     }
 }
-
-# Mocking Qublog::Module::Task for update
-# Essentially, this pretends we find something if load_by_nickname is even
-# called. Otherwise, we found nothing. This allows us to have the test set
-# below work when we use "+" to force a new item even though a nickname is
-# given.
-$module->mock( 'id'               => sub { shift->{__loaded_id} } );
-$module->mock( 'load_by_nickname' => sub { shift->{__loaded_id} = 1 } );
 
 # Add a comment and update some tasks
 {

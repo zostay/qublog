@@ -392,6 +392,12 @@ sub before_create {
     elsif ($args->{project}) {
         $args->{parent} = $args->{project};
     }
+
+    # Are we creating the none project? Ignore it...
+    elsif ($args->{name} eq Jifty->config->app('none_project_name')) {
+        delete $args->{parent};
+        delete $args->{project};
+    }
     
     # No parent or project, so set both to "none"
     else {

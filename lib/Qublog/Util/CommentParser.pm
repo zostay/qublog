@@ -198,10 +198,10 @@ sub parse {
     while (<$commentfh>) {
         SWITCH: {
             m{^  
-                  (-*)           \s*        # Nesting depth
-              \[  ([\ !x-]) \]   \s*        # Task status
-              (?: (\+?\#\w+):?   \s*        # Load/create nick
-              (?: (\#\w+): )? )? \s*        # Rename the nick to
+                  (-*)             \s*        # Nesting depth
+              \[  ([\ !x-]) \]     \s*        # Task status
+              (?: (\+?\#\w+):?     \s*        # Load/create nick
+              (?: (\#\w+)(:) )? )? \s*        # Rename the nick to
                   (.*)                      # Name of task
             $}x && do {
                 chomp;
@@ -210,7 +210,8 @@ sub parse {
                 my $status      = lc $2;
                 my $nick        = $3;
                 my $new_nick    = $4;
-                my $description = $5;
+                my $extra_colon = $5;
+                my $description = $6;
 
                 # Strip trailing space from the description
                 $description =~ s/\s+$//;
@@ -233,7 +234,8 @@ sub parse {
                 # Forget the new name on a create
                 if (!$found_task) {
                     if ($new_nick && length $new_nick > 0) {
-                        $description .= $new_nick . ' ' . $description;
+                        $description = '#' . $new_nick . $extra_colon 
+                                     . ' ' . $description;
                     }
                     $new_nick = $nick;
                 }

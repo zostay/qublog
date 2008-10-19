@@ -8,7 +8,7 @@ framework:
   Database: 
     AutoUpgrade: 1
     CheckSchema: 1
-    Database: kiln
+    Database: qublog
     Driver: SQLite
     Host: localhost
     Password: ''

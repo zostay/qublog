@@ -1,0 +1,28 @@
+---
+abstract: 'An application to help you journal your work'
+author:
+  - 'Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>'
+distribution_type: module
+generated_by: 'Module::Install version 0.750'
+license: artistic
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: Qublog
+no_index:
+  directory:
+    - share
+    - inc
+    - t
+requires:
+  DateTime: 0
+  Hash::Merge: 0
+  Jifty: 0.80408
+  Lingua::EN::Inflect: 0
+  Math::BaseCalc: 0
+  Moose: 0
+  Test::MockModule: 0
+  Text::Markdown: 0
+  Text::Typography: 0
+  perl: 5.8.0
+version: 0.01

@@ -8,42 +8,57 @@ A basic test harness for the TaskChange model.
 
 =cut
 
-use Jifty::Test tests => 11;
+use Jifty::Test tests => 15;
 
 # Make sure we can load the model
+use_ok('Qublog::Model::Task');
 use_ok('Qublog::Model::TaskChange');
 
 # Grab a system user
 my $system_user = Qublog::CurrentUser->superuser;
 ok($system_user, "Found a system user");
 
-# Try testing a create
-my $o = Qublog::Model::TaskChange->new(current_user => $system_user);
-my ($id) = $o->create();
-ok($id, "TaskChange create returned success");
-ok($o->id, "New TaskChange has valid id set");
-is($o->id, $id, "Create returned the right id");
+my $task = Qublog::Model::Task->new(current_user => $system_user);
+$task->create(
+    name => 'This is a new test task',
+);
+ok($task->id, 'We have a task for testing');
 
-# And another
-$o->create();
-ok($o->id, "TaskChange create returned another value");
-isnt($o->id, $id, "And it is different from the previous one");
+{
+    my $task_logs = $task->task_logs;
+    is($task_logs->count, 1, 'create task log exists');
 
-# Searches in general
-my $collection =  Qublog::Model::TaskChangeCollection->new(current_user => $system_user);
-$collection->unlimit;
-is($collection->count, 2, "Finds two records");
+    my $task_log = $task_logs->first;
+    is($task_log->task_changes->count, 0, 'creates do not have changes');
+}
 
-# Searches in specific
-$collection->limit(column => 'id', value => $o->id);
-is($collection->count, 1, "Finds one record with specific id");
+$task->set_status('done');
 
-# Delete one of them
-$o->delete;
-$collection->redo_search;
-is($collection->count, 0, "Deleted row is gone");
+{
+    my $task_logs = $task->task_logs;
+    is($task_logs->count, 3, 'update task logs added');
 
-# And the other one is still there
-$collection->unlimit;
-is($collection->count, 1, "Still one left");
+    my $task_log = $task_logs->next; # skip this one
+       $task_log = $task_logs->next;
 
+    my $task_changes = $task_log->task_changes;
+    is($task_changes->count, 1, 'a single update');
+
+    my $task_change = $task_changes->first;
+    is($task_change->name, 'status', 'change is status');
+    is($task_change->old_value, 'open', 'was open');
+    is($task_change->new_value, 'done', 'now done');
+
+    $task_log = $task_logs->next;
+    $task_changes = $task_log->task_changes;
+    is($task_changes->count, 1, 'a single update');
+
+    $task_change = $task_changes->first;
+    is($task_change->name, 'completed_on', 'change is completed_on');
+    is($task_change->old_value, undef, 'no old date');
+    is($task_change->new_value, ''.$task->completed_on, 
+        'new value is completed_on');
+
+}
+
+# TODO test how TaskChanges are grouped in an UpdateTask action

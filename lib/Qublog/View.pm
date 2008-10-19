@@ -903,7 +903,7 @@ template 'project/view' => page {
 
     div { { class is 'project-view inline' }
         form {
-            render_action $action, [ qw/ alternate_nickname name / ];
+            render_action $action, [ qw/ custom_nickname name / ];
 
             form_submit
                 label  => _('Save'),

@@ -11,6 +11,41 @@ Qublog::Upgrade - upgrade script for the Qublog application
 
 =head1 UPGRADES
 
+=head2 0.3.0
+
+Nicknames have been expanded into their own table. Existing nicknames will be automatically dropped into the new nickname table, but using the old base-36 numbering scheme.
+
+=cut
+
+since '0.3.0' => sub {
+    my $tasks = Qublog::Model::TaskCollection->new;
+    $tasks->unlimit;
+
+    my $base36 = Math::BaseCalc->new( digits => [ '0' .. '9', 'A' .. 'Z' ] );
+    my $nickname = Qublog::Model::Nickname->new;
+    while (my $task = $tasks->next) {
+        my $autonick = $base36->to_base($task->id);
+
+        $nickname->create(
+            nickname  => $autonick,
+            kind      => 'Task',
+            object_id => $task->id,
+            sticky    => 1,
+        );
+
+        if ($task->alternate_nickname) {
+            warn "Adding custom nickname ",$task->alternate_nickname," to ",
+                $autonick,"\n";
+            $nickname->create(
+                nickname  => $task->alternate_nickname,
+                kind      => 'Task',
+                object_id => $task->id,
+                sticky    => 0,
+            );
+        }
+    }
+};
+
 =head2 0.2.4
 
 Collapsing C<Qublog::Model::CommentTaskLink> into L<Qublog::Model::TaskLog> since having the extra table is just confusing.

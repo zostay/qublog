@@ -98,7 +98,7 @@ use_ok('Qublog::Util::CommentParser');
     $parser->parse;
 
     {
-        like($parser->comment, qr/\Q$comment\E\s*#3\s*#4\s*#5\s*/, 
+        like($parser->comment, qr/\Q$comment\E\s*#3\s*#testing\s*#5\s*/, 
             'comment is now missing the tasks');
 
         my @task_objs = $parser->created_tasks;
@@ -110,7 +110,7 @@ use_ok('Qublog::Util::CommentParser');
         is($task_objs[0]->status, 'done', 'done task');
         is($task_objs[0]->name, 'Create a done task', 'task name done');
 
-        is($task_objs[1]->nickname, '4', 'new nickname #4');
+        is($task_objs[1]->nickname, 'testing', 'new nickname #testing');
         is($task_objs[1]->status, 'nix', 'nixed task');
         is($task_objs[1]->name, 'Create a nixed task', 'task name nixed');
 
@@ -149,50 +149,55 @@ use_ok('Qublog::Util::CommentParser');
     $parser->parse;
 
     {
-        is($parser->comment, $comment, 'comment is now missing the tasks');
+        like($parser->comment, 
+            qr/\Q$comment\E\s*#6\s*#7\s*#8\s*#9\s*#A\s*#B\s*/, 
+            'comment is now missing the tasks');
 
-        my @task_objs = $parser->tasks;
-        is(scalar @task_objs, scalar @tasks, 'found six tasks');
+        my @task_objs = $parser->created_tasks;
+        my @all_tasks = $parser->tasks;
+        is(scalar @task_objs, scalar @tasks, 'found three tasks created');
+        is(scalar @task_objs, scalar @all_tasks, 'found three tasks');
 
-        ok(!$task_objs[0]->is_update, "task 0 is not an update");
-        is_deeply($task_objs[0]->arguments, {
-            status => 'open',
-            name   => 'Task 1',
-        }, 'task 0 has status and name arguments');
+        is($task_objs[0]->nickname, '6', 'new nickname #6');
+        is($task_objs[0]->status, 'open', 'open task');
+        is($task_objs[0]->name, 'Task 1', 'comment Task 1');
+        ok($task_objs[0]->parent->is_none_project, 'Task 1 parent is none');
+        ok($task_objs[0]->project->is_none_project, 'Task 1 project is none');
 
-        ok(!$task_objs[1]->is_update, "task 1 is not an update");
-        is_deeply($task_objs[1]->arguments, {
-            status             => 'open',
-            name               => 'Task 2',
-        }, 'task 1 has status and name arguments');
+        is($task_objs[1]->nickname, '7', 'new nickname #7');
+        is($task_objs[1]->status, 'open', 'open task');
+        is($task_objs[1]->name, 'Task 2', 'comment Task 2');
+        ok($task_objs[1]->parent->is_none_project, 'Task 2 parent is none');
+        ok($task_objs[1]->project->is_none_project, 'Task 2 project is none');
 
-        ok(!$task_objs[2]->is_update, "task 2 is not an update");
-        is_deeply($task_objs[2]->arguments, {
-            parent => $task_objs[1],
-            status => 'open',
-            name   => 'Task 2A',
-        }, 'task 2 has name, status, and parent="task 1" arguments');
+        is($task_objs[2]->nickname, '8', 'new nickname #8');
+        is($task_objs[2]->status, 'open', 'open task');
+        is($task_objs[2]->name, 'Task 2A', 'comment Task 2A');
+        is($task_objs[2]->parent->id, $task_objs[1]->id, 
+            'Task 2A parent is Task 2');
+        ok($task_objs[2]->project->is_none_project, 'Task 2A project is none');
 
-        ok(!$task_objs[3]->is_update, "task 3 is not an update");
-        is_deeply($task_objs[3]->arguments, {
-            parent => $task_objs[2],
-            status => 'open',
-            name   => 'Task 2Ai',
-        }, 'task 3 has name, status, and parent="task 2" arguments');
+        is($task_objs[3]->nickname, '9', 'new nickname #9');
+        is($task_objs[3]->status, 'open', 'open task');
+        is($task_objs[3]->name, 'Task 2Ai', 'comment Task 2Ai');
+        is($task_objs[3]->parent->id, $task_objs[2]->id, 
+            'Task 2Ai parent is Task 2A');
+        ok($task_objs[3]->project->is_none_project, 
+            'Task 2Ai project is none');
 
-        ok(!$task_objs[4]->is_update, "task 4 is not an update");
-        is_deeply($task_objs[4]->arguments, {
-            parent => $task_objs[1],
-            status => 'open',
-            name   => 'Task 2B',
-        }, 'task 4 has name, status, and parent="task 1" arguments');
+        is($task_objs[4]->nickname, 'A', 'new nickname #A');
+        is($task_objs[4]->status, 'open', 'open task');
+        is($task_objs[4]->name, 'Task 2B', 'comment Task 2B');
+        is($task_objs[4]->parent->id, $task_objs[1]->id, 
+            'Task 2B parent is Task 2');
+        ok($task_objs[4]->project->is_none_project, 'Task 2B project is none');
 
-        ok(!$task_objs[5]->is_update, "task 5 is not an update");
-        is_deeply($task_objs[5]->arguments, {
-            parent => $task_objs[1],
-            status => 'open',
-            name   => 'Task 2C',
-        }, 'task 5 has name, status, and parent="task 1" arguments');
+        is($task_objs[5]->nickname, 'B', 'new nickname #B');
+        is($task_objs[5]->status, 'open', 'open task');
+        is($task_objs[5]->name, 'Task 2C', 'comment Task 2C');
+        is($task_objs[5]->parent->id, $task_objs[1]->id, 
+            'Task 2C parent is Task 2');
+        ok($task_objs[5]->project->is_none_project, 'Task 2C project is none');
     }
 }
 

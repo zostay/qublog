@@ -427,19 +427,23 @@ Changes the L</task_type> of a parent to "group" if not already set as such. Thi
 sub after_create {
     my ($self, $result) = @_;
 
+    # Load the newly created task if there is one
     return unless $$result;
     $self->load($$result);
 
+    # Make the parent a group if it isn't already
     if ($self->parent->id and $self->parent->task_type eq 'action') {
         $self->parent->set_task_type('group');
     }
 
+    # Remember the creation of the object as a create log
     my $task_log = Qublog::Model::TaskLog->new;
     $task_log->create(
         task     => $self,
         log_type => 'create',
     );
 
+    # Make sure loading continues
     return 1;
 }
 

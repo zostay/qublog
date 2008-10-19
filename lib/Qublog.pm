@@ -2,6 +2,9 @@ use strict;
 use warnings;
 
 package Qublog;
+use 5.008;
+
+our $VERSION = '0.01';
 
 =head1 NAME
 

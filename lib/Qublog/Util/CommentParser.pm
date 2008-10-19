@@ -83,6 +83,19 @@ has linked_tasks => (
     auto_deref => 1,
 );
 
+=head2 tasks
+
+After calling L</parse>, this will return an array of L<Qublog::Model::Task> objects from all of the above lists of tasks, in no particular order.
+
+=cut
+
+sub tasks {
+    my $self = shift;
+
+    # Okay, so it is a particular order, but this isn't guaranteed to remain the same!
+    return ($self->created_tasks, $self->updated_tasks, $self->linked_tasks);
+}
+
 =head1 METHODS
 
 =head2 parse

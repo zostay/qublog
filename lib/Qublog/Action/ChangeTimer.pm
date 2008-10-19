@@ -98,9 +98,9 @@ sub validate_new_time {
     if (not defined $datetime) {
         my $date_too = $self->argument_value('change_date');
         my $message  = $date_too ?  _('That does not look like a date.')
-                    :              _('That does not look like a time. '
-                                    .'Should be like "15:45" or "8:30pm".')
-                    ;
+                     :              _('That does not look like a time. '
+                                     .'Should be like "15:45" or "8:30pm".')
+                     ;
 
         return $self->validation_error(new_time => $message);
     }

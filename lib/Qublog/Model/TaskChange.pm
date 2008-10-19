@@ -54,7 +54,6 @@ use Qublog::Record schema {
     column old_value =>
         type is 'text',
         label is 'Old value',
-        is mandatory,
         is immutable,
         ;
 

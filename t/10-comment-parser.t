@@ -6,7 +6,7 @@ use Jifty::Everything;
 Jifty->new;
 
 use Test::MockModule;
-use Test::More tests => 73;
+use Test::More tests => 93;
 use Jifty::Test;
 
 Jifty::Test->web;
@@ -230,53 +230,49 @@ use_ok('Qublog::Util::CommentParser');
     $parser->parse;
 
     {
-        is($parser->comment, $comment, 'comment is now missing the tasks');
+        like($parser->comment,
+            qr/\Q$comment\E
+                \s* #testing
+                \s* #testing
+                \s* #testing
+                \s* #testing
+                \s* #testing2
+                \s* #testing
+                \s* #testing \s* /x, 'comment is now missing the tasks');
 
-        my @task_objs = $parser->tasks;
-        is(scalar @task_objs, scalar @tasks, 'found seven tasks');
+        my @all_tasks    = $parser->tasks;
+        my @create_tasks = $parser->created_tasks;
+        my @update_tasks = $parser->updated_tasks;
+        is(scalar @all_tasks, scalar @tasks, 'found seven tasks');
+        is(scalar @create_tasks, 2, 'found two creates');
+        is(scalar @update_tasks, 5, 'found five updates');
+        
+        is($update_tasks[0]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[0]->status, 'open', 'open task');
 
-        ok($task_objs[0]->is_update, "task 0 is an update");
-        is($task_objs[0]->record->id, 1, 'task 0 has a task to update');
-        is_deeply($task_objs[0]->arguments, {
-            status => 'open',
-        }, 'task 0 has status');
+        is($update_tasks[1]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[1]->status, 'done', 'done task');
 
-        ok($task_objs[1]->is_update, "task 1 is an update");
-        is($task_objs[1]->record->id, 1, 'task 1 has a task to update');
-        is_deeply($task_objs[1]->arguments, {
-            status => 'done',
-        }, 'task 1 has status');
+        is($update_tasks[2]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[2]->status, 'nix', 'nixed task');
 
-        ok($task_objs[2]->is_update, "task 2 is an update");
-        is($task_objs[2]->record->id, 1, 'task 2 has a task to update');
-        is_deeply($task_objs[2]->arguments, {
-            status => 'nix',
-        }, 'task 2 has status');
+        is($update_tasks[3]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[3]->status, 'nix', 'nixed task');
+        is($update_tasks[3]->name, 'New task text', 'comment New task text');
 
-        ok($task_objs[3]->is_update, "task 3 is an update");
-        is($task_objs[3]->record->id, 1, 'task 3 has a task to update');
-        is_deeply($task_objs[3]->arguments, {
-            name => 'New task text',
-        }, 'task 3 has name argument');
+        is($update_tasks[4]->nickname, 'testing2', 'nickname #testing');
+        is($update_tasks[4]->status, 'nix', 'nixed task');
+        is($update_tasks[4]->name, 'New task text', 'comment New task text');
 
-        ok($task_objs[4]->is_update, "task 4 is an update");
-        is($task_objs[4]->record->id, 1, 'task 4 has a task to update');
-        is_deeply($task_objs[4]->arguments, {
-            alternate_nickname => 'testing2',
-        }, 'task 4 has alternate_nickname argument');
+        is($create_tasks[0]->nickname, 'testing', 'new nickname #testing');
+        is($create_tasks[0]->status, 'open', 'open task');
+        is($create_tasks[0]->name, '#testing2: New task text', 
+            'comment New task text');
 
-        ok($task_objs[5]->is_update, "task 5 is an update");
-        is($task_objs[5]->record->id, 1, 'task 5 has a task to update');
-        is_deeply($task_objs[5]->arguments, {
-            name               => 'New task text',
-            alternate_nickname => 'testing2',
-        }, 'task 5 has name and alternate_nickname argument');
-
-        ok(!$task_objs[6]->is_update, "task 6 is not an update");
-        is_deeply($task_objs[6]->arguments, {
-            name               => 'New task with same nick',
-            alternate_nickname => 'testing',
-        }, 'task 5 has name and alternate_nickname argument');
+        is($create_tasks[1]->nickname, 'testing', 'new nickname #testing');
+        is($create_tasks[1]->status, 'open', 'open task');
+        is($create_tasks[1]->name, 'New task with same nick', 
+            'comment New task with same nick');
     }
 }
 

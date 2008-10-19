@@ -44,7 +44,7 @@ sub arguments {
 sub _compute_new_time {
     my ($self, $new_time) = @_;
 
-    if ($self->argument_value('change_date')) {
+    if (not $self->argument_value('change_date')) {
         my $old_time = $self->argument_value('which') eq 'start' 
                                                     ? $self->record->start_time
                      :                                $self->record->stop_time
@@ -102,7 +102,7 @@ sub validate_new_time {
                                     .'Should be like "15:45" or "8:30pm".')
                     ;
 
-        return $self->validation-error(new_time => $message);
+        return $self->validation_error(new_time => $message);
     }
 
     my $which = $self->argument_value('which');

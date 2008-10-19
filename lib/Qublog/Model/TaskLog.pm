@@ -93,6 +93,9 @@ use Qublog::Record schema {
         label is 'Message',
         since '0.2.4',
         ;
+
+    column task_changes =>
+        references Qublog::Model::TaskChangeCollection by 'task_log';
 };
 
 =head1 METHODS

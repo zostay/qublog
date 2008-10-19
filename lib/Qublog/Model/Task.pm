@@ -364,6 +364,17 @@ This makes sure the L</parent> and L</project> fields are set correctly. It init
 sub before_create {
     my ($self, $args) = @_;
 
+    # Are we creating the none project? Deal with it specially
+    if ($args->{name} eq Jifty->config->app('none_project_name')) {
+        delete $args->{parent};
+        delete $args->{project};
+
+        $args->{created_on} = Jifty::DateTime->now;
+        $args->{task_type}  = 'project';
+
+        return 1;
+    }
+
     # Did they specify a parent task?
     if ($args->{parent}) {
 
@@ -393,12 +404,6 @@ sub before_create {
         $args->{parent} = $args->{project};
     }
 
-    # Are we creating the none project? Ignore it...
-    elsif ($args->{name} eq Jifty->config->app('none_project_name')) {
-        delete $args->{parent};
-        delete $args->{project};
-    }
-    
     # No parent or project, so set both to "none"
     else {
         $args->{parent} = $args->{project} = $self->project_none;

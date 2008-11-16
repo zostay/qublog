@@ -22,12 +22,6 @@ Each task has a type. The type is dependent on it's placement in the task tree. 
 
 =head1 SCHEMA
 
-=head2 alternate_nickname
-
-Normally every task has a nickname automatically assigned based upon the task ID. This nickname is created by converting the ID to base-36 using digits 0-9 and letters A-Z. For example, a task with ID 42 has nickname "16" or ID 4242 has nickname "39U" or 424242 has nickname "93CI" or 42424242 has nickname "P9AR6". This mostly provides a nice way of compressing the IDs to something more manageable (and I stole the idea from hiveminder.com).
-
-However, if you want to assign custom nickname on C<alternate_nickname> you may use this instead of the regular nickname. Alternate nicknames take precedent if there's a conflict (in the future, some manual way of referring to something as an original nickname will be added).
-
 =head2 name
 
 This is a descriptive name for the task.
@@ -184,6 +178,8 @@ use Qublog::Record schema {
 
 };
 
+use Qublog::Mixin::Model::Nicknamed;
+
 use Math::BaseCalc;
 use Scalar::Util;
 
@@ -197,22 +193,6 @@ This has been part of the application since database version 0.1.0.
 
 # Your model-specific methods go here.
 sub since { '0.1.0' }
-
-=head2 load_by_nickname NICKNAME
-
-This will load the task by the alternate nickname, if one exists, or load it by the original nickname based on the ID.
-
-=cut
-
-sub load_by_nickname {
-    my ($self, $nickname) = @_;
-
-    $self->load_by_cols( alternate_nickname => $nickname );
-    return $self if $self->id;
-
-    my $id = $self->nickname_to_id($nickname);
-    return $self->load($id);
-}
 
 =head2 project_none
 
@@ -233,37 +213,6 @@ sub project_none {
     $task->create( name => $name, project => 0 );
 
     return $task;
-}
-
-=head2 nickname_to_id TEXT
-
-This is a helper function for converting the given TEXT nickname into an ID number. This is done by converting the Base-36 encoded number into Base-10 using L<Math::BaseCalc>.
-
-=cut
-
-sub nickname_to_id {
-    my ($self, $text) = @_;
-
-    return undef if $text =~ /[^A-Z0-9]/i;
-
-    my $base36 = Math::BaseCalc->new( digits => [ 0 .. 9, "A" .. "Z" ] );
-    my $base10 = Math::BaseCalc->new( digits => [ 0 .. 9 ] );
-    return $base10->to_base( $base36->from_base( uc $text ) );
-}
-
-=head2 nickname
-
-This method returns the nickname for this task. If L</alternate_nickname> is set, then that will be returned. If not, then the ID will be translated into Based-36 and returned as a string.
-
-=cut
-
-sub nickname {
-    my $self = shift;
-
-    return $self->alternate_nickname if $self->alternate_nickname;
-
-    my $base36 = Math::BaseCalc->new( digits => [ 0 .. 9, 'A' .. 'Z' ] );
-    return $base36->to_base( $self->id );
 }
 
 =head2 comments

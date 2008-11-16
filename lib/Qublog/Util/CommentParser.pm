@@ -252,10 +252,10 @@ sub parse {
                         ;
 
                 my %arguments = (
-                    parent             => $parent,
-                    alternate_nickname => $new_nick,
-                    name               => $description,
-                    status             => $status,
+                    parent          => $parent,
+                    custom_nickname => $new_nick,
+                    name            => $description,
+                    status          => $status,
                 );
 
                 FIELD:
@@ -267,7 +267,7 @@ sub parse {
 
                     # String things must have at least one char
                     delete $arguments{ $field }
-                        if grep { $field eq $_ } qw( alternate_nickname name status )
+                        if grep { $field eq $_ } qw( custom_nickname name status )
                        and $arguments{ $field } !~ /\S/;
                 }
 

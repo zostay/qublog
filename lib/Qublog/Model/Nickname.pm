@@ -107,6 +107,7 @@ use Qublog::Record schema {
         is immutable,
         valid_values are qw(
             Task
+            Tag
         ),
         ;
 
@@ -227,6 +228,7 @@ Given a nicknamed object, this will look up the kind of object. This is currentl
 =cut
 
 my %kind_to_object = (
+    Tag  => 'Qublog::Model::Tag',
     Task => 'Qublog::Model::Task',
 );
 

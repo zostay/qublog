@@ -180,7 +180,6 @@ use Qublog::Record schema {
 
 use Qublog::Mixin::Model::Nicknamed;
 
-use Math::BaseCalc;
 use Scalar::Util;
 
 =head1 METHODS
@@ -191,7 +190,6 @@ This has been part of the application since database version 0.1.0.
 
 =cut
 
-# Your model-specific methods go here.
 sub since { '0.1.0' }
 
 =head2 project_none

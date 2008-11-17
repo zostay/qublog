@@ -12,8 +12,8 @@ use base qw/Qublog::Action::Record::Update/;
 
 use Jifty::Param::Schema;
 use Jifty::Action schema {
-    param custom_nickname =>
-        label is 'Nickname',
+    param tag_name =>
+        label is 'Tag',
         ajax validates,
         ;
 };
@@ -38,8 +38,8 @@ sub take_action {
     $self->SUPER::take_action(@_);    
     $self->record->end_update;
 
-    my $nickname = $self->argument_value( 'custom_nickname' );
-    $self->record->add_nickname( $nickname ) if $nickname;
+    my $nickname = $self->argument_value( 'tag_name' );
+    $self->record->add_tag( $nickname ) if $nickname;
 }
 
 =head2 report_success

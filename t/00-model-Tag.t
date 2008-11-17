@@ -19,13 +19,13 @@ ok($system_user, "Found a system user");
 
 # Try testing a create
 my $o = Qublog::Model::Tag->new(current_user => $system_user);
-my ($id) = $o->create();
+my ($id) = $o->create( name => 'foo' );
 ok($id, "Tag create returned success");
 ok($o->id, "New Tag has valid id set");
 is($o->id, $id, "Create returned the right id");
 
 # And another
-$o->create();
+$o->create( name => 'bar' );
 ok($o->id, "Tag create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 

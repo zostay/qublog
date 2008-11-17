@@ -59,7 +59,7 @@ use_ok('Qublog::Util::CommentParser');
     $parser->parse;
 
     {
-        like($parser->comment, qr/\Q$comment\E\s*#2\s*/, 
+        like($parser->comment, qr/\Q$comment\E\s*#4\s*/, 
             'comment is now missing the task');
 
         my @tasks = $parser->created_tasks;
@@ -67,7 +67,7 @@ use_ok('Qublog::Util::CommentParser');
         is(scalar @tasks, 1, 'found one task created');
         is(scalar @all_tasks, 1, 'found one task');
 
-        is($tasks[0]->nickname, '2', 'new nickname #2');
+        is($tasks[0]->tag, '4', 'new tag #4');
         is($tasks[0]->status, 'open', 'open task');
         is($tasks[0]->name, 'Create a new task', 'task name new');
     }
@@ -98,7 +98,7 @@ use_ok('Qublog::Util::CommentParser');
     $parser->parse;
 
     {
-        like($parser->comment, qr/\Q$comment\E\s*#3\s*#testing\s*#5\s*/, 
+        like($parser->comment, qr/\Q$comment\E\s*#5\s*#testing\s*#8\s*/, 
             'comment is now missing the tasks');
 
         my @task_objs = $parser->created_tasks;
@@ -106,15 +106,15 @@ use_ok('Qublog::Util::CommentParser');
         is(scalar @task_objs, scalar @tasks, 'found three tasks created');
         is(scalar @task_objs, scalar @all_tasks, 'found three tasks');
 
-        is($task_objs[0]->nickname, '3', 'new nickname #3');
+        is($task_objs[0]->tag, '5', 'new tag #5');
         is($task_objs[0]->status, 'done', 'done task');
         is($task_objs[0]->name, 'Create a done task', 'task name done');
 
-        is($task_objs[1]->nickname, 'testing', 'new nickname #testing');
+        is($task_objs[1]->tag, 'testing', 'new tag #testing');
         is($task_objs[1]->status, 'nix', 'nixed task');
         is($task_objs[1]->name, 'Create a nixed task', 'task name nixed');
 
-        is($task_objs[2]->nickname, '5', 'new nickname #5');
+        is($task_objs[2]->tag, '8', 'new tag #8');
         is($task_objs[2]->status, 'open', 'open task');
         is($task_objs[2]->name, 'Create a task without a specified status', 
             'task name unspecified');
@@ -150,7 +150,7 @@ use_ok('Qublog::Util::CommentParser');
 
     {
         like($parser->comment, 
-            qr/\Q$comment\E\s*#6\s*#7\s*#8\s*#9\s*#A\s*#B\s*/, 
+            qr/\Q$comment\E\s*#9\s*#A\s*#C\s*#D\s*#E\s*#F\s*/, 
             'comment is now missing the tasks');
 
         my @task_objs = $parser->created_tasks;
@@ -158,26 +158,26 @@ use_ok('Qublog::Util::CommentParser');
         is(scalar @task_objs, scalar @tasks, 'found three tasks created');
         is(scalar @task_objs, scalar @all_tasks, 'found three tasks');
 
-        is($task_objs[0]->nickname, '6', 'new nickname #6');
+        is($task_objs[0]->tag, '9', 'new tag #9');
         is($task_objs[0]->status, 'open', 'open task');
         is($task_objs[0]->name, 'Task 1', 'comment Task 1');
         ok($task_objs[0]->parent->is_none_project, 'Task 1 parent is none');
         ok($task_objs[0]->project->is_none_project, 'Task 1 project is none');
 
-        is($task_objs[1]->nickname, '7', 'new nickname #7');
+        is($task_objs[1]->tag, 'A', 'new tag #A');
         is($task_objs[1]->status, 'open', 'open task');
         is($task_objs[1]->name, 'Task 2', 'comment Task 2');
         ok($task_objs[1]->parent->is_none_project, 'Task 2 parent is none');
         ok($task_objs[1]->project->is_none_project, 'Task 2 project is none');
 
-        is($task_objs[2]->nickname, '8', 'new nickname #8');
+        is($task_objs[2]->tag, 'C', 'new tag #C');
         is($task_objs[2]->status, 'open', 'open task');
         is($task_objs[2]->name, 'Task 2A', 'comment Task 2A');
         is($task_objs[2]->parent->id, $task_objs[1]->id, 
             'Task 2A parent is Task 2');
         ok($task_objs[2]->project->is_none_project, 'Task 2A project is none');
 
-        is($task_objs[3]->nickname, '9', 'new nickname #9');
+        is($task_objs[3]->tag, 'D', 'new tag #D');
         is($task_objs[3]->status, 'open', 'open task');
         is($task_objs[3]->name, 'Task 2Ai', 'comment Task 2Ai');
         is($task_objs[3]->parent->id, $task_objs[2]->id, 
@@ -185,14 +185,14 @@ use_ok('Qublog::Util::CommentParser');
         ok($task_objs[3]->project->is_none_project, 
             'Task 2Ai project is none');
 
-        is($task_objs[4]->nickname, 'A', 'new nickname #A');
+        is($task_objs[4]->tag, 'E', 'new tag #E');
         is($task_objs[4]->status, 'open', 'open task');
         is($task_objs[4]->name, 'Task 2B', 'comment Task 2B');
         is($task_objs[4]->parent->id, $task_objs[1]->id, 
             'Task 2B parent is Task 2');
         ok($task_objs[4]->project->is_none_project, 'Task 2B project is none');
 
-        is($task_objs[5]->nickname, 'B', 'new nickname #B');
+        is($task_objs[5]->tag, 'F', 'new tag #F');
         is($task_objs[5]->status, 'open', 'open task');
         is($task_objs[5]->name, 'Task 2C', 'comment Task 2C');
         is($task_objs[5]->parent->id, $task_objs[1]->id, 
@@ -244,34 +244,34 @@ use_ok('Qublog::Util::CommentParser');
         my @create_tasks = $parser->created_tasks;
         my @update_tasks = $parser->updated_tasks;
         is(scalar @all_tasks, scalar @tasks, 'found seven tasks');
-        is(scalar @create_tasks, 2, 'found two creates');
-        is(scalar @update_tasks, 5, 'found five updates');
-        
-        is($update_tasks[0]->nickname, 'testing', 'nickname #testing');
+        is(scalar @create_tasks, 1, 'found two creates');
+        is(scalar @update_tasks, 6, 'found five updates');
+
+        is($update_tasks[0]->tag, 'testing2', 'tag #testing2');
         is($update_tasks[0]->status, 'open', 'open task');
 
-        is($update_tasks[1]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[1]->tag, 'testing2', 'tag #testing2');
         is($update_tasks[1]->status, 'done', 'done task');
 
-        is($update_tasks[2]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[2]->tag, 'testing2', 'tag #testing2');
         is($update_tasks[2]->status, 'nix', 'nixed task');
 
-        is($update_tasks[3]->nickname, 'testing', 'nickname #testing');
+        is($update_tasks[3]->tag, 'testing2', 'tag #testing2');
         is($update_tasks[3]->status, 'nix', 'nixed task');
         is($update_tasks[3]->name, 'New task text', 'comment New task text');
 
-        is($update_tasks[4]->nickname, 'testing2', 'nickname #testing');
+        is($update_tasks[4]->tag, 'testing2', 'tag #testing2');
         is($update_tasks[4]->status, 'nix', 'nixed task');
         is($update_tasks[4]->name, 'New task text', 'comment New task text');
 
-        is($create_tasks[0]->nickname, 'testing', 'new nickname #testing');
-        is($create_tasks[0]->status, 'open', 'open task');
-        is($create_tasks[0]->name, '#testing2: New task text', 
+        is($update_tasks[5]->tag, 'testing2', 'tag #testing2');
+        is($update_tasks[5]->status, 'nix', 'nixed task');
+        is($update_tasks[5]->name, 'New task text', 
             'comment New task text');
 
-        is($create_tasks[1]->nickname, 'testing', 'new nickname #testing');
-        is($create_tasks[1]->status, 'open', 'open task');
-        is($create_tasks[1]->name, 'New task with same nick', 
+        is($create_tasks[0]->tag, 'testing', 'new tag #testing');
+        is($create_tasks[0]->status, 'open', 'open task');
+        is($create_tasks[0]->name, 'New task with same nick', 
             'comment New task with same nick');
     }
 }

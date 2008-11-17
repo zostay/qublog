@@ -103,11 +103,11 @@ sub take_task_action {
         eval {
             $self->_do_it( 
                 CreateTask => {
-                    custom_nickname => $nickname,
-                    name            => $self->argument_value('comment'),
-                    task_type       => 'action',
-                    status          => 'open',
-                    parent          => Qublog::Model::Task->project_none,
+                    tag_name  => $nickname,
+                    name      => $self->argument_value('comment'),
+                    task_type => 'action',
+                    status    => 'open',
+                    parent    => Qublog::Model::Task->project_none,
                 } 
             );
 

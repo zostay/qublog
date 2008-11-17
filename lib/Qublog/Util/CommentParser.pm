@@ -227,7 +227,7 @@ sub parse {
                 my $found_task;
                 my $task = Qublog::Model::Task->new;
                 if (not $force_new and defined $nick and (length $nick > 1)) {
-                    $task->load_by_nickname($nick);
+                    $task->load_by_tag_name($nick);
                     $found_task = $task->id;
                 }
 
@@ -252,10 +252,10 @@ sub parse {
                         ;
 
                 my %arguments = (
-                    parent          => $parent,
-                    custom_nickname => $new_nick,
-                    name            => $description,
-                    status          => $status,
+                    parent   => $parent,
+                    tag_name => $new_nick,
+                    name     => $description,
+                    status   => $status,
                 );
 
                 FIELD:
@@ -267,7 +267,7 @@ sub parse {
 
                     # String things must have at least one char
                     delete $arguments{ $field }
-                        if grep { $field eq $_ } qw( custom_nickname name status )
+                        if grep { $field eq $_ } qw( tag_name name status )
                        and $arguments{ $field } !~ /\S/;
                 }
 
@@ -282,7 +282,7 @@ sub parse {
 
                 unshift @parent_stack, $task;
 
-                $_ = '#'.$task->nickname."  \n";
+                $_ = '#'.$task->tag."  \n";
                 last SWITCH;
             };
 
@@ -294,7 +294,7 @@ sub parse {
 
                 for my $nickname (@nicknames) {
                     my $task = Qublog::Model::Task->new;
-                    $task->load_by_nickname($nickname);
+                    $task->load_by_tag_name($nickname);
 
                     push @linked_tasks, $task if $task->id;
                 }

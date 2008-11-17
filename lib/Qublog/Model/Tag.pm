@@ -2,7 +2,12 @@ use strict;
 use warnings;
 
 package Qublog::Model::Tag;
+use base qw/ Class::Data::Inheritable /;
 use Jifty::DBI::Schema;
+
+use Number::RecordLocator;
+
+__PACKAGE__->mk_classdata( _locator => Number::RecordLocator->new );
 
 =head1 NAME
 
@@ -18,13 +23,34 @@ Tags can be attached to tasks and comments and are also used to associated extra
 
 =head1 SCHEMA
 
+=head2 name
+
+This is the name of the tag. This must be alphanumeric and is the part that is generally placed after a pound sign. For example a value of "XG12" would be stored here for the tag noted as "#XG12".
+
+Setting this to "-" on create will result in the creation of an "auto-tag". An auto-tag is one which has an automatically generated name using L<Number::Locator> applied to the ID assigned to the record.
+
+In 0.4.0, the experiment with nicknames added with 0.3.0 was collapsed into this class. This included the addition of this column.
+
+=head2 task_tags
+
+This is a collection representing all the L<Qublog::Model::TaskTag> objects linking this class to tasks.
+
 =cut
 
 use Qublog::Record schema {
+    column name =>
+        type is 'text',
+        label is 'Name',
+        default is '-',
+        is mandatory,
+        is distinct,
+        is immutable,
+        since '0.4.0',
+        ;
 
+    column task_tags =>
+        references Qublog::Model::TaskTagCollection by 'tag';
 };
-
-use Qublog::Mixin::Model::Nicknamed;
 
 =head1 METHODS
 
@@ -35,6 +61,50 @@ This has been part of the application since database version 0.3.1.
 =cut
 
 sub since { '0.3.1' }
+
+=head1 INTERNAL HELPERS
+
+These are not intended to have any user-serviceable parts and are for the internal use of this class.
+
+=head2 _id_to_tag_name
+
+  my $tag_name = $self->_id_to_tag_name($id);
+
+This is a helper function for converting the given ID number into a tag name. This is done using L<Number::RecordLocator>. This is used when creating an auto-tag.
+
+=cut
+
+sub _id_to_tag_name {
+    my ($self, $id) = @_;
+
+    return undef if $id =~ /[^0-9]/;
+
+    return $self->_locator->encode($id);
+}
+
+=head1 TRIGGERS
+
+=head2 after_create
+
+This is where auto-tags are generated from the ID using L<Number::RecordLocator>.
+
+=cut
+
+sub after_create {
+    my ($self, $id) = @_;
+
+    # Either get it or forget it
+    return 1 unless $$id;
+    $self->load($$id);
+
+    # If we get a - for a name (not normally legal), add the autonick
+    if ($self->name eq '-') {
+        my $name = $self->_id_to_tag_name($self->id);
+        $self->_set( column => 'name', value => $name );
+    }
+
+    return 1;
+}
 
 =head1 AUTHOR
 

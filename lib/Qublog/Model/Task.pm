@@ -89,11 +89,6 @@ This is a L<Qublog::Model::TaskLogCollection> for the logs attached to this task
 =cut
 
 use Qublog::Record schema {
-    column alternate_nickname =>
-        type is 'text',
-        label is 'Nickname',
-        ;
-
     column name =>
         type is 'text',
         label is 'Name',
@@ -176,11 +171,10 @@ use Qublog::Record schema {
     column task_logs =>
         references Qublog::Model::TaskLogCollection by 'task';
 
+    column task_tags =>
+        references Qublog::Model::TaskTagCollection by 'task';
+
 };
-
-use Qublog::Mixin::Model::Nicknamed;
-
-use Scalar::Util;
 
 =head1 METHODS
 
@@ -223,13 +217,13 @@ sub comments {
     my $self = shift;
 
     my $comments = Qublog::Model::CommentCollection->new;
-    my $log_alias = $comments->join(
+    my $log_table = $comments->join(
         column1 => 'id',
         table2  => Qublog::Model::TaskLog->table,
         column2 => 'comment',
     );
     $comments->limit(
-        alias  => $log_alias,
+        alias  => $log_table,
         column => 'task',
         value  => $self->id,
     );
@@ -298,6 +292,140 @@ sub end_update {
     my $self = shift;
 
     pop @{ $self->{__group} };
+}
+
+=head2 tags
+
+This returns a list of tag names (strings) that have been assigned to the current object. Returns an empty list if the current object does not have an ID (i.e., is not loaded).
+
+=cut
+
+sub tags {
+    my $self = shift;
+    return () unless $self->id;
+
+    my $task_tags = $self->task_tags;
+    $task_tags->order_by({
+        column => 'id',
+        order  => 'DES',
+    });
+    return map { $_->tag->name } @{ $task_tags->items_array_ref };
+}
+
+=head2 tag
+
+This returns the most recently added tag name for the current object. Returns C<undef> if the current object does not have an ID.
+
+=cut
+
+sub tag {
+    my $self = shift;
+    my @tags = $self->tags;
+
+    # The very first tag in this list should be the current one
+    return scalar $tags[0];
+}
+
+=head2 autotag
+
+This returns the original sticky tag name for the current object. Returns C<undef> if the current object does not have an ID (i.e., is not loaded).
+
+=cut
+
+sub autotag {
+    my $self = shift;
+    my @tags = $self->tags;
+
+    # The very last tag in this list should be the auto tag
+    return scalar $tags[-1];
+}
+
+=head2 add_tag
+
+Adds a new tag to the current object. If the tag is already taken or is not made up of only letters and numbers, this method will fail with an exception.
+
+=cut
+
+sub add_tag {
+    my ($self, $tag_name) = @_;
+
+    # Find or load the tag
+    my $tag = Qublog::Model::Tag->new;
+    $tag->load_or_create(
+        name => $tag_name,
+    );
+
+    # See if such a task tag exists already and clear it first
+    my $task_tag = Qublog::Model::TaskTag->new;
+    $task_tag->load_by_cols( tag => $tag );
+    $task_tag->delete if $task_tag->id;
+
+    # Now create a new one that links here
+    $task_tag->create(
+        task => $self,
+        tag  => $tag,
+    );
+
+    return $tag;
+}
+
+=head2 remove_tag
+
+Removes a tag from the current object. If the tag is sticky, this will fail with an exception.
+
+=cut
+
+sub remove_tag {
+    my ($self, $tag_name) = @_;
+
+    my $task_tags = $self->task_tags;
+    my $tag_table = $task_tags->join(
+        column1 => 'tag',
+        table2  => Qublog::Model::Tag->table,
+        column2 => 'id',
+    );
+    $task_tags->limit(
+        alias  => $tag_table,
+        column => 'name',
+        value  => $tag_name,
+    );
+    my $tag = $task_tags->first;
+    $tag->delete if $tag->id;
+}
+
+=head2 load_by_tag_name
+
+Loads the task that has the given tag name.
+
+=cut
+
+sub load_by_tag_name {
+    my ($self, $tag_name) = @_;
+    my $tasks = Qublog::Model::TaskCollection->new;
+    my $task_tag_table = $tasks->join(
+        column1 => 'id',
+        table2  => Qublog::Model::TaskTag->table,
+        column2 => 'task',
+    );
+    my $task_table = $tasks->join(
+        alias1  => $task_tag_table,
+        column1 => 'tag',
+        table2  => Qublog::Model::Tag->table,
+        column2 => 'id',
+    );
+    $tasks->limit(
+        alias  => $task_table,
+        column => 'name',
+        value  => $tag_name,
+    );
+
+    my $task = $tasks->first;
+    if ($task and $task->id) {
+        return $self->load($task->id);
+    }
+    else {
+        return (0, "Could not find a task for the requested tag name");
+    }
 }
 
 =head1 TRIGGERS
@@ -389,6 +517,18 @@ sub after_create {
     $task_log->create(
         task     => $self,
         log_type => 'create',
+    );
+
+    # Create the tag
+    my $tag = Qublog::Model::Tag->new;
+    $tag->create( name => '-' ); # name = "-" -> make an auto-tag
+    
+    # Now add the task tag link
+    my $task_tag = Qublog::Model::TaskTag->new;
+    $task_tag->create(
+        task   => $self,
+        tag    => $tag,
+        sticky => 1,
     );
 
     # Make sure loading continues
@@ -551,21 +691,6 @@ sub after_set {
     );
 
     return 1;
-}
-
-=head1 VALIDATORS
-
-=head2 validate_alternate_nickname
-
-The alternate nickname must only contain word characters. This includes letters (uppercase or lowercase), numbers, and the underscore. No other characters are permitted.
-
-=cut
-
-sub validate_alternate_nickname {
-    my ($self, $value) = @_;
-
-    # Must contain only \w
-    return $value !~ /\W/;
 }
 
 =head1 AUTHOR

@@ -167,7 +167,7 @@ sub take_entry_action {
         else {
             my $nickname = $self->nickname('short');
             my $task = Qublog::Model::Task->new;
-            $task->load_by_nickname($nickname) if $nickname;
+            $task->load_by_tag_name($nickname) if $nickname;
 
             $entry = $self->_do_it(
                 CreateJournalEntry => {
@@ -256,7 +256,7 @@ sub prepare_thingy {
         my $nickname_only = $self->nickname('short');
 
         my $task = Qublog::Model::Task->new;
-        $task->load_by_nickname( $nickname_only );
+        $task->load_by_tag_name( $nickname_only );
 
         return $task;
     }

@@ -572,7 +572,7 @@ private template 'journal/view_entry_span' => sub {
                 outs '(Project: ';
                 hyperlink
                     label => $journal_entry->project->name,
-                    url   => '/project#' . $journal_entry->project->nickname,
+                    url   => '/project#' . $journal_entry->project->tag,
                     ;
                 outs ')';
             } if $journal_entry->project->id;
@@ -897,7 +897,7 @@ template 'project/view' => page {
 
     my $action = new_action
         class   => 'UpdateTask',
-        moniker => 'update-task-'.$task->nickname,
+        moniker => 'update-task-'.$task->tag,
         record  => $task,
         ;
 
@@ -913,7 +913,7 @@ template 'project/view' => page {
     };
 
     render_region
-        name      => 'task-children-'.$task->nickname,
+        name      => 'task-children-'.$task->tag,
         path      => '/project/list_tasks',
         arguments => {
             parent_id => $task->id,
@@ -921,7 +921,7 @@ template 'project/view' => page {
         ;
 
     render_region
-        name      => 'task-ogs-'.$task->nickname,
+        name      => 'task-ogs-'.$task->tag,
         path      => '/project/list_task_logs',
         arguments => {
             task_id => $task->id,
@@ -1194,27 +1194,27 @@ private template 'project/view_task' => sub {
                     label   => _('Edit'),
                     tooltip => _('Edit this task'),
                     class   => 'icon-only edit',
-                    url     => '/project/edit/'.$task->nickname
+                    url     => '/project/edit/'.$task->tag
                 );
             }
         };
 
         # This helper sub renders the "subject" header
         my $subject = sub {
-            span { { class is 'nickname' } '#'.$task->nickname.':' };
+            span { { class is 'nickname' } '#'.$task->tag.':' };
             outs ' ';
             span { { class is 'name' } outs_raw htmlify($task->name) };
         };
 
         # Use a different header for each task type
         if ($task->task_type eq 'project') {
-            h2 { { id is $task->nickname, class is 'subject' } $subject->() };
+            h2 { { id is $task->tag, class is 'subject' } $subject->() };
         }
         elsif ($task->task_type eq 'group') {
-            h3 { { id is $task->nickname, class is 'subject' } $subject->() };
+            h3 { { id is $task->tag, class is 'subject' } $subject->() };
         }
         else {
-            h4 { { id is $task->nickname, class is 'subject' } $subject->() };
+            h4 { { id is $task->tag, class is 'subject' } $subject->() };
         }
 
         # If this can have children (group or project) try to show them
@@ -1246,9 +1246,9 @@ private template 'project/project_summary' => sub {
 
     ul { { class is 'project-summary' }
         while (my $task = $tasks->next) {
-            li { { id is 'summary-'.$task->nickname, class is 'subject' }
+            li { { id is 'summary-'.$task->tag, class is 'subject' }
                 span { { class is 'nickname' }
-                    '#'.$task->nickname.':'
+                    '#'.$task->tag.':'
                 };
                 outs ' ';
                 span { { class is 'name' }

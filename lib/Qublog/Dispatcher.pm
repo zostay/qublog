@@ -129,7 +129,7 @@ on 'project/edit/*' => run {
     my $nickname = $1;
 
     my $task = Qublog::Model::Task->new;
-    $task->load_by_nickname($nickname);
+    $task->load_by_tag_name($nickname);
 
     last_rule unless $task->id;
 

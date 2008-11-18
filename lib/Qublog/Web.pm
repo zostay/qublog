@@ -55,11 +55,11 @@ sub _replace_task_nicknames {
     $status ||= '';
 
     my $task = Qublog::Model::Task->new;
-    $task->load_by_nickname($nickname);
+    $task->load_by_tag_name($nickname);
 
     return '#'.$nickname unless $task->id;
 
-    my $url  = Jifty->web->url(path => '/project').'#'.$task->nickname;
+    my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
     my $name = $task->name;
     return qq{<span class="$action">}
           .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
@@ -71,7 +71,7 @@ sub _load_annotations($) {
     my %annotations;
     while (my $log = $logs->next) {
         my $task     = $log->task;
-        my $nickname = $task->nickname;
+        my $nickname = $task->tag;
 
         $annotations{ $nickname } 
             = [ $log->log_type, join ' ', $task->task_type, $task->status ];

@@ -111,7 +111,7 @@ use Qublog::TimedRecord schema {
                 column => 'status',
                 value  => 'open',
             );
-            return [ map { { display => '#'.$_->nickname.': '.$_->name, value => $_->id } }
+            return [ map { { display => '#'.$_->tag.': '.$_->name, value => $_->id } }
                           @{ $projects->items_array_ref } ];
         },
         ;

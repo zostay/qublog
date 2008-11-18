@@ -100,7 +100,8 @@ sub for_date {
 
     $self->load_by_cols( datestamp => $datestamp->ymd );
     unless ($self->id) {
-        return $self->create( datestamp => $datestamp );
+        $self->create( datestamp => $datestamp );
+        return $self;
     }
 
     return $self;

@@ -608,17 +608,17 @@ sub after_set_parent {
         }
 
         if ($self->parent->task_type eq 'project') {
-            $self->_set(project => $self->parent);
+            $self->__set( column => 'project', value => $self->parent );
         }
         
         else {
-            $self->_set(project => $self->parent->project);
+            $self->__set( column => 'project', value => $self->parent->project );
         }
     }
 
     else {
         $self->set_task_type('project');
-        $self->_set(project => undef);
+        $self->__set( column => 'project', value => undef);
     }
 
     return 1;

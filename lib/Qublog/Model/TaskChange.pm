@@ -74,7 +74,6 @@ This class was added with the 0.1.4 database revision.
 
 =cut
 
-# Your model-specific methods go here.
 sub since { '0.1.4' }
 
 =head1 AUTHOR

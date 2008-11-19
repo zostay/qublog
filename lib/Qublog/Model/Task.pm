@@ -487,9 +487,7 @@ sub before_create {
     $args->{created_on}   = Jifty::DateTime->now;
     $args->{completed_on} = Jifty::DateTime->now 
         if defined $args->{status} and $args->{status} eq 'done';
-    $args->{task_type}    = $args->{project} ? 'action'
-                          :                    'project'
-                          ;
+    $args->{task_type}    = 'action';
 
     return 1;
 }

@@ -61,6 +61,7 @@ use Qublog::Record schema {
         type is 'text',
         label is 'New value',
         is mandatory,
+        default is '',
         is immutable,
         ;
 };

@@ -134,7 +134,7 @@ sub take_timer_action {
         $self->_do_it(
             CreateComment => {
                 journal_day   => Qublog::Model::JournalDay->for_today,
-                journal_timer => $timer,
+                journal_timer => $timer->id,
                 name          => $self->argument_value('comment'),
             },
         );
@@ -184,7 +184,7 @@ sub take_entry_action {
         $self->_do_it(
             CreateComment => {
                 journal_day   => Qublog::Model::JournalDay->for_today,
-                journal_timer => $timer,
+                journal_timer => $timer->id,
                 name          => $self->argument_value('comment'),
             },
         );

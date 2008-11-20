@@ -19,15 +19,16 @@ ok($system_user, "Found a system user");
 
 # Try testing a create
 my $o = Qublog::Model::JournalDay->new(current_user => $system_user);
-my ($id) = $o->for_today;
-ok($id, "JournalDay create returned success");
+my ($journal_day) = $o->for_today;
+ok($o->id, "JournalDay create returned success");
 ok($o->id, "New JournalDay has valid id set");
-is($o->id, $id, "Create returned the right id");
+is($o->id, $journal_day->id, "Create returned the right id");
 
 # And another
+$o = Qublog::Model::JournalDay->new(current_user => $system_user);
 $o->for_date( Jifty::DateTime->today->subtract( days => 5 ) );
 ok($o->id, "JournalDay create returned another value");
-isnt($o->id, $id, "And it is different from the previous one");
+isnt($o->id, $journal_day->id, "And it is different from the previous one");
 
 # Searches in general
 my $collection =  Qublog::Model::JournalDayCollection->new(current_user => $system_user);

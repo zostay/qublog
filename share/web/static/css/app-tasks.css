@@ -1,0 +1,98 @@
+.task .task {
+    width: 95%;
+    margin-left: 5%;
+}
+
+.done .name {
+    color: #666;
+    text-decoration: line-through;
+}
+
+.nix .name {
+    color: #933;
+    text-decoration: line-through;
+}
+
+.nickname {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.task .subject {
+    margin: 0;
+}
+
+.task h2.subject {
+    background-color: silver;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+
+    padding: 0 0.5em;
+}
+
+.task h3.subject {
+    font-weight: bold;
+
+    display: list-item;
+    list-style-type: disc;
+}
+
+.task h4.subject {
+    display: list-item;
+    list-style-type: circle;
+}
+
+.subject p {
+    display: inline;
+}
+
+.task .actions {
+    float: right;
+    width: 70px;
+    display: none;
+    font-size: 0.8em;
+    padding: 0.1em;
+}
+
+.group:hover {
+    background: #eee;
+}
+
+.action:hover {
+    background: #ddd;
+}
+
+.task:hover > .actions {
+    display: block;
+}
+
+.top_level {
+    text-align: center;
+    color: white;
+    border: 3px dashed white;
+    margin: 3px;
+    padding: 3px;
+}
+
+.top_level.dropbox {
+    display: block;
+    border: 3px dashed #666;
+    color: #333;
+}
+
+.hoverbox.subject,
+.hoverbox.top_level {
+    background-color: #ccc;
+}
+
+h2.subject.hoverbox {
+    background-color: #aaa;
+}
+
+.project-view .form_field.argument-name {
+    width: 80%;
+}
+
+.project-view .text {
+    width: 100%;
+}

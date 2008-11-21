@@ -1,0 +1,13 @@
+body {
+    font-family: Optima;
+    color: #333;
+}
+
+pre {
+    overflow: auto;
+}
+
+#content {
+    width: 900px;
+}
+

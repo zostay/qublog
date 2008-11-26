@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package Qublog::Web;
+use Jifty::View::Declare -base;
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
@@ -13,6 +14,7 @@ our @EXPORT = qw/
     htmlify 
     format_time
     format_date
+    format_links
 /;
 
 =head1 NAME
@@ -127,6 +129,43 @@ sub format_date($) {
     }
 
     return $date_str;
+}
+
+=head2 show_links LINKS
+
+This outputs the list of links given as an array in LINKS.
+
+=cut
+
+sub show_links(\@) {
+    my $links = shift;
+
+    div { { class is 'actions' }
+        for my $link (@$links) {
+            hyperlink %$link;
+            outs ' ';
+        }
+    };
+}
+
+=head2 format_links LINKS
+
+This formats the list of links given as an array in LINKS.
+
+=cut
+
+sub format_links(\@) {
+    my $links = shift;
+
+    my $content;
+    Template::Declare->new_buffer_frame;
+    {
+        show_links @$links;
+        $content = Template::Declare->buffer->data || '';
+    }
+    Template::Declare->end_buffer_frame;
+
+    return $content;
 }
 
 =head1 AUTHOR

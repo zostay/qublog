@@ -17,43 +17,6 @@ Qublog::View - view templates for Qublog
 
 I have built some helper methods for use with Qublog.
 
-=head2 show_links LINKS
-
-This outputs the list of links given as an array in LINKS.
-
-=cut
-
-sub show_links(\@) {
-    my $links = shift;
-
-    div { { class is 'actions' }
-        for my $link (@$links) {
-            hyperlink %$link;
-            outs ' ';
-        }
-    };
-}
-
-=head2 format_links LINKS
-
-This formats the list of links given as an array in LINKS.
-
-=cut
-
-sub format_links(\@) {
-    my $links = shift;
-
-    my $content;
-    Template::Declare->new_buffer_frame;
-    {
-        show_links @$links;
-        $content = Template::Declare->buffer->data || '';
-    }
-    Template::Declare->end_buffer_frame;
-
-    return $content;
-}
-
 =head2 popup_submit ARGS
 
 This subroutine works exactly like C<form_submit>, except that it takes some additional options under the C<onclick> handler. This is intended to be used only within popup fragments.

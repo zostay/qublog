@@ -3,10 +3,12 @@ use warnings;
 
 package Qublog::Web::Format;
 
+use Qublog::Web ();
+
 require Exporter;
 our @ISA = qw/ Exporter /;
 
-our @EXPORT = qw/ format /;
+our @EXPORT = qw/ apply_format /;
 
 =head1 NAME
 
@@ -16,7 +18,7 @@ Qublog::Web::Format - format helpers for generic templating
 
   use Qublog::Web::Format;
 
-  my $formatted_text = format($text, [ 
+  my $formatted_text = apply_format($text, [ 
       'htmlify', 
       { 
           format    => 'wrap', 
@@ -30,7 +32,7 @@ A helper to format text. As of this implementation each format is handled as a f
 
 =head1 METHODS
 
-=head2 format
+=head2 apply_format
 
 This function takes a variable list of arguments. First, exactly one scalar (possibly a reference) should be passed to this function. This will be transformed by the given formats. The next (and last) argument is an array reference which contains the formats to apply to transform the scalar into a formatted string.
 
@@ -67,12 +69,12 @@ The formats are applied in the order given. In the second call in the example ab
 
 =cut
 
-sub format {
+sub apply_format {
     my ($scalar, $formats) = @_;
 
     $formats = [ $formats ] unless ref $formats eq 'ARRAY';
 
-    for my $format (@$formats) {
+    FORMAT: for my $format (@$formats) {
         my ($function, $options);
 
         if (ref $format) {
@@ -84,10 +86,12 @@ sub format {
             $function = $format;
         }
 
-        die qq{The format "$function" is invalid.}
-            if $function =~ /\W/;
+        if (length $function == 0 || $function =~ /\W/) {
+            warn qq{The format "$function" is invalid.};
+            next FORMAT;
+        }
 
-        no strict 'ref';
+        no strict 'refs';
         $scalar = $function->($scalar, $options);
     }
 
@@ -159,11 +163,11 @@ sub _generate_wrap {
     my $default = shift;
     return sub {
         my ($text, $opts) = @_;
-        my %options = %$opts; # avoid side-effects
+        my %options = %{ $opts || {} }; # avoid side-effects
         my $tag = delete $options{tag} || $default;
 
         my $result = "<$tag";
-        while (my ($attr, $value) = each %options)) {
+        while (my ($attr, $value) = each %options) {
             $result .= qq{ $attr="$value"};
         }
         $result .= ">$text</$tag>";
@@ -191,11 +195,23 @@ This is a synonym for L</wrap>, except that the default tag name is "span".
 
 =head2 links
 
-This converts an array of hash references into links by applying L<Jifty::View::Declare::Helpers/hyperlink> to each hash reference and concatenating the results together.
+This uses L<Qublog::Web/format_links> to take an array reference of link definitions (hash references) into a list of links. This format takes no options.
 
 =cut
 
 sub links {
+    my $links = shift;
+    return Qublog::Web::format_links(@$links);
 }
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp C<< hanenkamp@cpan.org >>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 Andrew Sterling Hanenkamp.
+
+=cut
 
 1;

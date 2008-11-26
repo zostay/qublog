@@ -5,6 +5,7 @@ package Qublog::View;
 use Jifty::View::Declare -base;
 
 use Qublog::Web;
+use Qublog::Web::Format;
 use Lingua::EN::Inflect qw/ PL /;
 use List::Util qw/ max /;
 use Scalar::Util qw/ reftype /;
@@ -86,22 +87,24 @@ template 'journal' => page {
         title is 'Journal for '.format_date($day->datestamp)
     }
 
-    render_region
-        name      => 'journal_summary',
-        path      => 'journal/summary',
-        arguments => {
-            date => $day->datestamp->ymd,
-        },
-        ;
+    div { { class is 'journal' }
+        render_region
+            name      => 'journal_summary',
+            path      => 'journal/summary',
+            arguments => {
+                date => $day->datestamp->ymd,
+            },
+            ;
 
-    # Use journal/list to render the guts
-    render_region 
-        name      => 'journal_list',
-        path      => 'journal/list', 
-        arguments => {
-            date => $day->datestamp->ymd,
-        },
-        ;
+        # Use journal/list to render the guts
+        render_region 
+            name      => 'journal_list',
+            path      => 'journal/list', 
+            arguments => {
+                date => $day->datestamp->ymd,
+            },
+            ;
+    };
 };
 
 =head2 JOURNAL FRAGMENTS
@@ -132,42 +135,14 @@ template 'journal/summary' => sub {
         $quitting_time = Jifty::DateTime->now + $planned_duration;
     }
 
-    div { 
-
-        # Make some handy calculations
-        my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
-        my $load_time = Jifty::DateTime->now->format_cldr($js_time_format);
-
-        # Throw some useful attributes into the top tag
-        { 
-            class is 'day-summary'.($is_today ? ' today' : ''),
-            load_time  is $load_time,
-            total_duration is $total_hours,
-        }
-
-        # Output the total duration for the current entry
-        p { { class is 'duration so-far' }
-            span { { class is 'number' } 
-                sprintf '%.2f', $total_hours
-            };
-            span { { class is 'unit' } _('hours so far') };
-        };
-
-        p { { class is 'duration to-go' }
-            span { { class is 'number' }
-                sprintf '%.2f', max($hours_left, 0)
-            };
-            span { { class is 'unit' } _('hours to go') };
-        };
-
-        if ($quitting_time) {
-            p { { class is 'clock summary' }
-                span { { class is 'time' }
-                    format_time $quitting_time;
-                };
-                span { { class is 'unit' } _('quitting time') };
-            };
-        }
+    show './item', {
+        class   => 'day-summary',
+        content => {
+            content => _('Quitting time %1', format_time $quitting_time),
+            format  => [ 'p' ],
+        },
+        info1   => _('%1 hours so far', sprintf('%.2f', $total_hours)),
+        info2   => _('%1 hours to go', sprintf('%.2f', max($hours_left, 0))),
     };
 };
 
@@ -671,7 +646,7 @@ This is a piece of text to render as the message of the comment. This will be in
 
 =item links
 
-This list of links is preprocessed so that if C<open_popup> is set to true within an C<onclick> handler, the handler is modified to prop open the popup region correctly. This is then rendered as a list of links using L</show_links>. 
+This list of links is preprocessed so that if C<open_popup> is set to true within an C<onclick> handler, the handler is modified to prop open the popup region correctly. This is then rendered as a list of links using L</format_links>. 
 
 =back
 
@@ -759,6 +734,183 @@ template 'journal/comment_item_fragment' => sub {
             ;
     };
 };
+
+=head3 journal/item OPTIONS
+
+This is a sub-template used to render most of the information in the comment page. This is the template that provides the markup to induce the nice tabular display of information on this page.
+
+As of this writing, this defines six different boxes that can be included on a line. The boxes are:
+
+=over
+
+=item *
+
+B<Timestamp.> This is a 90 pixel wide column at the start of each item line,usually containing a time stamp.
+
+=item *
+
+B<Content.> This is a flexible width column containing the main guts of the information related to the item.
+
+=item *
+
+B<Info1.> This is an informational line that is 150 pixels wide that goes after the Content. This is used to contain a small amount of summary information about the item.
+
+=item *
+
+B<Info2.> This is an informational line that is 150 pixels wide at the very end of the line after the Info1 box. This is used to contain a small amount of summary information about the item.
+
+=item *
+
+B<Info3.> This is an informational line that is 300 pixels wide at the very end of the line after the Content. If used with either or both of Info1 and Info2, this will appear immediately below these. If neither of those are present, this will slide upward to fill the space they normally hold.
+
+=item *
+
+B<Links.> This is a line immediately below the Content and is used to show a list of action links that can be taken related to the item.
+
+=back
+
+In addition to these, there is a special action region that can be used to place forms and other information during the client lifetime of the item.
+
+Each of the above translates into an option: timestamp, content, info1, info2, info3, and links. Each option takes either a value that describes the content to be placed within the box or a hash reference containing a complete set of options used to modify that box.
+
+Here is the complete list of options available for each box.
+
+=over
+
+=item content
+
+This is the text or HTML to place within the box. It will be formatted according to the C<format> option.
+
+=item icon
+
+This is the icon class for the box. If set to an available icon, this will insert that icon at the front of the box before the text. If this is set to C<undef>, no icon will be shown. Some boxes have this set to something other than C<undef> by default:
+
+=over
+
+=item timestamp
+
+The default is "time".
+
+=item content
+
+The default is "comment".
+
+=back
+
+=item id
+
+This is an HTML ID attribute to give to the box.
+
+=item class
+
+This is an additional CSS class for to assign to the box.
+
+=item attributes
+
+This is a hash of additional attributes to assign to the div surrounding the content.
+
+=item format
+
+This is a scalar or array of scalars describing the formats to apply to the C<content> placed inside the box. See L<Qublog::Web::Format> for details on what each of these mean.
+
+Each box has a set of defaults:
+
+=over
+
+=item timestamp
+
+The default is C<[ "time" ]>.
+
+=item content
+
+The default is C<[ "htmlify" ]>.
+
+=item info1, info2, info3
+
+The default is C<[ "p" ]>.
+
+=item links
+
+The default is C<[ "links" ]>.
+
+=back
+
+=back
+
+=cut
+
+private template 'journal/item/box' => sub {
+    my ($self, $options) = @_;
+
+    if ($options->{content}) {
+        my $class = $options->{_name} . ' ' . $options->{class};
+        $class .= ' icon ' . $options->{icon} if $options->{icon};
+
+        div {
+            attr {
+                %{ $options->{attributes} || {} },
+                id    => $options->{id},
+                class => $class,
+            };
+
+            outs_raw apply_format($options->{content}, $options->{format});
+        };
+    }
+};
+
+my %defaults = (
+    timestamp => {
+        _name  => 'timestamp',
+        format => [ 'time' ],
+        icon   => 'time',
+    },
+    content   => {
+        _name  => 'item-content',
+        format => [ 'htmlify' ],
+        icon   => 'comment',
+    },
+    info1     => {
+        _name  => 'info1',
+        format => [ 'p' ],
+    },
+    info2     => {
+        _name  => 'info2',
+        format => [ 'p' ],
+    },
+    info3     => {
+        _name  => 'info3',
+        format => [ 'p' ],
+    },
+    links     => {
+        _name  => 'links',
+        format => [ 'links' ],
+    },
+);
+
+private template 'journal/item' => sub {
+    my ($self, $options) = @_;
+
+    div {
+        { class is 'item' }
+
+        for my $box (qw( timestamp content info1 info2 info3 links )) {
+            my %box_options = ( 
+                %{ $defaults{$box} },
+                (ref $options->{$box} ? %{ $options->{$box} || {}      }
+                :                        ( content => $options->{$box} ) )
+            );
+
+            if ($box eq 'content') {
+                div { { class is 'item-wrapper' }
+                    show './item/box', \%box_options;
+                };
+            }
+            else {
+                show './item/box', \%box_options;
+            }
+        }
+    };
+}; 
 
 =head3 journal/view_comment COMMENT
 

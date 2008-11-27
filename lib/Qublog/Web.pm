@@ -101,6 +101,7 @@ Given a L<DateTime> object, it returns a string representing that time in C<h:mm
 
 sub format_time($) {
     my $time = shift;
+    return '-:--' unless defined $time;
     return $time->format_cldr('h:mm a');
 }
 

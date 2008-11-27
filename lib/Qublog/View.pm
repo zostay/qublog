@@ -767,11 +767,15 @@ B<Info3.> This is an informational line that is 300 pixels wide at the very end 
 
 B<Links.> This is a line immediately below the Content and is used to show a list of action links that can be taken related to the item.
 
+=item *
+
+B<Row.> This is a special box that wraps all the others.
+
 =back
 
 In addition to these, there is a special action region that can be used to place forms and other information during the client lifetime of the item.
 
-Each of the above translates into an option: timestamp, content, info1, info2, info3, and links. Each option takes either a value that describes the content to be placed within the box or a hash reference containing a complete set of options used to modify that box.
+Each of the above translates into an option: timestamp, content, info1, info2, info3, links, and row. Each option takes either a value that describes the content to be placed within the box or a hash reference containing a complete set of options used to modify that box. The exception is that for row, it only makes sense to give the hash since it doesn't take the C<content> option.
 
 Here is the complete list of options available for each box.
 
@@ -779,7 +783,7 @@ Here is the complete list of options available for each box.
 
 =item content
 
-This is the text or HTML to place within the box. It will be formatted according to the C<format> option.
+This is the text or HTML to place within the box. It will be formatted according to the C<format> option. The C<row> box does not take this option.
 
 =item icon
 
@@ -796,6 +800,8 @@ The default is "time".
 The default is "comment".
 
 =back
+
+The C<row> box does not take this option.
 
 =item id
 
@@ -835,6 +841,8 @@ The default is C<[ "links" ]>.
 
 =back
 
+The C<row> box does not take this option.
+
 =back
 
 =cut
@@ -842,10 +850,10 @@ The default is C<[ "links" ]>.
 private template 'journal/item/box' => sub {
     my ($self, $options) = @_;
 
-    if ($options->{content}) {
-        my $class = $options->{_name} . ' ' . $options->{class};
-        $class .= ' icon ' . $options->{icon} if $options->{icon};
+    my $class  = $options->{class} || '';
+       $class .= ' icon ' . $options->{icon} if $options->{icon};
 
+    div { { class is $options->{_name} }
         div {
             attr {
                 %{ $options->{attributes} || {} },
@@ -855,7 +863,7 @@ private template 'journal/item/box' => sub {
 
             outs_raw apply_format($options->{content}, $options->{format});
         };
-    }
+    };
 };
 
 my %defaults = (
@@ -891,22 +899,28 @@ private template 'journal/item' => sub {
     my ($self, $options) = @_;
 
     div {
-        { class is 'item' }
+        attr {
+            %{ $options->{row}{attributes} || {} },
+            id    => $options->{row}{id},
+            class => 'item ' . ($options->{row}{class} || ''),
+        };
 
-        for my $box (qw( timestamp content info1 info2 info3 links )) {
+        for my $box (qw( links content timestamp info1 info2 info3 )) {
             my %box_options = ( 
                 %{ $defaults{$box} },
-                (ref $options->{$box} ? %{ $options->{$box} || {}      }
-                :                        ( content => $options->{$box} ) )
+                (ref $options->{$box} eq 'HASH' ? %{ $options->{$box} || {} }
+                :                           ( content => $options->{$box} ) )
             );
 
-            if ($box eq 'content') {
-                div { { class is 'item-wrapper' }
+            if ($box_options{content}) {
+                if ($box eq 'content' or $box eq 'links') {
+                    div { { class is 'item-wrapper' }
+                        show './item/box', \%box_options;
+                    };
+                }
+                else {
                     show './item/box', \%box_options;
-                };
-            }
-            else {
-                show './item/box', \%box_options;
+                }
             }
         }
     };

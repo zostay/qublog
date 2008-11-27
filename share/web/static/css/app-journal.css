@@ -1,350 +1,165 @@
-.day-summary {
-    text-align: right;
-    padding: 3px;
-    margin: 1em;
-}
+/*** Journal Item Basic Layout ***/
 
-.day-summary p {
-    display: inline;
-}
-
-.day-summary .time,
-.day-summary .number {
-    border: 2px inset #222;
-    color: #ee5;
-    background-color: #222;
-    margin-left: 1em;
-    padding: 3px;
-    font-family: "Synchro LET";
-}
-
-.today .time,
-.today .number {
-    color: #5e5;
-}
-
-.top-spacer {
-    height: 1.5em;
-}
-
-.button-group {
-    margin-left: 15%;
-}
-
-.button-group .submit_button {
-    display: inline;
-}
-
-.button-group .submit_button input {
-    margin-left: 0.5em;
-}
-
-#goto_date {
-    width: 240px;
-    height: 2em;
-    float: right;
-}
-
-#goto_date p,
-#goto_date div,
-#goto_date label,
-#goto_date input {
-    width: auto;
-    display: inline;
-    margin: 0;
-    white-space: nowrap;
-}
-
-.new_comment_entry {
-    width: 660px;
-}
-
-.new_comment_entry div.form_field label.argument-task_entry {
-    width: 20px;
-    padding: 2px 3px 0 3px;
-}
-
-.new_comment_entry div.form_field input.argument-task_entry {
-    width: 162px;
-    padding: 2px;
-    margin: 0 3px;
-}
-
-.new_comment_entry div.form_field textarea.argument-comment {
-    width: 350px;
-    padding: 2px;
-    margin: 0 3px;
-
-    min-height: 1em;
-}
-
-.new_comment_entry div.form_field {
-    padding-top: 0;
-    float: left;
-    clear: none;
-}
-
-.new_comment_entry div.form_field label.argument-comment {
-    display: none;
-}
-
-.new_comment_entry div.submit_button {
-    float: left;
-    clear: none;
-}
-
-.new_comment_entry {
-    overflow: auto;
-}
-
-.new_entry,
-.new_task {
-    white-space: nowrap;
-}
-
-.new_entry p,
-.new_entry div,
-.new_entry label,
-.new_entry input,
-.new_task p,
-.new_task div,
-.new_task label,
-.new_task input {
-    display: inline;
-    margin: 0;
-}
-
-.new_entry label,
-.new_task label {
-    display: none;
-    white-space: nowrap;
-}
-
-.new_entry .argument-name,
-.new_task .argument-name {
-    width: 35em;
-}
-
-.journal .entry {
-    width: 900px;
-    border-width: 1px 1px 1px 5px;
-    border-style: solid;
-    border-color: #333;
-    overflow: auto;
-    margin: 5px 0;
-    background: white url(/images/journal-background.png) top right repeat-y;
-}
-
-.journal .entry input.argument-name,
-.journal .entry input.argument-primary_link,
-.journal .entry select.argument-project {
-    width: 35em;
-}
-
-.journal .entry .body {
-    padding-left: 10px;
-    width: 670px;
-    overflow: hidden;
-}
-
-.journal .entry .related-tasks {
-    font-size: 0.7em;
-    width: 160px;
-    overflow: hidden;
-    margin-right: 20px;
-    float: right;
-    clear: right;
-}
-
-.journal .entry .related-tasks ul,
-.journal .entry .related-tasks li {
-    margin: 0.5em 0;
-    padding: 0;
-    display: block;
-    overflow: auto;
-}
-
-.related-tasks .project-summary {
-    width: 100%;
+.journal .item {
     clear: both;
 }
 
-.journal .entry .related-tasks .nickname {
-    font-size: 2em;
-    padding-right: 3px;
-    display: block;
+.journal .item .item-wrapper {
     float: left;
-    clear: left;
+    width: 100%;
 }
 
-.journal .entry .hours-summary {
-    width: 200px;
-    float: right;
+.journal .item .item-content,
+.journal .item .links {
+    margin: 0 300px 0 90px;
 }
 
-.journal .entry p.project {
-    margin-top: -1.5em;
-    margin-left: 2em;
-    font-size: 0.8em;
-    color: #666;
-    font-weight: bold;
-}
-
-.hours-summary .duration {
-    border: 2px inset #222;
-    color: #ee5;
-    background-color: #222;
-    margin: 0.5em auto;
-    padding: 0 0 1em 0;
-    width: 60%;
-    font-family: "Synchro LET"
-}
-
-.span-running .elapsed,
-.entry-running .total {
-    color: #5e5;
-}
-
-.hours-summary .duration .number,
-.hours-summary .duration .unit {
-    display: block;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 1.2em;
-}
-
-.hours-summary .duration .number {
-    font-size: 2.5em;
-}
-
-.hours-summary .duration .unit {
-    margin-top: -0.5em;
-    font-size: 0.9em;
-}
-
-textarea.argument-name {
-    min-height: 5em;
-}
-
-.comment:hover {
-    background-color: #eee;
-}
-
-.comment:hover > .actions {
-    display: block;
-}
-
-.comment {
-    background-image: url(/images/icons/comment.png);
-    background-repeat: no-repeat;
-    background-position: 90px 2px;
-}
-
-.comment.start-time {
-    background-image: url(/images/icons/clock_play.png);
-}
-
-.comment.stop-time {
-    background-image: url(/images/icons/clock_stop.png);
-}
-
-.comment .date {
+.journal .item .timestamp {
     float: left;
+    margin-left: -100%;
     width: 90px;
 }
 
-.comment .comment_text {
-    width: 460px;
-    margin-left: 110px;
+.journal .item .info1 {
+    float: left;
+    width: 150px;
+    margin-left: -300px;
 }
 
-.comment .actions {
-    float: right;
-    display: none;
-    font-size: 0.8em;
-    margin: 0.1em 0;
-    width: 70px;
+.journal .item .info2 {
+    float: left;
+    width: 150px;
+    margin-left: -150px;
 }
 
-a.action.open {
-    padding-left: 16px;
-    background: url(/images/icons/lightbulb.png) no-repeat top left;
+.journal .item .info3 {
+    float: left;
+    width: 300px;
+    margin-left: -300px;
 }
 
-a.group.open {
-    padding-left: 16px;
-    background: url(/images/icons/folder_lightbulb.png) no-repeat top left;
+.journal .item .item-content p,
+.journal .item .timestamp p,
+.journal .item .info1 p,
+.journal .item .info2 p,
+.journal .item .info3 p {
+    margin-top: 0;
 }
 
-a.project.open {
-    padding-left: 16px;
-    background: url(/images/icons/briefcase.png) no-repeat top left;
+/*** Journal Timer Style ***/
+
+.timer.start .item-content,
+.timer.start .timestamp,
+.timer.start .info1,
+.timer.start .info2,
+.timer.start .info3 {
+    background-color: #bbf;
 }
 
-a.done {
-    padding-left: 16px;
-    background: url(/images/icons/tick.png) no-repeat top left;
-    text-decoration: line-through;
+.timer.span-running .item-content,
+.timer.span-running .timestamp,
+.timer.span-running .info1,
+.timer.span-running .info2,
+.timer.span-running .info3 {
+    background-color: #bfb;
 }
 
-a.nix {
-    padding-left: 16px;
-    background: url(/images/icons/cross.png) no-repeat top left;
-    text-decoration: line-through;
+.timer.span-stopped .item-content,
+.timer.span-stopped .timestamp,
+.timer.span-stopped .info1,
+.timer.span-stopped .info2,
+.timer.span-stopped .info3 {
+    background-color: #ff9;
 }
 
-span.task-reference.create {
-    padding-left: 16px;
-    background: url(/images/icons/add.png) no-repeat top left;
+.timer.stop .nested-start {
+    font-style: italic;
 }
 
-span.task-reference.update {
-    padding-left: 16px;
-    background: url(/images/icons/pencil.png) no-repeat top left;
+.timer .links {
+    background-color: #ccc;
 }
 
-span.task-reference.link {
-    padding-left: 16px;
-    background: url(/images/icons/link.png) no-repeat top left;
+.timer .info1 p,
+.timer .info2 p,
+.timer .info3 p {
+    margin-bottom: 0;
+    text-align: center;
 }
 
-.actions {
-    padding: 0 3px;
-}
+/*** Journal Icons ***/
 
-.actions a.icon {
+.icon {
     padding-left: 16px;
     background-repeat: no-repeat;
     background-attachment: top left;
+    background-image: url(/images/icons/shading.png);
 }
 
-.actions a.icon-only {
+.icon.only {
     display: block;
     overflow: hidden;
     padding-left: 16px;
     width: 0;
-    background-repeat: no-repeat;
-    background-attachment: top left;
     float: right;
 }
 
-.actions a.change-time {
-    background-image: url(/images/icons/clock_edit.png);
+.icon.comment {
+    background-image: url(/images/icons/comment.png);
 }
 
-.actions a.open {
-    background-image: url(/images/icons/door_open.png);
+.icon.clock_play {
+    background-image: url(/images/icons/clock_play.png);
 }
 
-.actions a.done {
-    background-image: url(/images/icons/accept.png);
+.icon.clock_stop {
+    background-image: url(/images/icons/clock_stop.png);
 }
 
-.actions a.nix {
-    background-image: url(/images/icons/delete.png);
+.icon.lightbulb {
+    background-image: url(/images/icons/lightbulb.png);
 }
 
-.actions a.edit {
+.icon.folder_lightbulb {
+    background-image: url(/images/icons/folder_lightbulb.png);
+}
+
+.icon.briefcase {
+    background-image: url(/images/icons/briefcase.png);
+}
+
+.icon.tick {
+    background-image: url(/images/icons/tick.png);
+}
+
+.icon.add {
+    background-image: url(/images/icons/add.png);
+}
+
+.icon.pencil {
     background-image: url(/images/icons/pencil.png);
 }
 
+.icon.time {
+    background-image: url(/images/icons/time.png);
+}
+
+.icon.link {
+    background-image: url(/images/icons/link.png);
+}
+
+.icon.clock_edit {
+    background-image: url(/images/icons/clock_edit.png);
+}
+ 
+.icon.door_open {
+    background-image: url(/images/icons/door_open.png);
+}
+ 
+.icon.accept {
+    background-image: url(/images/icons/accept.png);
+}
+ 
+.icon.delete {
+    background-image: url(/images/icons/delete.png);
+}

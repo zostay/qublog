@@ -63,6 +63,225 @@ sub popup_submit(@) {
     return form_submit %args;
 }
 
+=head1 journal_items RECORD
+
+Given a loaded L<Qublog::Model::JournalDay>, L<Qublog::Model::JournalEntry>, L<Qublog::Model::JournalTimer>, or L<Qublog::Model::Comment>, this will build a list of hash references ready to be used as arguments to the L<journal/item> template.
+
+=cut
+
+sub _journal_items_day {
+    my ($self, $items) = @_;
+
+    my $timers = Qublog::Model::JournalTimerCollection->new;
+    my $entry_alias = $timers->join(
+        column1 => 'journal_entry',
+        table2  => Qublog::Model::JournalEntry->table,
+        column2 => 'id',
+    );
+    $timers->limit(
+        alias  => $entry_alias,
+        column => 'journal_day',
+        value  => $self->id,
+    );
+    $timers->order_by({ column => 'start_time' });
+
+    while (my $timer = $timers->next) {
+        journal_items($timer, $items);
+    }
+
+    my $comments = $self->comments;
+    while (my $comment = $comments->next) {
+        journal_items($comment, $items);
+    }
+}
+
+sub _journal_items_entry {
+    my ($self, $items) = @_;
+
+    # TODO Add items for the entry itself?
+
+    my $timers = $self->timers;
+    $timers->order_by({ column => 'start_time' });
+
+    while (my $timer = $timers->next) {
+        journal_items($timer, $items);
+    }
+}
+
+sub _journal_items_timer {
+    my ($self, $items) = @_;
+    my $journal_entry = $self->journal_entry;
+
+    my $collapse_start;
+    for my $item_id (keys %$items) {
+        next unless $item_id =~ /JournalTimer-\d+-stop/;
+        if ($items->{$item_id}{timestamp} == $self->start_time) {
+            $collapse_start = $item_id;
+            last;
+        }
+    }
+
+    my $id = 'JournalTimer-'.$self->id.'-';
+
+    if ($collapse_start) {
+        $items->{$collapse_start}{content}{content}
+            .= _(' <span class="nested-start">(Start %1)</span>', $journal_entry->name);
+    }
+    else {
+        $items->{$id.'start'} = {
+            id             => $self->id,
+            order_priority => $self->start_time->epoch * 10 + 1,
+
+            row       => {
+                class => 'timer start',
+            },
+            timestamp => $self->start_time,
+            content   => {
+                content => _('Started %1', $journal_entry->name),
+                icon    => 'clock_play',
+                format  => [ 'p' ],
+            },
+            info3     => '&nbsp;',
+            links     => [
+                {
+                    label   => _('Change'),
+                    class   => 'icon clock_edit',
+                    tooltip => _('Set the start time for this timer span.'),
+                    onclick => {
+                        open_popup   => 1,
+                        replace_with => 'journal/popup/change_start_stop',
+                        arguments    => {
+                            entry_id => $journal_entry->id,
+                            which    => 'start',
+                            timer_id => $self->id,
+                        },
+                    },
+                },
+            ],
+        };
+    }
+
+    # Make some handy calculations
+    my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
+    my $start_time = $self->start_time->format_cldr($js_time_format);
+    my $load_time  = Jifty::DateTime->now->format_cldr($js_time_format);
+    my $total_duration = $journal_entry->hours;
+
+    $items->{$id.'stop'} = {
+        id             => $self->id,
+        order_priority => $self->start_time->epoch * 10 + 9,
+
+        row       => {
+            class => 'timer stop hours-summary'
+               .' '. ($journal_entry->is_running ? 'entry-running' 
+                                                 : 'entry-stopped')
+               .' '. ($self->is_running    ? 'span-running'
+                                                 : 'span-stopped'),
+            attributes => {
+                start_time     => $start_time,
+                load_time      => $load_time,
+                total_duration => $total_duration,
+            },
+        },
+        timestamp => $self->stop_time || DateTime->now,
+        content   => {
+            content => $journal_entry->name,
+            icon    => ($self->is_running ? 'clock' : 'clock_stop'),
+            format  => [ 'p' ],
+        },
+        info1     => {
+            content => capture {
+                # Output the duration elapsed for the current timer
+                span { { class is 'number' } 
+                    sprintf '%.2f', $self->hours 
+                };
+                span { { class is 'unit' } _('hours elapsed') };
+            },
+            format => [
+                {
+                    format  => 'p',
+                    options => {
+                        class => 'duration elapsed',
+                    },
+                },
+            ],
+        },
+        info2     => {
+            content => capture {
+                # Output the total duration for the current entry
+                span { { class is 'number' } 
+                    sprintf '%.2f', $self->journal_entry->hours 
+                };
+                span { { class is 'unit' } _('hours total') };
+            },
+            format => [
+                {
+                    format  => 'p',
+                    options => {
+                        class => 'duration total',
+                    },
+                },
+            ],
+        },
+        links     => [
+            {
+                label   => _('Change'),
+                class   => 'icon clock_edit',
+                tooltip => _('Set the stop time for this timer span.'),
+                onclick => {
+                    open_popup   => 1,
+                    replace_with => 'journal/popup/change_start_stop',
+                    arguments    => {
+                        entry_id => $journal_entry->id,
+                        which    => 'stop',
+                        timer_id => $self->id,
+                    },
+                },
+            },
+        ],
+    };
+}
+
+sub _journal_items_comment {
+    my ($self, $items) = @_;
+
+    my $order_priority 
+        = $self->journal_timer->id ? $self->journal_timer->start_time->epoch
+        :                            $self->created_on;
+    $order_priority *= 10;
+    $order_priority += 5;
+
+    $items->{'Comment-'.$self->id} = {
+        id             => $self->id,
+        order_priority => $order_priority,
+
+        timestamp => $self->created_on,
+        content   => $self->name,
+    };
+}
+
+my %JOURNAL_ITEMS_HANDLER = (
+    JournalDay   => \&_journal_items_day,
+    JournalEntry => \&_journal_items_entry,
+    JournalTimer => \&_journal_items_timer,
+    Comment      => \&_journal_items_comment,
+);
+
+sub journal_items {
+    my ($record, $items) = @_;
+    $items ||= {};
+
+    for my $model (keys %JOURNAL_ITEMS_HANDLER) {
+        if ($record->isa("Qublog::Model::$model")) {
+            my $journal_items = $JOURNAL_ITEMS_HANDLER{$model};
+            $journal_items->($record, $items);
+            last;
+        }
+    }
+    
+    return $items;
+}
+
 =head1 TEMPLATES
 
 These are the templates used by Qublog.
@@ -175,14 +394,17 @@ template 'journal/list' => sub {
         },
         ;
 
+    my $items = journal_items($day);
+
+    for my $item (sort { 
+                $b->{timestamp}      <=> $a->{timestamp}      ||
+                $b->{order_priority} <=> $a->{order_priority} ||
+                $b->{id}             <=> $a->{id}
+            } values %$items) {
+        show './item', $item;
+    }
+
     # Call journal/list_items to list all the timer spans
-    render_region
-        name => 'list_items',
-        path => 'journal/list_items',
-        arguments => {
-            date => $day->datestamp->ymd,
-        },
-        ;
 };
 
 =head3 journal/new_entry

@@ -80,5 +80,11 @@ Behaviour.register({
     },
     'input.argument-task_entry': function(e) {
         jQuery(e).change(Qublog.Journal.updateJournalThingyButton);
+    },
+    'div.item': function(e) {
+        jQuery('.links', e).css({ visibility: 'hidden' });
+        jQuery(e)
+            .mouseover(function() {jQuery('.links', this).css({ visibility: 'visible' })})
+            .mouseout(function() {jQuery('.links', this).css({ visibility: 'hidden' })});
     }
 });

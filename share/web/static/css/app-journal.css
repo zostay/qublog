@@ -1,7 +1,7 @@
 /*** Journal Item Basic Layout ***/
 
 .journal .item {
-    clear: both;
+    overflow: auto;
 }
 
 .journal .item .item-wrapper {
@@ -48,28 +48,13 @@
 
 /*** Journal Timer Style ***/
 
-.timer.start .item-content,
-.timer.start .timestamp,
-.timer.start .info1,
-.timer.start .info2,
-.timer.start .info3 {
-    background-color: #bbf;
-}
-
-.timer.span-running .item-content,
-.timer.span-running .timestamp,
-.timer.span-running .info1,
-.timer.span-running .info2,
-.timer.span-running .info3 {
-    background-color: #bfb;
-}
-
-.timer.span-stopped .item-content,
-.timer.span-stopped .timestamp,
-.timer.span-stopped .info1,
-.timer.span-stopped .info2,
-.timer.span-stopped .info3 {
-    background-color: #ff9;
+.timer .item-content,
+.timer .timestamp,
+.timer .info1,
+.timer .info2,
+.timer .info3 {
+    background-color: #333;
+    color: #ccc;
 }
 
 .timer.stop .nested-start {
@@ -85,6 +70,21 @@
 .timer .info3 p {
     margin-bottom: 0;
     text-align: center;
+}
+
+.timer {
+    background-color: #eee;
+}
+
+/*** Journal Comment Style ***/
+
+.free-comment {
+    border-top: 1px #ccc solid;
+    border-bottom: 1px #ccc solid;
+}
+
+.timer-comment {
+    background-color: #eee;
 }
 
 /*** Journal Icons ***/

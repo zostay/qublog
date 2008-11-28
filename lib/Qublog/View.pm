@@ -255,6 +255,11 @@ sub _journal_items_comment {
         id             => $self->id,
         order_priority => $order_priority,
 
+        row       => {
+            class => 
+                ($self->journal_timer->id ? 'timer-comment' : 'free-comment'),
+        },
+
         timestamp => $self->created_on,
         content   => $self->name,
     };

@@ -265,11 +265,21 @@ sub _journal_items_comment {
     };
 }
 
+sub _journal_items_task {
+    my ($self, $items) = @_;
+    
+    my $comments = $self->comments;
+    while (my $comment = $comments->next) {
+        journal_items($comment, $items);
+    }
+}
+
 my %JOURNAL_ITEMS_HANDLER = (
+    Comment      => \&_journal_items_comment,
     JournalDay   => \&_journal_items_day,
     JournalEntry => \&_journal_items_entry,
     JournalTimer => \&_journal_items_timer,
-    Comment      => \&_journal_items_comment,
+    Task         => \&_journal_items_task,
 );
 
 sub journal_items {
@@ -399,17 +409,7 @@ template 'journal/list' => sub {
         },
         ;
 
-    my $items = journal_items($day);
-
-    for my $item (sort { 
-                $b->{timestamp}      <=> $a->{timestamp}      ||
-                $b->{order_priority} <=> $a->{order_priority} ||
-                $b->{id}             <=> $a->{id}
-            } values %$items) {
-        show './item', $item;
-    }
-
-    # Call journal/list_items to list all the timer spans
+    show './items', $day;
 };
 
 =head2 journal/new_comment_entry
@@ -502,11 +502,22 @@ private template 'journal/hours_summary' => sub {
     };
 };
 
+=head3 journal/items OBJECT
 
+This is a sub-template used to display all the journal items associated with the given object.
 
 =cut
 
+private template '/journal/items' => sub {
+    my ($self, $object) = @_;
 
+    my $items = journal_items($object);
+    for my $item (sort { 
+                $b->{timestamp}      <=> $a->{timestamp}      ||
+                $b->{order_priority} <=> $a->{order_priority} ||
+                $b->{id}             <=> $a->{id}
+            } values %$items) {
+        show './item', $item;
     }
 };
 
@@ -1003,10 +1014,7 @@ template 'project/list_task_logs' => sub {
     $task->load( $task_id );
 
     div { { class is 'comment list' }
-        my $comments = $task->comments;
-        while (my $comment = $comments->next) {
-            show '/journal/view_comment', $comment;
-        }
+        show '/journal/items', $task;
     };
 };
 

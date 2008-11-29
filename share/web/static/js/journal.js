@@ -20,9 +20,9 @@ Qublog.Journal.updateActiveTimers = function() {
         var total_el   = jQuery('.total .number', this);
 
         var stop  = new Date();
-        var load  = new Date(Date.parse(summary_el.attr('load-time')));
-        var start = new Date(Date.parse(summary_el.attr('start-time')));
-        var total_duration = parseFloat(summary_el.attr('total-duration'));
+        var load  = new Date(Date.parse(summary_el.attr('load_time')));
+        var start = new Date(Date.parse(summary_el.attr('start_time')));
+        var total_duration = parseFloat(summary_el.attr('total_duration'));
 
 
         if (summary_el.hasClass('span-running')) {

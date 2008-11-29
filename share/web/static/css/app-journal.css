@@ -152,6 +152,10 @@
     background-image: url(/images/icons/clock_edit.png);
 }
  
+.icon.clock {
+    background-image: url(/images/icons/clock.png);
+}
+ 
 .icon.door_open {
     background-image: url(/images/icons/door_open.png);
 }

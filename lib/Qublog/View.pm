@@ -369,8 +369,18 @@ template 'journal/summary' => sub {
         $quitting_time = Jifty::DateTime->now + $planned_duration;
     }
 
+    # Make some handy calculations
+    my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
+    my $load_time = Jifty::DateTime->now->format_cldr($js_time_format);
+
     show './item', {
-        class   => 'day-summary',
+        row     => {
+            class      => 'day-summary',
+            attributes => {
+                load_time      => $load_time,
+                total_duration => $total_hours,
+            },
+        },
         content => {
             content => _('Quitting time %1', format_time $quitting_time),
             format  => [ 'p' ],

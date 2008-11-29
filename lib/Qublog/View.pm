@@ -518,7 +518,7 @@ This is a sub-template used to display all the journal items associated with the
 
 =cut
 
-private template '/journal/items' => sub {
+private template 'journal/items' => sub {
     my ($self, $object) = @_;
 
     my $items = journal_items($object);

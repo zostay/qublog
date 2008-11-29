@@ -45,7 +45,7 @@ on [ '', 'index', 'index.html' ] => dispatch 'journal';
 
 =head2 on journal/list
 
-=head2 on journal/list_items
+=head2 on journal/new_comment_entry
 
 =head2 on journal/summary
 
@@ -80,15 +80,8 @@ sub parse_date {
 
 on 'journal'                   => \&parse_date;
 on 'journal/list'              => \&parse_date;
-on 'journal/list_items'        => \&parse_date;
 on 'journal/new_comment_entry' => \&parse_date;
 on 'journal/summary'           => \&parse_date;
-
-=head2 on journal/comments
-
-=head2 on journal/new_comment
-
-=head2 on journal/list_comments
 
 =head2 on journal/popup/change_start_stop
 
@@ -114,9 +107,6 @@ sub load_entry {
     }
 }
 
-on 'journal/comments'                => \&load_entry;
-on 'journal/new_comment'             => \&load_entry;
-on 'journal/list_comments'           => \&load_entry;
 on 'journal/popup/change_start_stop' => \&load_entry;
 
 =head2 on project/edit/*

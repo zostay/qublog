@@ -14,6 +14,8 @@ Qublog.Journal.formatHours = function(duration) {
 Qublog.Journal.updateActiveTimers = function() {
     var timers = jQuery('.entry-running');
 
+    var day_summary_total = 0;
+
     timers.each(function() {
         var summary_el = jQuery(this);
         var elapsed_el = jQuery('.elapsed .number', this);
@@ -24,7 +26,6 @@ Qublog.Journal.updateActiveTimers = function() {
         var start = new Date(Date.parse(summary_el.attr('start_time')));
         var total_duration = parseFloat(summary_el.attr('total_duration'));
 
-
         if (summary_el.hasClass('span-running')) {
             var duration = (stop.getTime() - start.getTime()) / 3600000;
             var new_elapsed = Qublog.Journal.formatHours(duration);
@@ -32,8 +33,47 @@ Qublog.Journal.updateActiveTimers = function() {
         }
 
         var duration_since = (stop.getTime() - load.getTime()) / 3600000;
-        var new_total = Qublog.Journal.formatHours(total_duration + duration_since);
-        total_el.text(new_total);
+        var new_total = total_duration + duration_since;
+        total_el.text(Qublog.Journal.formatHours(new_total));
+
+        day_summary_total += new_total;
+    });
+
+    jQuery('.day-summary').each(function() {
+        var summary_el  = jQuery(this);
+        var quitting_el = jQuery('.quit .time', this);
+        var total_el    = jQuery('.total .number', this);
+        var to_go_el    = jQuery('.remaining .number', this);
+
+        var to_go_hours = Math.max(0, 8.0 - day_summary_total);
+        var hours       = Math.floor(to_go_hours);
+        var minutes     = Math.floor((to_go_hours - hours) * 60);
+
+        var quitting_time = new Date();
+        var quitting_hour = quitting_time.getHours() + hours;
+        var quitting_min  = quitting_time.getMinutes() + minutes;
+
+        if (quitting_min >= 60) {
+            quitting_hour++;
+            quitting_min %= 60;
+        }
+        
+        if (quitting_hour >= 24) {
+            quitting_hour = 23;
+            quitting_min  = 59;
+        }
+
+        quitting_time.setHours(quitting_hour);
+        quitting_time.setMinutes(quitting_min);
+
+        if (to_go_hours == 0) {
+            quitting_el.text('-:--');
+        }
+        else {
+            quitting_el.text(Qublog.Journal.formatTime(quitting_time));
+        }
+        total_el.text(Qublog.Journal.formatHours(day_summary_total));
+        to_go_el.text(Qublog.Journal.formatHours(to_go_hours));
     });
 };
 

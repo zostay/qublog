@@ -359,7 +359,7 @@ template 'journal/summary' => sub {
         $total_hours += $timer->hours;
     }
 
-    my $hours_left = 8 - $total_hours;
+    my $hours_left = max(0, 8 - $total_hours);
 
     my $quitting_time;
     my $is_today = $day->is_today;
@@ -382,11 +382,49 @@ template 'journal/summary' => sub {
             },
         },
         content => {
-            content => _('Quitting time %1', format_time $quitting_time),
-            format  => [ 'p' ],
+            content => capture {
+                span { { class is 'unit' } _('Quitting time ') };
+                span { { class is 'time' } 
+                    format_time $quitting_time;
+                };
+            },
+            format  => [ 
+                {
+                    format  =>  'p',
+                    options => {
+                        class => 'quit',
+                    },
+                },
+            ],
         },
-        info1   => _('%1 hours so far', sprintf('%.2f', $total_hours)),
-        info2   => _('%1 hours to go', sprintf('%.2f', max($hours_left, 0))),
+        info1 => {
+            content => capture {
+                span { { class is 'number' } sprintf '%.2f', $total_hours };
+                span { { class is 'unit' } _('hours so far') };
+            },
+            format  => [
+                {
+                    format  => 'p',
+                    options => {
+                        class => 'total',
+                    },
+                },
+            ],
+        },
+        info2 => {
+            content => capture {
+                span { { class is 'number' } sprintf '%.2f', $hours_left };
+                span { { class is 'unit' } _('hours to go') };
+            },
+            format => [
+                {
+                    format  => 'p',
+                    options => {
+                        class => 'remaining',
+                    },
+                },
+            ],
+        },
     };
 };
 

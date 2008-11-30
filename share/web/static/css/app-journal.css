@@ -167,3 +167,9 @@
 .icon.delete {
     background-image: url(/images/icons/delete.png);
 }
+
+span.preamble.icon {
+    padding-left: 0;
+    background-image: none;
+}
+

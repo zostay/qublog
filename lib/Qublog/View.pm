@@ -128,6 +128,7 @@ sub _journal_items_timer {
             .= capture { 
                 span { { class is 'nested-start' }
                     _('(Start %1)', $journal_entry->name);
+                };
             };
     }
     else {

@@ -90,16 +90,16 @@
 /*** Journal Icons ***/
 
 .icon {
-    padding-left: 16px;
+    padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: top left;
+    background-attachment: 1px 1px;
     background-image: url(/images/icons/shading.png);
 }
 
 .icon.only {
     display: block;
     overflow: hidden;
-    padding-left: 16px;
+    padding-left: 18px;
     width: 0;
     float: right;
 }

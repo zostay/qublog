@@ -142,7 +142,7 @@ sub _journal_items_timer {
             timestamp => $self->start_time,
             content   => {
                 content => _('Started %1', $journal_entry->name),
-                icon    => 'clock_play',
+                icon    => 'clock',
                 format  => [ 'p' ],
             },
             info3     => '&nbsp;',
@@ -190,7 +190,7 @@ sub _journal_items_timer {
         timestamp => $self->stop_time || DateTime->now,
         content   => {
             content => $journal_entry->name,
-            icon    => ($self->is_running ? 'clock' : 'clock_stop'),
+            icon    => 'clock',
             format  => [ 'p' ],
         },
         info1     => {

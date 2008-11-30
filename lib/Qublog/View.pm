@@ -171,6 +171,55 @@ sub _journal_items_timer {
     my $load_time  = Jifty::DateTime->now->format_cldr($js_time_format);
     my $total_duration = $journal_entry->hours;
 
+    my @stop_links;
+    if ($self->is_stopped) {
+        push @stop_links, {
+            label   => _('Change'),
+            class   => 'icon clock_edit',
+            tooltip => _('Set the stop time for this timer span.'),
+            onclick => {
+                open_popup   => 1,
+                replace_with => 'journal/popup/change_start_stop',
+                arguments    => {
+                    entry_id => $journal_entry->id,
+                    which    => 'stop',
+                    timer_id => $self->id,
+                },
+            },
+        };
+
+        if ($journal_entry->is_stopped) {
+            push @stop_links, {
+                label   => _('Restart'),
+                class   => 'icon clock_play',
+                tooltip => _('Start a new timer for this entry.'),
+                as_link => 1,
+                onclick => {
+                    refresh => 'journal_list',
+                    submit  => new_action(
+                        class  => 'StartTimer',
+                        record => $journal_entry,
+                    ),
+                },
+            };
+        }
+    }
+    else {
+        push @stop_links, {
+            label   => _('Stop'),
+            class   => 'icon clock_stop',
+            tooltip => _('Stop this timer.'),
+            as_link => 1,
+            onclick => {
+                refresh => 'journal_list',
+                submit  => new_action(
+                    class  => 'StopTimer',
+                    record => $journal_entry,
+                ),
+            },
+        };
+    }
+
     $items->{$id.'stop'} = {
         id             => $self->id,
         order_priority => $self->start_time->epoch * 10 + 9,
@@ -227,22 +276,7 @@ sub _journal_items_timer {
                 },
             ],
         },
-        links     => [
-            {
-                label   => _('Change'),
-                class   => 'icon clock_edit',
-                tooltip => _('Set the stop time for this timer span.'),
-                onclick => {
-                    open_popup   => 1,
-                    replace_with => 'journal/popup/change_start_stop',
-                    arguments    => {
-                        entry_id => $journal_entry->id,
-                        which    => 'stop',
-                        timer_id => $self->id,
-                    },
-                },
-            },
-        ],
+        links     => \@stop_links,
     };
 }
 

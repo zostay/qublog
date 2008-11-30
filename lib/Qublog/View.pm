@@ -125,7 +125,10 @@ sub _journal_items_timer {
 
     if ($collapse_start) {
         $items->{$collapse_start}{content}{content}
-            .= _(' <span class="nested-start">(Start %1)</span>', $journal_entry->name);
+            .= capture { 
+                span { { class is 'nested-start' }
+                    _('(Start %1)', $journal_entry->name);
+            };
     }
     else {
         $items->{$id.'start'} = {

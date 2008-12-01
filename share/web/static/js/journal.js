@@ -17,9 +17,10 @@ Qublog.Journal.updateActiveTimers = function() {
     var day_summary_total = 0;
 
     timers.each(function() {
-        var summary_el = jQuery(this);
-        var elapsed_el = jQuery('.elapsed .number', this);
-        var total_el   = jQuery('.total .number', this);
+        var summary_el   = jQuery(this);
+        var timestamp_el = jQuery('.timestamp .time', this);
+        var elapsed_el   = jQuery('.elapsed .number', this);
+        var total_el     = jQuery('.total .number', this);
 
         var stop  = new Date();
         var load  = new Date(Date.parse(summary_el.attr('load_time')));
@@ -30,6 +31,8 @@ Qublog.Journal.updateActiveTimers = function() {
             var duration = (stop.getTime() - start.getTime()) / 3600000;
             var new_elapsed = Qublog.Journal.formatHours(duration);
             elapsed_el.text(new_elapsed)
+
+            timestamp_el.text(Qublog.Journal.formatTime(new Date()));
         }
 
         var duration_since = (stop.getTime() - load.getTime()) / 3600000;

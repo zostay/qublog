@@ -3,6 +3,8 @@ use warnings;
 
 package Qublog::Web::Format;
 
+use Scalar::Util qw( reftype );
+
 use Qublog::Web ();
 
 require Exporter;
@@ -192,6 +194,63 @@ This is a synonym for L</wrap>, except that the default tag name is "P".
 =head2 span
 
 This is a synonym for L</wrap>, except that the default tag name is "span".
+
+=head2 popup
+
+This takes a set of links partially prepared for the L</links> format and checks to see if a "open_popup" key is present. If so, it modifies the link to perform the work of opening a popup box for giving additional details about the modification to perform.
+
+This accepts the following option:
+
+=over
+
+=item popup_id
+
+This is required. This should be the fully-qualified name of the region to throw the fragment into.
+
+=item effect
+
+This is the effect to use to show the popup. Be default, this is "SlideDown". Set it to C<undef> if you want no effect.
+
+=back
+
+=cut
+
+sub popup {
+    my ($links, $options) = @_;
+    $options->{effect} = 'SlideDown' unless exists $options->{effect};
+
+    my $region = $options->{popup_id};
+    my $effect = exists $options->{effect} ? $options->{effect} : 'SlideDown';
+
+    for my $link (@$links) {
+        if (exists $link->{onclick}) {
+
+            my $replace_close = sub {
+                my $handler = shift;
+                if (exists $handler->{open_popup}) {
+                    my $open = delete $handler->{open_popup};
+                    if ($open) {
+                        $handler->{region} = $region;
+                        $handler->{effect} = $effect
+                            unless defined $handler->{effect};
+                    }
+                }
+            };
+            
+            if (reftype $link->{onclick} eq 'ARRAY') {
+                for my $handler (@{ $link->{onclick} }) {
+                    $replace_close->($handler);
+                }
+            }
+ 
+            elsif (reftype $link->{onclick} eq 'HASH') {
+                $replace_close->($link->{onclick});
+            }
+        }
+    }
+
+    return $links;
+}
 
 =head2 links
 

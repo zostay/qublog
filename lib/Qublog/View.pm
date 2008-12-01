@@ -237,7 +237,7 @@ sub _journal_items_timer {
                 total_duration => $total_duration,
             },
         },
-        timestamp => $self->stop_time || DateTime->now,
+        timestamp => $self->stop_time || Jifty::DateTime->now,
         content   => {
             content => $journal_entry->name,
             icon    => 'clock',

@@ -221,6 +221,19 @@ sub _journal_items_timer {
         };
     }
 
+    push @stop_links, {
+        label   => _('List Actions'),
+        class   => 'icon lightbulb',
+        tooltip => _('Show the list of tasks for this project.'),
+        onclick => {
+            open_popup   => 1,
+            replace_with => 'journal/popup/show_tasks',
+            arguments    => {
+                entry_id => $journal_entry->id,
+            },
+        },
+    } if $journal_entry->project->id;
+
     $items->{$id.'stop'} = {
         id             => $self->id,
         order_priority => $self->start_time->epoch * 10 + 9,
@@ -872,6 +885,28 @@ template 'journal/popup/change_start_stop' => sub {
             },
             {
                 refresh     => 'journal_list',
+            },
+        ],
+        ;
+};
+
+template 'journal/popup/show_tasks' => sub {
+    my $entry = get 'entry';
+    my $task  = $entry->project;
+
+    if ($task->id) {
+        show '/project/project_summary', $task;
+    }
+
+    else {
+        p { { class is 'none' } _('No project associated with this entry.') };
+    }
+
+    popup_submit
+        label   => _('Close'),
+        onclick => [
+            {
+                close_popup => 1,
             },
         ],
         ;

@@ -108,6 +108,7 @@ sub load_entry {
 }
 
 on 'journal/popup/change_start_stop' => \&load_entry;
+on 'journal/popup/show_tasks'        => \&load_entry;
 
 =head2 on project/edit/*
 

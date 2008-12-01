@@ -9,6 +9,7 @@ use Qublog::Web::Format;
 use Lingua::EN::Inflect qw/ PL /;
 use List::Util qw/ max /;
 use Scalar::Util qw/ reftype /;
+use Storable qw/ dclone /;
 
 =head1 NAME
 
@@ -779,7 +780,7 @@ private template 'journal/item' => sub {
 
         for my $box (qw( links content timestamp info1 info2 info3 )) {
             my %box_options = ( 
-                %{ $defaults{$box} },
+                %{ dclone($defaults{$box}) },
                 (ref $options->{$box} eq 'HASH' ? %{ $options->{$box} || {} }
                 :                           ( content => $options->{$box} ) )
             );

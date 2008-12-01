@@ -12,11 +12,9 @@ Qublog.Journal.formatHours = function(duration) {
 }
 
 Qublog.Journal.updateActiveTimers = function() {
-    var timers = jQuery('.entry-running');
-
     var day_summary_total = 0;
 
-    timers.each(function() {
+    jQuery('.entry-running').each(function() {
         var summary_el   = jQuery(this);
         var timestamp_el = jQuery('.timestamp .time', this);
         var elapsed_el   = jQuery('.elapsed .number', this);
@@ -40,6 +38,12 @@ Qublog.Journal.updateActiveTimers = function() {
         total_el.text(Qublog.Journal.formatHours(new_total));
 
         day_summary_total += new_total;
+    });
+
+    jQuery('.entry-stopped').each(function() {
+        var summary_el = jQuery(this);
+        var total = parseFloat(summary_el.attr('total_duration'));
+        day_summary_total += total;
     });
 
     jQuery('.day-summary').each(function() {

@@ -710,7 +710,9 @@ The default is C<[ "p" ]>.
 
 =item links
 
-The default is C<[ "links" ]>.
+The default is:
+
+  [ { format => "popup", options => { popup_id => ... } }, "links" ]
 
 =back
 
@@ -764,7 +766,12 @@ my %defaults = (
     },
     links     => {
         _name  => 'links',
-        format => [ 'links' ],
+        format => [ 
+            {
+                format  => 'popup',
+            },
+            'links',
+        ],
     },
 );
 
@@ -772,9 +779,14 @@ private template 'journal/item' => sub {
     my ($self, $options) = @_;
 
     div {
+        my $row_id       = $options->{row}{id} || 'row_'.Jifty->web->serial;
+        my $popup_region = $row_id . '_actions';
+        my $popup_id     = Jifty->web->current_region->qualified_name
+                        . '-' . $popup_region;
+
         attr {
             %{ $options->{row}{attributes} || {} },
-            id    => $options->{row}{id},
+            id    => $row_id,
             class => 'item ' . ($options->{row}{class} || ''),
         };
 
@@ -787,6 +799,16 @@ private template 'journal/item' => sub {
 
             if ($box_options{content}) {
                 if ($box eq 'content' or $box eq 'links') {
+                    if ($box eq 'links') {
+                        if (ref $box_options{format} eq 'ARRAY'
+                                and ref $box_options{format}[0] eq 'HASH'
+                                and $box_options{format}[0]{format} eq 'popup',
+                                and not defined $box_options{format}[0]{options}{popup_id}) {
+
+                            $box_options{format}[0]{options}{popup_id} = $popup_id;
+                        }
+                    }
+
                     div { { class is 'item-wrapper' }
                         show './item/box', \%box_options;
                     };
@@ -796,6 +818,11 @@ private template 'journal/item' => sub {
                 }
             }
         }
+
+        render_region
+            name => $popup_region,
+            path => '/__jifty/empty',
+            ;
     };
 }; 
 
@@ -826,17 +853,27 @@ template 'journal/popup/change_start_stop' => sub {
 
     popup_submit
         label   => _("Set \u$which Time"),
-        onclick => {
-            submit      => $action,
-            close_popup => 1,
-        },
+        onclick => [ 
+            {
+                submit      => $action,
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
         ;
 
     popup_submit
         label   => _('Cancel'),
-        onclick => {
-            close_popup => 1,
-        },
+        onclick => [
+            {
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
         ;
 };
 

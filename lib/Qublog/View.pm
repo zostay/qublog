@@ -890,6 +890,12 @@ template 'journal/popup/change_start_stop' => sub {
         ;
 };
 
+=head2 journal/popup/show_tasks
+
+Shows the tasks for a given journal entry.
+
+=cut
+
 template 'journal/popup/show_tasks' => sub {
     my $entry = get 'entry';
     my $task  = $entry->project;

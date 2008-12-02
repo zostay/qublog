@@ -3,7 +3,41 @@ use warnings;
 
 =head1 NAME
 
-Qublog::Action::ChangeTimer
+Qublog::Action::ChangeTimer - change the stop/start time
+
+=head1 SYNOPSIS
+
+  my $timer = Qublog::Model::JournalTimer->new;
+  $timer->load($some_id);
+
+  my $change_timer = Jifty->web->new_action(
+      class     => 'ChangeTimer',
+      record    => $timer,
+      arguments => {
+          which       => 'start',
+          new_time    => '4:42 PM',
+          change_date => 0,
+      },
+  );
+  $change_timer->run;
+
+=head1 DESCRIPTION
+
+Updates the start or stop time of a timer.
+
+=head1 PARAMETERS
+
+=head2 which
+
+This is the timer to change, either "start" or "stop".
+
+=head2 new_time
+
+This is the string containing the new time to set the timer to. This can be just about any time format you can think of.
+
+=head2 change_date
+
+This is a boolean/checkbox that allows you to change the date of the timer too. This is an unusual thing to want to do, but sometimes useful. When this is done, a date is expected as well as a time.
 
 =cut
 
@@ -56,7 +90,11 @@ sub _compute_new_time {
     return Jifty::DateTime->new_from_string($new_time);
 }
 
+=head1 METHODS
+
 =head2 take_action
+
+Performs the work of changing the start or stop time of the timer.
 
 =cut
 
@@ -81,6 +119,11 @@ sub take_action {
 
 =head2 report_success
 
+Shows one of the following messages on success:
+
+  Updated start time.
+  Updated stop time.
+
 =cut
 
 sub report_success {
@@ -90,6 +133,12 @@ sub report_success {
         _('Updated %1 time.', $self->argument_value('which'))
     );
 }
+
+=head2 validate_new_time
+
+This is a validator that makes sure that the given time is in a valid format. If not, it will make suggestions on what kind of time/date formats to try.
+
+=cut
 
 sub validate_new_time {
     my ($self, $value) = @_;
@@ -121,6 +170,16 @@ sub validate_new_time {
 
     return $self->validation_ok('new_time');
 }
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp C<< hanenkamp@cpan.org >>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 Andrew Sterling Hanenkamp.
+
+=cut
 
 1;
 

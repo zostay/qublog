@@ -314,6 +314,22 @@ sub _journal_items_comment {
 
         timestamp => $self->created_on,
         content   => $self->name,
+
+        links     => [
+            {
+                label   => _('Remove'),
+                class   => 'icon delete',
+                as_link => 1,
+                onclick => {
+                    refresh => 'journal_list',
+                    confirm => _('Are you sure? This cannot be undone.'),
+                    submit  =>  new_action(
+                        class  => 'DeleteComment',
+                        record => $self,
+                    ),
+                },
+            },
+        ],
     };
 }
 

@@ -27,22 +27,26 @@ Qublog.Journal.updateActiveTimers = function() {
 
         if (summary_el.hasClass('span-running')) {
             var duration = (stop.getTime() - start.getTime()) / 3600000;
+            day_summary_total += duration;
             var new_elapsed = Qublog.Journal.formatHours(duration);
             elapsed_el.text(new_elapsed)
 
             timestamp_el.text(Qublog.Journal.formatTime(new Date()));
+        }
+        else {
+            var duration = parseFloat(summary_el.attr('elapsed_duration'));
+            day_summary_total += duration;
         }
 
         var duration_since = (stop.getTime() - load.getTime()) / 3600000;
         var new_total = total_duration + duration_since;
         total_el.text(Qublog.Journal.formatHours(new_total));
 
-        day_summary_total += new_total;
     });
 
     jQuery('.entry-stopped').each(function() {
         var summary_el = jQuery(this);
-        var total = parseFloat(summary_el.attr('total_duration'));
+        var total = parseFloat(summary_el.attr('elapsed_duration'));
         day_summary_total += total;
     });
 

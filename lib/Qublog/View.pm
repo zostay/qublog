@@ -245,9 +245,10 @@ sub _journal_items_timer {
                .' '. ($self->is_running    ? 'span-running'
                                                  : 'span-stopped'),
             attributes => {
-                start_time     => $start_time,
-                load_time      => $load_time,
-                total_duration => $total_duration,
+                start_time       => $start_time,
+                load_time        => $load_time,
+                total_duration   => $total_duration,
+                elapsed_duration => $self->hours,
             },
         },
         timestamp => $self->stop_time || Jifty::DateTime->now,

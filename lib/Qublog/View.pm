@@ -566,59 +566,6 @@ template 'journal/new_comment_entry' => sub {
 
 =head2 JOURNAL PRIVATE TEMPLATES
 
-=head3 journal/hours_summary
-
-Shows the part of each journal entry containing the current number of hours that have been accumulated for this entry.
-
-=cut
-
-private template 'journal/hours_summary' => sub {
-    my ($self, $entry_span) = @_;
-    my $journal_entry = $entry_span->journal_entry;
-
-    # Container for everything
-    div { 
-
-        # Make some handy calculations
-        my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
-        my $start_time = $entry_span->start_time->format_cldr($js_time_format);
-        my $load_time  = Jifty::DateTime->now->format_cldr($js_time_format);
-        my $total_duration = $journal_entry->hours;
-
-        # Throw some useful attributes into the top tag
-        { 
-            class is 'hours-summary'
-               .' '. ($journal_entry->is_running ? 'entry-running' 
-                                                 : 'entry-stopped')
-               .' '. ($entry_span->is_running    ? 'span-running'
-                                                 : 'span-stopped'),
-            start_time is $start_time,
-            load_time  is $load_time,
-            total_duration is $total_duration,
-        }
-
-        # Output the total duration for the current entry
-        p { { class is 'duration total' }
-            span { { class is 'number' } 
-                sprintf '%.2f', $entry_span->journal_entry->hours 
-            };
-            span { { class is 'unit' } _('hours total') };
-        };
-
-        # Output the duration elapsed for the current timer
-        p { { class is 'duration elapsed' }
-            span { { class is 'number' } sprintf '%.2f', $entry_span->hours };
-            span { { class is 'unit' } _('hours elapsed') };
-        };
-    };
-
-    div { { class is 'related-tasks' }
-        if ($entry_span->journal_entry->project->id) {
-            show '/project/project_summary', $entry_span->journal_entry->project;
-        }
-    };
-};
-
 =head3 journal/items OBJECT
 
 This is a sub-template used to display all the journal items associated with the given object.

@@ -9,8 +9,11 @@
     width: 100%;
 }
 
-.journal .item .item-content,
 .journal .item .links {
+    margin: 0 300px 0 110px;
+}
+
+.journal .item .item-content {
     margin: 0 300px 0 90px;
 }
 

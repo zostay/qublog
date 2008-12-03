@@ -171,6 +171,10 @@
     background-image: url(/images/icons/delete.png);
 }
 
+.icon.book_edit {
+    background-image: url(/images/icons/book_edit.png);
+}
+
 span.preamble.icon {
     padding-left: 0;
     background-image: none;

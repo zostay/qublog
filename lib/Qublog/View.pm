@@ -172,7 +172,20 @@ sub _journal_items_timer {
     my $load_time  = Jifty::DateTime->now->format_cldr($js_time_format);
     my $total_duration = $journal_entry->hours;
 
-    my @stop_links;
+    my @stop_links = ({
+        label   => _('Edit Info'),
+        class   => 'icon book_edit',
+        tooltip => _('Edit the journal information for this entry.'),
+        onclick => {
+            open_popup   => 1,
+            replace_with => 'journal/popup/edit_entry',
+            arguments    => {
+                entry_id => $journal_entry->id,
+                timer_id => $self->id,
+            },
+        },
+    });
+
     if ($self->is_stopped) {
         push @stop_links, {
             label   => _('Change'),
@@ -804,6 +817,48 @@ private template 'journal/item' => sub {
 }; 
 
 =head2 JOURNAL POPUPS
+
+=head3 journal/popup/edit_entry
+
+This shows a popup editor for a journal entry's information.
+
+=cut
+
+template 'journal/popup/edit_entry' => sub {
+    my $entry = get 'entry';
+
+    my $action = new_action
+        class  => 'UpdateJournalEntry',
+        record => $entry,
+        ;
+
+    render_action $action; 
+
+    popup_submit
+        label   => _("Save"),
+        onclick => [ 
+            {
+                submit      => $action,
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
+        ;
+
+    popup_submit
+        label   => _('Cancel'),
+        onclick => [
+            {
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
+        ;
+};
 
 =head3 journal/popup/change_start_stop
 

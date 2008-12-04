@@ -331,6 +331,17 @@ sub _journal_items_comment {
 
         links     => [
             {
+                label   => _('Edit'),
+                class   => 'icon comment_edit',
+                onclick => {
+                    open_popup => 1,
+                    replace_with => 'journal/popup/edit_comment',
+                    arguments    => {
+                        comment_id => $self->id,
+                    },
+                },
+            },
+            {
                 label   => _('Remove'),
                 class   => 'icon delete',
                 as_link => 1,
@@ -817,6 +828,48 @@ private template 'journal/item' => sub {
 }; 
 
 =head2 JOURNAL POPUPS
+
+=head3 journal/popup/edit_comment
+
+This shows a popup editor for a journal comment's information.
+
+=cut
+
+template 'journal/popup/edit_comment' => sub {
+    my $comment = get 'comment';
+
+    my $action = new_action
+        class  => 'UpdateComment',
+        record => $comment,
+        ;
+
+    render_action $action;
+
+    popup_submit
+        label   => _("Save"),
+        onclick => [ 
+            {
+                submit      => $action,
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
+        ;
+
+    popup_submit
+        label   => _('Cancel'),
+        onclick => [
+            {
+                close_popup => 1,
+            },
+            {
+                refresh     => 'journal_list',
+            },
+        ],
+        ;
+};
 
 =head3 journal/popup/edit_entry
 

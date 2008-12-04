@@ -83,7 +83,27 @@ on 'journal/list'              => \&parse_date;
 on 'journal/new_comment_entry' => \&parse_date;
 on 'journal/summary'           => \&parse_date;
 
+=head2 on journal/popup/edit_comment
+
+Loads the L<Qublog::Model::Comment> object needed to handle the request.
+
+=cut
+
+on 'journal/popup/edit_comment' => run {
+    my $comment_id = get 'comment_id';
+    if ($comment_id) {
+        my $comment = Qublog::Model::Comment->new;
+        $comment->load($comment_id);
+
+        set comment => $comment;
+    }
+};
+
+=head2 on journal/popup/edit_entry
+
 =head2 on journal/popup/change_start_stop
+
+=head2 on journal/popup/show_tasks
 
 Loads the L<Qublog::Model::JournalEntry> and L<Qublog::Model::JournalTimer> object needed to handle the request.
 

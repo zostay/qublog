@@ -46,6 +46,7 @@ use Qublog::Record schema {
     column journal_day =>
         references Qublog::Model::JournalDay,
         label is 'Day',
+        render as 'unrendered',
         ;
 
     column journal_timer =>
@@ -54,18 +55,17 @@ use Qublog::Record schema {
         render as 'unrendered',
         ;
 
+    column created_on =>
+        type is 'datetime',
+        label is 'Time',
+        filters are qw/ Jifty::Filter::DateTime Jifty::DBI::Filter::DateTime /,
+        ;
+
     column name =>
         type is 'text',
         label is 'Comment',
         is mandatory,
         render as 'textarea',
-        ;
-
-    column created_on =>
-        type is 'datetime',
-        label is 'Timestamp',
-        filters are qw/ Jifty::Filter::DateTime Jifty::DBI::Filter::DateTime /,
-        render as 'unrendered',
         ;
 
     column task_logs =>

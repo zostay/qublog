@@ -175,6 +175,10 @@
     background-image: url(/images/icons/book_edit.png);
 }
 
+.icon.comment_edit {
+    background-image: url(/images/icons/comment_edit.png);
+}
+
 span.preamble.icon {
     padding-left: 0;
     background-image: none;

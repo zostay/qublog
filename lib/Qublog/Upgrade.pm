@@ -11,6 +11,21 @@ Qublog::Upgrade - upgrade script for the Qublog application
 
 =head1 UPGRADES
 
+=head2 0.4.1
+
+Added a nickname flag to the L<Qublog::Model::TaskTag> class which usually defaults to 0. However, all existing task-tag relationships are nicknames. Therfore, we turn on the nickname flag for all.
+
+=cut
+
+since '0.4.1' => sub {
+    my $task_tags = Qublog::Model::TaskTagCollection->new;
+    $task_tags->unlimit;
+
+    while (my $task_tag = $task_tags->next) {
+        $task_tag->__set(nickname => 1);
+    }
+};
+
 =head2 0.4.0
 
 I didn't like how nicknames worked in 0.3.0. I'm using a less hacky solution by collapsing the Nicknames into Tags and eliminating the magic C<kind>/C<object_id> mapping used. Instead, I'm expanding to regular link tables. Eventually, I may have a nickname link table to link "reference tags" (i.e., nicknames) to the objects, but I'm not going to use a magic reference without enforcing referential integrity in the future.

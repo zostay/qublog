@@ -843,7 +843,9 @@ template 'journal/popup/edit_comment' => sub {
         record => $comment,
         ;
 
-    render_action $action;
+    render_param $action, 'created_on', 
+        default_value => format_time($comment->created_on);
+    render_param $action, 'name';
 
     popup_submit
         label   => _("Save"),

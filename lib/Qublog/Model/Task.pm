@@ -357,7 +357,7 @@ sub add_tag {
 
     # See if such a task tag exists already and clear it first
     my $task_tag = Qublog::Model::TaskTag->new;
-    $task_tag->load_by_cols( tag => $tag );
+    $task_tag->load_by_cols( tag => $tag, nickname => 1 );
     $task_tag->delete if $task_tag->id;
 
     # Now create a new one that links here
@@ -395,7 +395,9 @@ sub remove_tag {
 
 =head2 load_by_tag_name
 
-Loads the task that has the given tag name.
+=head2 load_by_nickname
+
+Loads the task that has the given nickname.
 
 =cut
 
@@ -406,6 +408,11 @@ sub load_by_tag_name {
         column1 => 'id',
         table2  => Qublog::Model::TaskTag->table,
         column2 => 'task',
+    );
+    $tasks->limit(
+        alias  => $task_tag_table,
+        column => 'nickname',
+        value  => 1,
     );
     my $task_table = $tasks->join(
         alias1  => $task_tag_table,
@@ -424,9 +431,11 @@ sub load_by_tag_name {
         return $self->load($task->id);
     }
     else {
-        return (0, "Could not find a task for the requested tag name");
+        return (0, "Could not find a task for the requested nickname");
     }
 }
+
+*load_by_nickname = *load_by_tag_name;
 
 =head1 TRIGGERS
 

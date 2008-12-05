@@ -88,6 +88,29 @@ sub before_create {
     return 1;
 }
 
+=head2 before_set_created_on
+
+Allows for time strings to be specified as just the time and makes sure time zones are consistent.
+
+=cut
+
+sub before_set_created_on {
+    my ($self, $args) = @_;
+
+    unless (ref $args->{value}) {
+        my $dt = Jifty::DateTime->new_from_string(
+            $self->journal_day->datestamp->ymd . ' ' . $args->{value}
+        );
+
+        $dt = Jifty::DateTime->new_from_string($args->{value})
+            unless $dt;
+
+        $args->{value} = $dt;
+    }
+
+    return 1;
+}
+
 =head1 METHODS
 
 =head2 since

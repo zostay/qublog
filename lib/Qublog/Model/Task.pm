@@ -4,7 +4,9 @@ use warnings;
 package Qublog::Model::Task;
 use Jifty::DBI::Schema;
 
+use DateTime::Span;
 use Jifty::DateTime;
+use Storable qw( dclone );
 
 =head1 NAME
 
@@ -436,6 +438,78 @@ sub load_by_tag_name {
 }
 
 *load_by_nickname = *load_by_tag_name;
+
+=head2 historical_values
+
+Given a L<DateTime> object, this returns a hash reference containing the values each field would have had as of that date. If the task had not yet been created yet, C<undef> is returned instead of the hash.
+
+If no L<DateTime> object is given, then the history of the object is returned. This will be a reference to an array of hashes. Each hash will also have an additional key named "span" which will be set to a L<DateTime::Span> representing the start and stop of each. The "span" of the final entry in the returned array (the latest entry) will have no end date and represent the current values.
+
+=cut
+
+sub historical_values {
+    my ($self, $date) = @_;
+    my $task_logs = $self->task_logs;
+
+    if ($date) {
+        my $utc_date = $date->clone;
+        $utc_date->set_time_zone('UTC');
+
+        $task_logs->limit( 
+            column   => 'created_on',
+            operator => '>',
+            value    => $utc_date->format_cldr('YYYY-MM-dd HH:mm:ss'),
+            entry_aggregator => 'AND',
+        );
+        $task_logs->order_by({ column => 'created_on', order => 'DES' });
+
+        my $record = { $self->as_hash };
+        while (my $task_log = $task_logs->next) {
+            my $task_changes = $task_log->task_changes;
+            while (my $task_change = $task_changes->next) {
+                $record->{ $task_change->name } = $task_change->old_value;
+            }
+        }
+
+        return $record;
+    }
+
+    else {
+        my @records;
+        $task_logs->order_by({ column => 'created_on', order => 'DES' });
+
+        my $end_date = undef;
+        my $record   = { $self->as_hash };
+
+        push @records, $record;
+        while (my $task_log = $task_logs->next) {
+            $records[-1]{span} = DateTime::Span->new(
+                start => $task_log->created_on,
+                (defined $end_date ? (before => $end_date) : ()),
+            );
+
+            # Join spans if a task log has not changes
+            my $task_changes = $task_log->task_changes;
+            next unless $task_changes->count > 0;
+
+            $end_date = $task_log->created_on;
+            $record = dclone($record);
+            
+            while (my $task_change = $task_changes->next) {
+                $record->{ $task_change->name } = $task_change->old_value;
+            }
+
+            push @records, $record;
+        }
+
+        $records[-1]{span} = DateTime::Span->new(
+            start => $self->created_on,
+            (defined $end_date ? (before => $end_date) : ()),
+        );
+
+        return [ reverse @records ];
+    }
+}
 
 =head1 TRIGGERS
 

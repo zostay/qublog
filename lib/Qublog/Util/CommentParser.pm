@@ -12,13 +12,54 @@ Qublog::Util::CommentParser - parses a bit of text and manipulates tasks
 
 =head1 SYNOPSIS
 
-  # Please add one...
+  use Qublog::Util::CommentParser;
+
+  # Setup a nice long comment.
+  $comment = <<'END_OF_COMMENT';
+  Some regular text in the comment. This /is/ generally *formatted* using 
+  Markdown.
+
+  [ ] Task 1
+  -[ ] Task 2
+  --[ ] Task 3
+ 
+  [x] Task 4
+  [!] Task 5
+  [-] Task 6
+  
+  [x] #1J3G
+  [-] #NG54: Task 7
+  [-] #4FFT: #foo: Task 8
+ 
+  #R441: I did some interesting stuff.
+  END_OF_COMMENT
+
+  # Get a comment object
+  my $comment_record = Qublog::Model::Comment->new;
+  # Load or create a $comment_record ...
+
+  # Build a parser object
+  my $parser = Qublog::Util::CommentParser->new(
+      project => $default_project,
+      text    => $comment,
+      comment => $comment_record,
+  );
+
+  # Execution Path A: "Execute" the comment to build tasks and such
+  $parser->execute;
+
+  # Only the parts needed to reference the tasks remain in the comment
+  my $new_comment = $parser->comment;
+
+  # Execution Path B: "Transform" the comment into pretty HTML
+  $parser->htmlify;
+
+  # This text has tag references transformed into HTML
+  my $htmlified = $parser->htmlify;
 
 =head1 DESCRIPTION
 
-This class encapsulates a very simple (i.e., not very smart) parser. This parser takes a string of text and tries to find references to tasks and requests to create and update tasks within the string. It then rewrites the string as appropriate for running through L<Qublog::Web/htmlify> and sets up some information about the tasks that have been manipulated.
-
-Each instance of this class should be used to parse one pieces of text and then discarded.
+This class encapsulates the comment parser. This parser takes a string of text and tries to find references to tags or task nicknames and requests to create and update tasks within the string. It then rewrites the string as appropriate for running through L</htmlify>.
 
 This class is built using L<Moose>, so you can construct it by passing the attributes as a hash to the C<new> constructor.
 

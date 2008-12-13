@@ -37,7 +37,11 @@ This parses the comment and performs the C<take_action> method call on L<Jifty::
 sub take_action {
     my $self = shift;
 
-    $self->parse_comment_and_take_actions;
+    # Process the comment into a parsed comment
+    $self->parse_comment;
+
+    # Update the comment
+    $self->SUPER::take_action;
 }
 
 =head1 AUTHOR

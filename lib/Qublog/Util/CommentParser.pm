@@ -76,57 +76,33 @@ has project => (
     isa => 'Qublog::Model::Task',
 );
 
-=head2 comment
+=head2 text
 
 B<Required>. This is the text of the comment to parse.
 
 =cut
 
-has comment => (
+has text => (
     is => 'rw',
     isa => 'Str',
     required => 1,
 );
 
-=head2 created_tasks
+=head2 comment
 
-After calling L</parse>, this will return an array of L<Qublog::Model::Task> objects that have just been created.
-
-=cut
-
-has created_tasks => (
-    is => 'rw',
-    isa => 'ArrayRef[Qublog::Model::Task]',
-    auto_deref => 1,
-);
-
-=head2 updated_tasks
-
-After calling L</parse>, this will return an array of L<Qublog::Model::Task> objects that have just been updated.
+B<Required>. This is the L<Qublog::Model::Comment> class to task log objects should be attached to.
 
 =cut
 
-has updated_tasks => (
+has comment => (
     is => 'rw',
-    isa => 'ArrayRef[Qublog::Model::Task]',
-    auto_deref => 1,
-);
-
-=head2 linked_tasks
-
-After calling L</parse>, this will return an array of L<Qublog::Model::Task> objects that were referenced in the task.
-
-=cut
-
-has linked_tasks => (
-    is => 'rw',
-    isa => 'ArrayRef[Qublog::Model::Task]',
-    auto_deref => 1,
+    isa => 'Qublog::Model::Comment',
+    required => 1,
 );
 
 =head2 tasks
 
-After calling L</parse>, this will return an array of L<Qublog::Model::Task> objects from all of the above lists of tasks, in no particular order.
+After calling L</execute>, this will return an array of L<Qublog::Model::Task> objects from all of the above lists of tasks, in no particular order.
 
 =cut
 
@@ -139,7 +115,7 @@ sub tasks {
 
 =head1 METHODS
 
-=head2 parse
+=head2 execute
 
 This performs all the interesting work in this class. This will look for strings like:
 
@@ -169,7 +145,7 @@ In the line labeled "#4FFT", the status is unchanged, but the task nickname is c
 
 In the line labeled "#R441", a from that other task to this comment should be created.
 
-As the comment is parsed, it is also rewritten in a form suitable for use with L<Qublog::Web/htmlify>. All of the creates and updates are just included as references to the ticket number.
+As the comment is parsed, it is also rewritten in a form suitable for use with L</htmlify>. All of the creates and updates are just included as references to the ticket number.
 
 =cut
 
@@ -222,18 +198,36 @@ sub _decide_parent(\@$) {
         DEFAULT: do { splice @$parent_stack, 0, $old_depth - $new_depth + 1 };
     }
 
-    return scalar(@$parent_stack) > 0 ? ($parent_stack->[0]) : (undef);
+    return (
+        scalar(@$parent_stack) > 0 ? ($parent_stack->[0]) : (undef), 
+        $new_depth
+    );
 }
 
-sub parse {
+sub _eval_tag_name {
+    my ($self, $tag) = @_;
+
+    my $task = Qublog::Model::Task->new;
+    $task->load_by_tag_name($tag);
+
+    my $task_log = Qublog::Model::TaskLog->new;
+    $task_log->create(
+        task     => $task,
+        log_type => 'note',
+        comment  => $self->comment,
+    );
+
+    return '#' . $tag . '*' . $task_log->id;
+}
+
+sub execute {
     my $self = shift;
     
-    my $original_comment = $self->comment;
+    my $original_comment = $self->text;
     open my $commentfh, '<', \$original_comment;
 
     my $new_comment  = '';
     my @parent_stack;
-    my (@created_tasks, @updated_tasks, @linked_tasks);
 
     LINE: 
     while (<$commentfh>) {
@@ -282,7 +276,8 @@ sub parse {
                 }
 
                 # Figure out who the parent should be
-                my $parent = _decide_parent(@parent_stack, $depth);
+                my $parent;
+                ($parent, $depth) = _decide_parent(@parent_stack, $depth);
 
                 # TODO warning on bad status
                 $status = $status eq '-' ? undef
@@ -314,16 +309,40 @@ sub parse {
 
                 $task = $self->_create_task($task, \%arguments);
 
+                my $task_log;
                 if ($found_task) {
-                    push @updated_tasks, $task;
+                    # Find the latest task log (just created) and link to it
+                    my $task_logs = $task->task_logs;
+                    $task_logs->limit( 
+                        column => 'log_type', 
+                        value  => 'update',
+                    );
+                    $task_logs->order_by({ 
+                        column => 'created_on', 
+                        order  => 'des',
+                    });
+                    $task_log = $task_logs->first;
+                    $task_log->set_comment( $self->comment );
                 }
                 else {
-                    push @created_tasks, $task;
+                    # Find the latest task log (just created) and link to it
+                    my $task_logs = $task->task_logs;
+                    $task_logs->limit( 
+                        column => 'log_type', 
+                        value  => 'create',
+                    );
+                    $task_logs->order_by({ 
+                        column => 'created_on', 
+                        order  => 'des',
+                    });
+                    $task_log = $task_logs->first;
+                    $task_log->set_comment( $self->comment );
                 }
 
                 unshift @parent_stack, $task;
 
-                $_ = '#'.$task->tag."  \n";
+                $_ = ("  " x $depth) . ' * #' . $task->tag 
+                   . "*" . $task_log->id . "\n";
                 last SWITCH;
             };
 
@@ -331,25 +350,53 @@ sub parse {
             @parent_stack = (); 
 
             m{#\w+} && do {
-                my @nicknames = m{#(\w+)};
-
-                for my $nickname (@nicknames) {
-                    my $task = Qublog::Model::Task->new;
-                    $task->load_by_tag_name($nickname);
-
-                    push @linked_tasks, $task if $task->id;
-                }
+                s/#(\w+)/$self->_eval_tag_name($1)/ge;
+                last SWITCH;
             };
         }
 
         $new_comment .= $_;
     }
 
-    $self->comment($new_comment);
+    $self->text($new_comment);
+}
 
-    $self->created_tasks(\@created_tasks);
-    $self->updated_tasks(\@updated_tasks);
-    $self->linked_tasks(\@linked_tasks);
+=head2 htmlify
+
+This turns all task references into HTML links. We decorate these links so that they show the status that that item held immediately after the comment was executed.
+
+=cut
+
+sub _replace_task_nicknames {
+    my ($nickname, $task_log_id) = @_;
+
+    my $log = Qublog::Model::TaskLog->new;
+    $log->load($task_log_id) if $task_log_id;
+
+    my $task = Qublog::Model::Task->new;
+    $task->load_by_tag_name($nickname);
+
+    my $old_task = $task->historical_values($log->created_on);
+
+    my $action = join ' ', 'task-reference', ($log->log_type || '');
+    my $status = join ' ', ($old_task->{task_type} || ''), 
+                           ($old_task->{status}    || '');
+
+    return '#'.$nickname unless $task->id;
+
+    my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
+    my $name = $task->name;
+    return qq{<span class="$action">}
+          .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
+}
+
+sub htmlify {
+    my $self = shift;
+    my $text = $self->text;
+
+    $text =~ s/#(\w+)(?:\*(\d+))?/_replace_task_nicknames($1, $2)/ge;
+
+    $self->text($text);
 }
 
 =head1 AUTHOR

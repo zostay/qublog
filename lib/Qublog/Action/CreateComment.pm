@@ -37,7 +37,25 @@ This creates a comment, parses the text of the comment, and then updates the com
 sub take_action {
     my $self = shift;
 
-    $self->parse_comment_and_take_actions;
+    $self->handle->begin_transaction;
+
+    eval {
+        # Create the comment record before parsing
+        $self->SUPER::take_action();
+
+        # Process the comment into a parsed comment
+        $self->parse_comment;
+
+        # Update the comment with the extra bits stripped
+        $self->record->set_comment( $self->argument_value('name') );
+    };
+
+    if ($@) {
+        $self->handle->rollback;
+        die $@;
+    }
+
+    $self->handle->commit;
 }
 
 =head1 AUTHOR

@@ -14,7 +14,7 @@ sub is_test_class {
 
     open my $pm, $file or die "cannot open $file: $!";
     PM: while (<$pm>) {
-        if (/^(?:our)?\s*$NOT_A_TEST\s*=\s*([^;]+);/) {
+        if (/^(?:our)?\s*\$NOT_A_TEST\s*=\s*([^;]+);/) {
             return if eval $1;
             die $@ if "cannot determine if $file is a test: $@";
             last PM;

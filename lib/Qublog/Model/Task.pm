@@ -692,11 +692,11 @@ sub after_set_parent {
         }
 
         if ($self->parent->task_type eq 'project') {
-            $self->__set( column => 'project', value => $self->parent );
+            $self->__set( column => 'project', value => $self->parent->id );
         }
         
         else {
-            $self->__set( column => 'project', value => $self->parent->project );
+            $self->__set( column => 'project', value => $self->parent->project->id );
         }
     }
 

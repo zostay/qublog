@@ -320,6 +320,9 @@ sub execute {
                     $task_logs->order_by({ 
                         column => 'created_on', 
                         order  => 'des',
+                    }, {
+                        column => 'id',
+                        order  => 'des',
                     });
                     $task_log = $task_logs->first;
                     $task_log->set_comment( $self->comment );
@@ -333,6 +336,9 @@ sub execute {
                     );
                     $task_logs->order_by({ 
                         column => 'created_on', 
+                        order  => 'des',
+                    }, {
+                        column => 'id',
                         order  => 'des',
                     });
                     $task_log = $task_logs->first;

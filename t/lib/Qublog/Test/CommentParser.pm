@@ -84,4 +84,17 @@ sub number_of_task_logs_is {
     return @{ $task_logs->items_array_ref };
 }
 
+sub check_comment_text {
+    my ($self, $got, $bits, $task_objs) = @_;
+
+    my $expected_text = '';
+    for my $i (0 .. $#$bits) {
+        $expected_text .= $bits->[$i] 
+                        .  '#' . $task_objs->[$i]->task->tag
+                        .  '\*' . $task_objs->[$i]->id;
+    }
+
+    like($got, qr/$expected_text/, 'comment has been rewritten');
+}
+
 1;

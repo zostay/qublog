@@ -42,23 +42,15 @@ sub comment_and_six_nested_tasks : Test(29) {
         my @task_objs = $self->number_of_task_logs_is( create => scalar @tasks);
         $self->number_of_task_logs_is( all => scalar @tasks );
 
-        my @bits = (
-            "\Q$comment\E\\s* \\*\\s*",
-            "\\s* \\*\\s*",
-            "\\s*   \\*\\s*",
-            "\\s*     \\*\\s*",
-            "\\s*   \\*\\s*",
-            "\\s*   \\*\\s*",
-        );
-
-        my $expected_text = '';
-        for my $i (0 .. $#bits) {
-            $expected_text .= $bits[$i] 
-                           .  '#' . $task_objs[$i]->task->tag
-                           .  '\*' . $task_objs[$i]->id;
-        }
-
-        like($parser->text, qr/$expected_text/, 'comment has been rewritten');
+        $self->check_comment_text(
+            $parser->text, [
+                "\Q$comment\E\\s* \\*\\s*",
+                "\\s* \\*\\s*",
+                "\\s*   \\*\\s*",
+                "\\s*     \\*\\s*",
+                "\\s*   \\*\\s*",
+                "\\s*   \\*\\s*",
+            ], \@task_objs);
 
         is($task_objs[0]->task->status, 'open', 'open task');
         is($task_objs[0]->task->name, 'Task 1', 'comment Task 1');

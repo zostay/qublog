@@ -7,7 +7,7 @@ use base qw( Qublog::Test::CommentParser );
 
 use Test::More;
 
-sub three_more_complex_tests : Test(17) {
+sub three_more_complex_tasks : Test(17) {
     my $self = shift;
 
     my $project = $self->{project};
@@ -15,7 +15,7 @@ sub three_more_complex_tests : Test(17) {
     my $comment = qq/This is a test.\n\n/;
     my @tasks   = (
         qq/[x] Create a done task/,
-        qq/ [!]   #testing: Create a nixed task/,
+        qq/ [!]   #multiple: Create a nixed task/,
         qq/[-] Create a task without a specified status /,
     );
     my $joined_tasks = join "\n", @tasks;

@@ -364,8 +364,9 @@ sub add_tag {
 
     # Now create a new one that links here
     $task_tag->create(
-        task => $self,
-        tag  => $tag,
+        task     => $self,
+        tag      => $tag,
+        nickname => 1,
     );
 
     return $tag;

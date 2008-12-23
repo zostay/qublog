@@ -4,6 +4,8 @@ use warnings;
 package Qublog::Test::CommentParser;
 use base qw( Test::Class );
 
+INIT { Test::Class->runtests }
+
 use Jifty::Everything;
 use Jifty::Test;
 

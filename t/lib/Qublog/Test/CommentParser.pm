@@ -89,9 +89,17 @@ sub check_comment_text {
 
     my $expected_text = '';
     for my $i (0 .. $#$bits) {
-        $expected_text .= $bits->[$i] 
-                        .  '#' . $task_objs->[$i]->task->tag
-                        .  '\*' . $task_objs->[$i]->id;
+
+        # If given as an array, skip the nickname
+        if (ref $bits->[$i]) {
+            $expected_text .= $bits->[$i][0]
+                            .  '\*' . $task_objs->[$i]->id;
+        }
+        else {
+            $expected_text .= $bits->[$i] 
+                            .  '#' . $task_objs->[$i]->task->tag
+                            .  '\*' . $task_objs->[$i]->id;
+        }
     }
 
     like($got, qr/$expected_text/, 'comment has been rewritten');

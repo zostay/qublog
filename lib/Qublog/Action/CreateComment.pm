@@ -47,7 +47,7 @@ sub take_action {
         $self->parse_comment;
 
         # Update the comment with the extra bits stripped
-        $self->record->set_comment( $self->argument_value('name') );
+        $self->record->set_name( $self->argument_value('name') );
     };
 
     if ($@) {

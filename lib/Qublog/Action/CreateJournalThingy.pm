@@ -94,6 +94,8 @@ sub take_task_action {
                     $self->argument_value('task_entry'))
             );
         };
+
+        if ($@) { $self->log->error($@) }
     }
 
     # Create a new task

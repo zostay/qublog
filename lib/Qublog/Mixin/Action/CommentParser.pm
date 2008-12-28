@@ -6,7 +6,7 @@ package Qublog::Mixin::Action::CommentParser;
 require Exporter;
 our @ISA = qw/ Exporter /;
 
-our @EXPORT = qw/ parse_comment_and_take_actions journal_timer /;
+our @EXPORT = qw/ parse_comment journal_timer /;
 
 use Qublog::Util::CommentParser;
 use Scalar::Util qw/ looks_like_number reftype /;
@@ -70,10 +70,10 @@ sub parse_comment {
         text    => $unparsed_comment,
         comment => $self->record,
     );
-    $parser->parse;
+    $parser->execute;
 
     # Update the comment with the extra bits stripped
-    $self->argument_value( name => $parser->comment );
+    $self->argument_value( name => $parser->text );
 
     # Link the project to the comment
     if ($project->id) {

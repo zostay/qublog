@@ -37,7 +37,7 @@ This creates a comment, parses the text of the comment, and then updates the com
 sub take_action {
     my $self = shift;
 
-    $self->handle->begin_transaction;
+    Jifty->handle->begin_transaction;
 
     eval {
         # Create the comment record before parsing
@@ -51,11 +51,11 @@ sub take_action {
     };
 
     if ($@) {
-        $self->handle->rollback;
+        Jifty->handle->rollback;
         die $@;
     }
 
-    $self->handle->commit;
+    Jifty->handle->commit;
 }
 
 =head1 AUTHOR

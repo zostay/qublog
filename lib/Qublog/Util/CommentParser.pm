@@ -226,7 +226,7 @@ sub parse {
                 # Load the existing task if we can
                 my $found_task;
                 my $task = Qublog::Model::Task->new;
-                if (not $force_new and defined $nick and (length $nick > 1)) {
+                if (not $force_new and defined $nick and (length $nick > 0)) {
                     $task->load_by_tag_name($nick);
                     $found_task = $task->id;
                 }

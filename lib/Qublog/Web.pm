@@ -34,8 +34,6 @@ Qublog::Web - Helper subroutines for use in views
 
 =head2 htmlify TEXT
 
-=head2 htmlify TEXT, LOGS
-
 Given a string, it uses L<Text::Markdown> to convert it into HTML, which is returned.
 
 Prior to doing that, it also does some other things:
@@ -52,7 +50,7 @@ The optional second argument provides some context. This should be a L<Qublog::M
 
 =cut
 
-sub htmlify($;$) {
+sub htmlify($) {
     my ($scalar) = @_;
 
     my $parser = Qublog::Util::CommentParser->new( 

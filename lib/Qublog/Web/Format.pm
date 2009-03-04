@@ -118,7 +118,7 @@ This is a L<Qublog::Model::TaskLogCollection> object.
 
 sub htmlify {
     my ($scalar, $options) = @_;
-    return Qublog::Web::htmlify($scalar, $options->{logs});
+    return Qublog::Web::htmlify($scalar);
 }
 
 =head2 time

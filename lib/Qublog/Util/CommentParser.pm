@@ -97,7 +97,6 @@ B<Required>. This is the L<Qublog::Model::Comment> class to task log objects sho
 has comment => (
     is => 'rw',
     isa => 'Qublog::Model::Comment',
-    required => 1,
 );
 
 =head2 tasks
@@ -382,13 +381,13 @@ sub _replace_task_nicknames {
     my $task = Qublog::Model::Task->new;
     $task->load_by_tag_name($nickname);
 
+    return '#'.$nickname unless $task->id;
+
     my $old_task = $task->historical_values($log->created_on);
 
     my $action = join ' ', 'task-reference', ($log->log_type || '');
     my $status = join ' ', ($old_task->{task_type} || ''), 
                            ($old_task->{status}    || '');
-
-    return '#'.$nickname unless $task->id;
 
     my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
     my $name = $task->name;

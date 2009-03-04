@@ -381,7 +381,9 @@ sub _replace_task_nicknames {
     my $task = Qublog::Model::Task->new;
     $task->load_by_tag_name($nickname);
 
-    return '#'.$nickname unless $task->id;
+    return '#'.$nickname 
+        if not $task->id
+            or $log->task->id != $task->id;
 
     my $old_task = $task->historical_values($log->created_on);
 

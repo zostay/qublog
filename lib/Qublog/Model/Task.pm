@@ -608,9 +608,10 @@ sub after_create {
     # Now add the task tag link
     my $task_tag = Qublog::Model::TaskTag->new;
     $task_tag->create(
-        task   => $self,
-        tag    => $tag,
-        sticky => 1,
+        task     => $self,
+        tag      => $tag,
+        sticky   => 1,
+        nickname => 1,
     );
 
     # Make sure loading continues

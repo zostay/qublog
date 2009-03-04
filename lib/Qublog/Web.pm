@@ -80,8 +80,15 @@ Returns the date in a pretty format.
 =cut
 
 sub format_date($) {
-    my $date = Jifty::DateTime->from_epoch( epoch => shift->epoch );
-    my $now  = Jifty::DateTime->now;
+    my $date = shift;
+    $date = Jifty::DateTime->new( 
+        year      => $date->year,
+        month     => $date->month,
+        day       => $date->day,
+        time_zone => $date->time_zone,
+    ) unless $date->isa('Jifty::DateTime');
+
+    my $now  = Jifty::DateTime->now( time_zone => $date->time_zone );
 
     my $date_str = $date->friendly_date;
     if ($date_str =~ /^\d\d\d\d-\d\d-\d\d$/) {

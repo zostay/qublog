@@ -104,14 +104,14 @@ Qublog.Journal.handleEnter = function(event) {
     // If Enter pressed, we want to do something
     if (event.keyCode == 13) {
         
-        // With the shift key, make sure the textarea gets a return
-        if (event.shiftKey) {
-            jQuery(this).append(document.createTextNode("\n"));
+        // With the shift key, click the button
+        if (event.shiftKey && Jifty.Form.Element.clickDefaultButton(event.target)) {
+            event.preventDefault();
         }
 
-        // By itself, click the button
-        else if (Jifty.Form.Element.clickDefaultButton(event.target)) {
-            event.preventDefault();
+        // By itself, make sure the textarea gets a return
+        else {
+            jQuery(this).append(document.createTextNode("\n"));
         }
     }
 };

@@ -54,9 +54,9 @@ This is the options to pass to the format. See the L</FORMATS> below for informa
 
 Here are some examples:
 
-  my $html_text   = format($text, [ 'htmlify' ]);
-  my $pretty_date = format($datetime, [ 'date', 'p' ]);
-  my $links       = format(\@links, [ 
+  my $html_text   = apply_format($text, [ 'htmlify' ]);
+  my $pretty_date = apply_format($datetime, [ 'date', 'p' ]);
+  my $links       = apply_format(\@links, [ 
       'links', 
       { 
           format  => 'wrap', 
@@ -118,7 +118,7 @@ This is a L<Qublog::Model::TaskLogCollection> object.
 
 sub htmlify {
     my ($scalar, $options) = @_;
-    return Qublog::Web::htmlify($scalar, $options->{logs});
+    return Qublog::Web::htmlify($scalar);
 }
 
 =head2 time

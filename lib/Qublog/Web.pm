@@ -34,8 +34,6 @@ Qublog::Web - Helper subroutines for use in views
 
 =head2 htmlify TEXT
 
-=head2 htmlify TEXT, LOGS
-
 Given a string, it uses L<Text::Markdown> to convert it into HTML, which is returned.
 
 Prior to doing that, it also does some other things:
@@ -52,45 +50,15 @@ The optional second argument provides some context. This should be a L<Qublog::M
 
 =cut
 
-sub _replace_task_nicknames {
-    my ($nickname, $action, $status) = @_;
-    $action   = join ' ', 'task-reference', ($action || '');
-    $status ||= '';
+sub htmlify($) {
+    my ($scalar) = @_;
 
-    my $task = Qublog::Model::Task->new;
-    $task->load_by_tag_name($nickname);
+    my $parser = Qublog::Util::CommentParser->new( 
+        text      => $scalar,
+    );
+    $parser->htmlify;
 
-    return '#'.$nickname unless $task->id;
-
-    my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
-    my $name = $task->name;
-    return qq{<span class="$action">}
-          .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
-}
-
-sub _load_annotations($) {
-    my $logs = shift;
-
-    my %annotations;
-    while (my $log = $logs->next) {
-        my $task     = $log->task;
-        my $nickname = $task->tag;
-
-        $annotations{ $nickname } 
-            = [ $log->log_type, join ' ', $task->task_type, $task->status ];
-    }
-
-    return %annotations;
-}
-
-sub htmlify($;$) {
-    my ($text, $logs) = @_;
-
-    my %annotations = _load_annotations($logs) if defined $logs;
-
-    $text =~ s/#(\w+)/_replace_task_nicknames($1, @{ $annotations{$1} })/ge;
-
-    return typography(markdown($text));
+    return typography(markdown($parser->text));
 }
 
 =head2 format_time DATETIME

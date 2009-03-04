@@ -6,7 +6,7 @@ package Qublog::Mixin::Action::CommentParser;
 require Exporter;
 our @ISA = qw/ Exporter /;
 
-our @EXPORT = qw/ parse_comment_and_take_actions journal_timer /;
+our @EXPORT = qw/ parse_comment journal_timer /;
 
 use Qublog::Util::CommentParser;
 use Scalar::Util qw/ looks_like_number reftype /;
@@ -51,13 +51,13 @@ sub journal_timer {
     return Qublog::Model::JournalTimer->new;
 }
 
-=head2 parse_comment_and_take_actions
+=head2 parse_comment
 
-This performs the actual work of linking the comment to the current timer/entry project and attaching it to the various tasks that are referenced in the comment.
+This uses L<Qublog::Util::CommentParser> to process the C<name> argument into a parsed comment.
 
 =cut
 
-sub parse_comment_and_take_actions {
+sub parse_comment {
     my $self    = shift;
 
     # Load a project if we can; might be a dead object
@@ -67,53 +67,19 @@ sub parse_comment_and_take_actions {
     my $unparsed_comment = $self->argument_value('name');
     my $parser = Qublog::Util::CommentParser->new( 
         project => $project,
-        comment => $unparsed_comment,
+        text    => $unparsed_comment,
+        comment => $self->record,
     );
-    $parser->parse;
+    $parser->execute;
 
     # Update the comment with the extra bits stripped
-    $self->argument_value( name => $parser->comment );
-
-    # Create the comment
-    my $caller = caller 0;
-    my $take_action = $caller . '::SUPER::take_action';
-    $self->$take_action();
+    $self->argument_value( name => $parser->text );
 
     # Link the project to the comment
     if ($project->id) {
         my $task_log = Qublog::Model::TaskLog->new;
         $task_log->create(
             task     => $project,
-            log_type => 'note',
-            comment  => $self->record,
-        );
-    }
-
-    # Handle any tasks that were included in the original comment
-    for my $task ($parser->created_tasks) {
-
-        # Find the latest task log (just created) and link to it
-        my $task_logs = $task->task_logs;
-        $task_logs->limit( column => 'log_type', value => 'create' );
-        $task_logs->order_by({ column => 'created_on', order => 'des' });
-        my $task_log = $task_logs->first;
-        $task_log->set_comment( $self->record );
-    }
-
-    for my $task ($parser->updated_tasks) {
-
-        # Find the latest task log (just created) and link to it
-        my $task_logs = $task->task_logs;
-        $task_logs->limit( column => 'log_type', value => 'update' );
-        $task_logs->order_by({ column => 'created_on', order => 'des' });
-        my $task_log = $task_logs->first;
-        $task_log->set_comment( $self->record );
-    }
-
-    for my $task ($parser->linked_tasks) {
-        my $task_log = Qublog::Model::TaskLog->new;
-        $task_log->create(
-            task     => $task,
             log_type => 'note',
             comment  => $self->record,
         );

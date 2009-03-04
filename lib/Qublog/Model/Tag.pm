@@ -62,6 +62,21 @@ This has been part of the application since database version 0.3.1.
 
 sub since { '0.3.1' }
 
+=head2 task
+
+If this tag is used as a nickname for a task. This returns that task or C<undef> if none is found.
+
+=cut
+
+sub task {
+    my $self = shift;
+
+    my $tasks = Qublog::Model::TaskTagCollection->new;
+    $tasks->limit( tag => $self );
+    $tasks->limit( nickname => 1 );
+    return $tasks->first;
+}
+
 =head1 INTERNAL HELPERS
 
 These are not intended to have any user-serviceable parts and are for the internal use of this class.

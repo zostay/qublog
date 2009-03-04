@@ -38,6 +38,10 @@ This determines whether or not this link is "sticky." A sticky tag applied to a 
 
 See L</delete>.
 
+=head2 nickname
+
+There are two kinds of tag relationships a tag may have with a task: nickname or topic. A nickname is a tag name that is used to refer to a specific task. A topic tag is just a way of categorizing a task. A given tag may only be used as a nickname once, but a given task may have multiple nicknames. A tag that is used as a nickname may also be used as a topic tag on other tasks.
+
 =cut
 
 use Qublog::Record schema {
@@ -62,6 +66,15 @@ use Qublog::Record schema {
         default is 0,
         is mandatory,
         is immutable,
+        ;
+
+    column nickname =>
+        type is 'boolean',
+        label is 'Nickname?',
+        default is 0,
+        is mandatory,
+        is immutable,
+        since '0.4.1',
         ;
 };
 
@@ -97,6 +110,32 @@ sub delete {
         if $self->sticky and not $params{force};
 
     return $self->SUPER::delete;
+}
+
+=head1 TRIGGERS
+
+=head2 before_create
+
+Fail if trying to create a nickname tag if that tag is already used as a nickname.
+
+=cut
+
+sub before_create {
+    my ($self, $args) = @_;
+
+    if ($args->{nickname} and $args->{tag}) {
+        my $tag;
+        if (ref $args->{tag}) {
+            $tag = $args->{tag};
+        }
+        else {
+            $tag = Qublog::Model::Tag->new;
+            $tag->load($args->{tag});
+            return '' if $tag->task;
+        }
+    }
+
+    return 1;
 }
 
 =head1 AUTHOR

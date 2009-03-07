@@ -122,7 +122,9 @@ jQuery(document).ready(function() {
 
 Behaviour.register({
     'textarea.argument-name': function(e) {
-        jQuery(e).autogrow();
+        jQuery(e).keypress(Qublog.Journal.handleEnter)
+                 .autogrow()
+                 .focus();
     },
     'textarea.argument-comment': function(e) {
         jQuery(e).keypress(Qublog.Journal.handleEnter)

@@ -1380,7 +1380,11 @@ private template 'project/project_summary' => sub {
 
     ul { { class is 'project-summary' }
         while (my $task = $tasks->next) {
-            li { { id is 'summary-'.$task->tag, class is 'subject' }
+            li { 
+                { 
+                    id is 'summary-'.$task->tag, 
+                    class is 'subject '.$task->task_type,
+                }
                 span { { class is 'nickname' }
                     '#'.$task->tag.':'
                 };

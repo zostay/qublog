@@ -79,6 +79,30 @@
     background-color: #eee;
 }
 
+/*** Journal Project Summary ***/
+
+.project-summary .subject.project {
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-image: url(/images/icons/briefcase.png);
+}
+
+.project-summary .subject.group {
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-image: url(/images/icons/folder_lightbulb.png);
+}
+
+.project-summary .subject.action {
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-image: url(/images/icons/lightbulb.png);
+}
+
+
 /*** Journal Comment Style ***/
 
 .free-comment {

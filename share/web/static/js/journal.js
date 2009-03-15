@@ -121,6 +121,11 @@ jQuery(document).ready(function() {
 });
 
 Behaviour.register({
+    'input.argument-date': function(e) {
+        jQuery(e).change(function(event) {
+            Jifty.Form.Element.clickDefaultButton(event.target);
+        });
+    },
     'textarea.argument-name': function(e) {
         jQuery(e).keypress(Qublog.Journal.handleEnter)
                  .autogrow()

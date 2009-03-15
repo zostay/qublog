@@ -535,6 +535,7 @@ template 'journal/list' => sub {
     div { { id is 'goto_date' }
         form {
             my $go_to_date = new_action class => 'GoToDate';
+            $go_to_date->argument_value( date => $day->datestamp );
             render_action $go_to_date;
             form_submit
                 label  => _('Go'),

@@ -1,6 +1,6 @@
 --- 
 framework: 
-  AdminMode: 1
+  AdminMode: 0
   ApplicationClass: Qublog
   ApplicationName: Qublog
   ApplicationUUID: 79CA768A-3C86-11DD-AF3C-232A75D5E9C0
@@ -35,7 +35,7 @@ framework:
   PubSub: 
     Backend: Memcached
     Enable: ~
-  SkipAccessControl: 0
+  SkipAccessControl: 1
   TemplateClass: Qublog::View
   View: 
     FallbackHandler: Jifty::View::Mason::Handler

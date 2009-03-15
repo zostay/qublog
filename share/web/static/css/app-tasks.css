@@ -27,19 +27,27 @@
     border-top: 1px solid #333;
     border-bottom: 1px solid #333;
 
-    padding: 0 0.5em;
+    padding: 0 25px;
+
+    background-repeat: no-repeat;
+    background-position: 3px center;
+    background-image: url(/images/icons/briefcase.png);
 }
 
 .task h3.subject {
     font-weight: bold;
 
-    display: list-item;
-    list-style-type: disc;
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+    background-image: url(/images/icons/folder_lightbulb.png);
 }
 
 .task h4.subject {
-    display: list-item;
-    list-style-type: circle;
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+    background-image: url(/images/icons/lightbulb.png);
 }
 
 .subject p {
@@ -95,4 +103,20 @@ h2.subject.hoverbox {
 
 .project-view .text {
     width: 100%;
+}
+
+.icon.open {
+    background-image: url(/images/icons/door_open.png);
+}
+
+.icon.done {
+    background-image: url(/images/icons/tick.png);
+}
+
+.icon.edit {
+    background-image: url(/images/icons/pencil.png);
+}
+
+.icon.nix {
+    background-image: url(/images/icons/cross.png);
 }

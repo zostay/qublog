@@ -456,7 +456,7 @@ template 'journal/summary' => sub {
 
     my $quitting_time;
     my $is_today = $day->is_today;
-    if ($is_today) {
+    if ($is_today and $hours_left > 0) {
         my $planned_duration = DateTime::Duration->new( hours => $hours_left );
 
         $quitting_time = Jifty::DateTime->now + $planned_duration;

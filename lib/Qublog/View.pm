@@ -1303,7 +1303,7 @@ private template 'project/view_task' => sub {
                         hyperlink
                             label   => $label,
                             tooltip => _("%1 this task", $label),
-                            class   => "icon-only $status",
+                            class   => "icon only $status",
                             as_link => 1,
                             onclick => {
                                 refresh      => Jifty->web->current_region->parent,
@@ -1329,7 +1329,7 @@ private template 'project/view_task' => sub {
                 hyperlink(
                     label   => _('Edit'),
                     tooltip => _('Edit this task'),
-                    class   => 'icon-only edit',
+                    class   => 'icon only edit',
                     url     => '/project/edit/'.$task->tag
                 );
             }

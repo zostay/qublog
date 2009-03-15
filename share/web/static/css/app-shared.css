@@ -1,9 +1,37 @@
 body {
     font-family: Optima;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
 
 pre {
     overflow: auto;
 }
 
+#salutation {
+    position: absolute;
+    right: 1em;
+    z-index: 100;
+    color: #ccc;
+}
+
+div#navigation {
+    width: 100%;
+    height: auto;
+}
+
+div#navigation ul {
+    width: 100%;
+}
+
+#content h1 {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#content h1.title {
+    margin: 0 0 5px 0;
+    padding: 0 10px;
+    background-color: #ccc;
+}

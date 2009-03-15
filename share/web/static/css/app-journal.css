@@ -1,3 +1,80 @@
+/*** Journal Day Form ***/
+
+#goto_date {
+    position: absolute;
+    top: 25px;
+    right: 15px;
+}
+
+#goto_date div.argument-date {
+    float: left;
+    clear: none;
+}
+
+#goto_date label.argument-date {
+    width: auto;
+}
+
+#goto_date input.date {
+    width: 15em;
+}
+
+#goto_date div.submit_button {
+    float: left;
+    clear: none;
+}
+
+#goto_date input.button {
+    float: left;
+    clear: none;
+}
+
+/*** Journal Entry Form ***/
+
+.new_comment_entry {
+    position: relative;
+}
+
+.new_comment_entry div.argument-task_entry {
+    margin: 0 300px 0 110px;
+
+}
+
+.new_comment_entry div.argument-task_entry label.argument-task_entry {
+    margin: 0;
+    padding: 0 3px 0 0;
+    width: auto;
+}
+
+.new_comment_entry input.argument-task_entry {
+    font-family: Optima;
+}
+
+.new_comment_entry div.argument-comment {
+    margin: 0 300px 0 90px;
+    padding-top: 0;
+    padding-left: 20px;
+    background-image: url(/images/icons/comment_add.png);
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+}
+
+.new_comment_entry label.argument-comment {
+    display: none;
+}
+
+.new_comment_entry textarea.argument-comment {
+    width: 100%;
+    font-family: Optima;
+    min-height: 1em;
+}
+
+input.new_comment_entry_submit {
+    position: absolute;
+    right: 300px;
+    top: 0px;
+}
+
 /*** Journal Item Basic Layout ***/
 
 .journal .item {

@@ -196,42 +196,42 @@ input.new_comment_entry_submit {
 .task-reference.create {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/add.png);
 }
 
 .task-reference.update {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/pencil.png);
 }
 
 .task-reference.note {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/link.png);
 }
 
 .task-reference .project {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/briefcase.png);
 }
 
 .task-reference .group {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/folder_lightbulb.png);
 }
 
 .task-reference .action {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/lightbulb.png);
 }
 
@@ -255,7 +255,7 @@ input.new_comment_entry_submit {
 .icon {
     padding-left: 18px;
     background-repeat: no-repeat;
-    background-attachment: 1px 1px;
+    background-position: 1px 1px;
     background-image: url(/images/icons/shading.png);
 }
 

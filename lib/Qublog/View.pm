@@ -481,6 +481,7 @@ template 'journal/summary' => sub {
                     format_time $quitting_time;
                 };
             },
+            icon    => 'clock',
             format  => [ 
                 {
                     format  =>  'p',

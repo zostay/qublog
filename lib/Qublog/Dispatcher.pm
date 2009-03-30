@@ -29,6 +29,29 @@ before '**' => run {
     Jifty->api->allow('GoToDate'); 
 };
 
+=head2 on **
+
+Makes sure there's a registered user available and starts the login process if
+login is required.
+
+=cut
+
+on '**' => run {
+    my $path = $1;
+    next_rule if $path =~ m[^user/];
+
+    my $users = Qublog::Model::UserCollection->new;
+    $users->unlimit;
+    if ($users->count_all == 0) {
+        tangent '/user/register';
+    }
+
+    my $current_user = Jifty->web->current_user;
+    if (not $current_user->id) {
+        tangent '/user/login';
+    }
+};
+
 =head2 on ''
 
 =head2 on index

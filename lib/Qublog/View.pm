@@ -1403,6 +1403,63 @@ private template 'project/project_summary' => sub {
     };
 };
 
+=head2 USER PAGES
+
+=head3 user/register
+
+This is the new user registration page.
+
+=cut
+
+template 'user/register' => page {
+    title is _('New User Registration');
+
+    p { 
+        outs_raw _(q{
+            Before using Qublog, you must register a user account. Please fill
+            in the form below and click <strong>Register</strong> when finished.
+        });
+    };
+
+    form {
+        my $register = new_action 'CreateUser';
+        render_param $register, 'name';
+        render_param $register, 'email';
+        render_param $register, 'password';
+        render_param $register, 'password_confirm', label => _('Type again');
+        form_return
+            label  => _('Register'),
+            submit => $register,
+            ;
+    };
+};
+
+=head3 user/login
+
+This is the user login page.
+
+=cut
+
+template 'user/login' => page {
+    title is 'Login';
+
+    form {
+        my $login = new_action 'Login';
+        render_action $login;
+        form_return
+            label  => _('Login'),
+            submit => $login,
+            ;
+    };
+
+    p {
+        tangent
+            url   => '/user/register',
+            label => _(q{Don't have an account? Register for one.}),
+            ;
+    };
+};
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>

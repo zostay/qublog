@@ -4,14 +4,18 @@ use warnings;
 package Qublog::CurrentUser;
 use base qw/ Jifty::CurrentUser /;
 
-sub user_object { 'Qublog::CurrentUser::SingleUser' }
+sub _init {
+    my $self = shift;
+    my %args = @_;
 
-package Qublog::CurrentUser::SingleUser;
+    if (keys %args) {
+        my $user = Qublog::Model::User->new( current_user => $self );
+        $user->load_by_cols(%args);
+        
+        $self->user_object($user);
+    }
 
-sub id { 1 }
-
-sub brief_description { 'me' }
-
-sub time_zone { 'local' }
+    return 1;
+}
 
 1;

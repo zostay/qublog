@@ -60,3 +60,6 @@ framework:
 
 application:
   none_project_name: none
+
+  salt_hash:
+    digest: SHA-512

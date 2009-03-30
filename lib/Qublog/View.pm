@@ -555,7 +555,7 @@ template 'journal/list' => sub {
     show './items', $day;
 };
 
-=head2 journal/new_comment_entry
+=head3 journal/new_comment_entry
 
 Creates new comments, tasks, timers, and entries as determined by the user's input.
 
@@ -966,7 +966,7 @@ template 'journal/popup/change_start_stop' => sub {
         ;
 };
 
-=head2 journal/popup/show_tasks
+=head3 journal/popup/show_tasks
 
 Shows the tasks for a given journal entry.
 

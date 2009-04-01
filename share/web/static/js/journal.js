@@ -138,6 +138,7 @@ Behaviour.register({
     },
     'input.argument-task_entry': function(e) {
         jQuery(e).change(Qublog.Journal.updateJournalThingyButton);
+        jQuery(e).focus(function() { jQuery(this).select() });
     },
     'div.item': function(e) {
         jQuery('.links', e).css({ visibility: 'hidden' });

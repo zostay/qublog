@@ -22,8 +22,20 @@ before '**' => run {
     # Configure the navigation menu
     my $top = Jifty->web->navigation;
 
-    $top->child( Tasks => url        => '/project',
-                          sort_order => 10 );
+    $top->child( Home   => url        => '/journal',
+                            sort_order => 0 );
+
+    if (Jifty->web->current_user->id) {
+        $top->child( Tasks    => url        => '/project',
+                                 sort_order => 10 );
+        $top->child( Logout   => url        => '/logout',
+                                 sort_order => 999 );
+    }
+
+    else {
+        $top->child( Register => url        => '/user/register',
+                                 sort_order => 10 );
+    }
 
     # Allow some actions
     Jifty->api->allow('GoToDate'); 

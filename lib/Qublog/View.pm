@@ -1430,6 +1430,7 @@ template 'user/register' => page {
         form_return
             label  => _('Register'),
             submit => $register,
+            to     => '/journal',
             ;
     };
 };

@@ -204,6 +204,19 @@ on 'journal/thingy_button' => run {
     last_rule;
 };
 
+=head2 on logout
+
+Logout.
+
+=cut
+
+on 'logout' => run {
+    my $logout = Jifty->web->new_action('Logout');
+    $logout->run;
+
+    redirect '/';
+};
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>

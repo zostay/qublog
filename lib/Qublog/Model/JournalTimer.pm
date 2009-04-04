@@ -67,8 +67,17 @@ This class was added in 0.1.2.
 
 =cut
 
-# Your model-specific methods go here.
 sub since { '0.1.2' }
+
+=head2 owner
+
+The owner of this timer is the same as the parent entry.
+
+=cut
+
+sub owner {
+    return shift->journal_entry->owner;
+}
 
 =head2 hours [ stopped_only => 1 ]
 

@@ -76,6 +76,16 @@ This class was added with the 0.1.4 database revision.
 
 sub since { '0.1.4' }
 
+=head2 owner
+
+This change has the same owner as the task log it belongs to.
+
+=cut
+
+sub owner {
+    shift->task_log->owner;
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>

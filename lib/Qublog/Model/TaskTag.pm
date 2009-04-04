@@ -88,6 +88,16 @@ This was added with database versio 0.4.0.
 
 sub since { '0.4.0' }
 
+=head2 owner
+
+This has the same owner as the task to which it belongs.
+
+=cut
+
+sub owner {
+    shift->task->owner;
+}
+
 =head2 delete
 
   my $task_tag = Qublog::Model::TaskTag->new;

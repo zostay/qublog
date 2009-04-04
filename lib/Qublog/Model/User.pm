@@ -67,6 +67,18 @@ This class was added in schema version 0.5.0.
 
 sub since { '0.5.0' }
 
+=head2 current_user_can
+
+The user can. Everyone else can't.
+
+=cut
+
+sub current_user_can {
+    my $self = shift;
+    return 1 if $self->id = Jifty->web->current_user->id;
+    return $self->SUPER::current_user_can(@_);
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>

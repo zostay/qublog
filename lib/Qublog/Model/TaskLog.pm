@@ -108,8 +108,19 @@ This model was added with the 0.1.4 database revision.
 
 =cut
 
-# Your model-specific methods go here.
 sub since { '0.1.4' }
+
+=head2 current_user_can
+
+The owner can. Everyone else can't.
+
+=cut
+
+sub current_user_can {
+    my $self = shift;
+    return 1 if $self->owner->id = Jifty->web->current_user->id;
+    return $self->SUPER::current_user_can(@_);
+}
 
 =head1 TRIGGERS
 

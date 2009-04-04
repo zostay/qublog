@@ -121,6 +121,14 @@ sub after_create {
     return 1;
 }
 
+=head2 current_user_can
+
+Everyone can.
+
+=cut
+
+sub current_user_can { 1 }
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>

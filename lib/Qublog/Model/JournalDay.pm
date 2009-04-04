@@ -130,6 +130,14 @@ sub is_today {
     return $self->datestamp->ymd eq Jifty::DateTime->today->ymd;
 }
 
+=head2 current_user_can
+
+Everyone can.
+
+=cut
+
+sub current_user_can { 1 }
+
 =head1 TRIGGERS
 
 =head2 before_create

@@ -72,6 +72,8 @@ use Qublog::Record schema {
         references Qublog::Model::TaskLogCollection by 'comment';
 };
 
+use Qublog::Mixin::Model::HasOwner;
+
 =head1 TRIGGERS
 
 =head2 before_create

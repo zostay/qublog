@@ -178,6 +178,8 @@ use Qublog::Record schema {
 
 };
 
+use Qublog::Mixin::Model::HasOwner;
+
 =head1 METHODS
 
 =head2 since

@@ -123,6 +123,8 @@ use Qublog::TimedRecord schema {
         references Qublog::Model::CommentCollection by 'journal_entry';
 };
 
+use Qublog::Mixin::Model::HasOwner;
+
 =head1 TRIGGERS
 
 =head2 before_create

@@ -98,6 +98,8 @@ use Qublog::Record schema {
         references Qublog::Model::TaskChangeCollection by 'task_log';
 };
 
+use Qublog::Mixin::Model::HasOwner;
+
 =head1 METHODS
 
 =head2 since

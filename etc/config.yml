@@ -35,7 +35,7 @@ framework:
   PubSub: 
     Backend: Memcached
     Enable: ~
-  SkipAccessControl: 1
+  SkipAccessControl: 0
   TemplateClass: Qublog::View
   View: 
     FallbackHandler: Jifty::View::Mason::Handler

@@ -285,7 +285,8 @@ The owner can. Everyone else can't.
 
 sub current_user_can {
     my $self = shift;
-    return 1 if $self->owner->id == Jifty->web->current_user->id;
+    return 1 if defined Jifty->web->current_user->id
+            and $self->owner->id == Jifty->web->current_user->id;
     return $self->SUPER::current_user_can(@_);
 }
 

@@ -84,6 +84,11 @@ sub _journal_items_day {
         column => 'journal_day',
         value  => $self->id,
     );
+    $timers->limit(
+        alias  => $entry_alias,
+        column => 'owner',
+        value  => Jifty->web->current_user->id,
+    );
     $timers->order_by({ column => 'start_time' });
 
     while (my $timer = $timers->next) {
@@ -1155,7 +1160,10 @@ template 'project/list_tasks' => sub {
 
     # Load all the tasks
     my $tasks = Qublog::Model::TaskCollection->new;
-    $tasks->unlimit;
+    $tasks->limit(
+        column => 'owner',
+        value  => Jifty->web->current_user->id,
+    );
 
     # Limit by parent ID, if requested
     $tasks->limit(

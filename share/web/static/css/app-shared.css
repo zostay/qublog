@@ -13,7 +13,7 @@ pre {
     position: absolute;
     right: 1em;
     z-index: 100;
-    color: #ccc;
+    color: #333;
 }
 
 div#navigation {
@@ -24,6 +24,35 @@ div#navigation {
 div#navigation ul {
     width: 100%;
     height: 11px;
+}
+
+div#navigation ul.menu a:link,
+div#navigation ul.menu a:visited,
+div#navigation ul.menu a:hover {
+    background-color: #aaa;
+    color: #333;
+    border-bottom-color: #333;
+    margin-left: 5px;
+    padding: 1px 25px 3px 25px;
+    text-transform: lowercase;
+}
+
+div#navigation ul.menu a:hover {
+    background-color: #ccc;
+    color: #444;
+}
+
+div#navigation ul.menu li.active a:link,
+div#navigation ul.menu li.active a:visited,
+div#navigation ul.menu li.active a:hover {
+    background-color: #ccc;
+    color: #444;
+    border-bottom-color: transparent;
+}
+
+ul.menu {
+    background-color: #fff;
+    border-bottom: 1px solid #333;
 }
 
 #content h1 {

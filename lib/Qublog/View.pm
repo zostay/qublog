@@ -1463,9 +1463,48 @@ template 'user/login' => page {
 
     p {
         tangent
-            url   => '/user/register',
-            label => _(q{Don't have an account? Register for one.}),
+            url    => '/user/register',
+            label  => _(q{Don't have an account? Register for one.}),
             ;
+    };
+};
+
+=head2 OTHER SPECIAL BITS
+
+=head3 salutation
+
+Show the salutation up in the corner.
+
+=cut
+
+template 'salutation' => sub {
+    div { 
+        { id is 'salutation' }
+
+        if (Jifty->web->current_user->id) {
+            outs 'Hello, ';
+            outs(Jifty->web->current_user->user_object->name);
+            outs ' (';
+            hyperlink
+                url   => '/logout',
+                label => _('sign out'),
+                ;
+            outs ')';
+        }
+
+        else {
+            outs 'Please ';
+            hyperlink 
+                url   => '/user/login',
+                label => _('sign in'),
+                ;
+            outs ' or ';
+            hyperlink
+                url   => '/user/register',
+                label => _('register'),
+                ;
+            outs '.';
+        }
     };
 };
 

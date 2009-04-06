@@ -28,8 +28,6 @@ before '**' => run {
     if (Jifty->web->current_user->id) {
         $top->child( Tasks    => url        => '/project',
                                  sort_order => 10 );
-        $top->child( Logout   => url        => '/logout',
-                                 sort_order => 999 );
     }
 
     else {

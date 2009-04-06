@@ -26,14 +26,23 @@ div#navigation ul {
     height: 11px;
 }
 
+div#navigation ul.menu li {
+    border-left: 1px solid #999;
+    border-right: 1px solid #666;
+    margin-left: 5px;
+}
+
 div#navigation ul.menu a:link,
 div#navigation ul.menu a:visited,
 div#navigation ul.menu a:hover {
+    display: inline-block;
     background-color: #aaa;
     color: #333;
-    border-bottom-color: #333;
-    margin-left: 5px;
-    padding: 1px 25px 3px 25px;
+    border-top-color: #999;
+    border-left: none;
+    border-right: none;
+    border-bottom-color: #999;
+    padding: 2px 25px 2px 25px;
     text-transform: lowercase;
 }
 
@@ -52,7 +61,7 @@ div#navigation ul.menu li.active a:hover {
 
 ul.menu {
     background-color: #fff;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #999;
 }
 
 #content h1 {

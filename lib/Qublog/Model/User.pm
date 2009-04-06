@@ -4,6 +4,8 @@ use warnings;
 package Qublog::Model::User;
 use Jifty::DBI::Schema;
 
+use DateTime::TimeZone;
+
 =head1 NAME
 
 Qublog::Model::User - a user account
@@ -20,11 +22,25 @@ As of Qublog schema version 0.5.0 a single user object is associated with the da
 
 =head2 name
 
-This is the name of the user. It defaults to "me".
+This is the name of the user.
 
 =head2 email
 
 This is the email address of the user. This isn't used for anything yet.
+
+=head2 email_verified
+
+A boolean value telling whether we are pretty sure the email address belongs to
+this user or not.
+
+=head2 password
+
+The login password for the user.
+
+=head2 time_zone
+
+This is the time zone of the user. It must be a scalar name provided by
+L<DateTime::TimeZone>.
 
 =cut
 
@@ -54,6 +70,17 @@ use Qublog::Record schema {
         render_as 'password',
         is mandatory,
         filters are qw/ Qublog::Filter::SaltHash /,
+        ;
+
+    column time_zone =>
+        type is 'text',
+        label is 'Time Zone',
+        valid_values are defer {
+            DateTime::TimeZone->all_names
+        },
+        since '0.5.2',
+        is mandatory,
+        default is 'US/Central',
         ;
 };
 

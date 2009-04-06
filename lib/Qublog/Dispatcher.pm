@@ -23,7 +23,8 @@ before '**' => run {
     my $top = Jifty->web->navigation;
 
     $top->child( Home   => url        => '/journal',
-                            sort_order => 0 );
+                           label      => 'Journal',
+                           sort_order => 0 );
 
     if (Jifty->web->current_user->id) {
         $top->child( Tasks    => url        => '/project',

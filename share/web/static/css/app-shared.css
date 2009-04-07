@@ -73,6 +73,7 @@ ul.menu {
     margin: 0 0 5px 0;
     padding: 0 10px;
     background-color: #ccc;
+    border-bottom: 2px solid #666;
 }
 
 div#jGrowl.jGrowl.top-right {

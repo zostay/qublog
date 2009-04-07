@@ -37,17 +37,17 @@
 
 .new_comment_entry div.argument-task_entry {
     margin: 0 300px 0 110px;
-
 }
 
 .new_comment_entry div.argument-task_entry label.argument-task_entry {
     margin: 0;
-    padding: 0 3px 0 0;
+    padding: 3px 3px 0 0;
     width: auto;
 }
 
 .new_comment_entry input.argument-task_entry {
     font-family: Optima;
+    width: 30%;
 }
 
 .new_comment_entry div.argument-comment {

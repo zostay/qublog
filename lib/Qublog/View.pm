@@ -316,9 +316,10 @@ sub _journal_items_timer {
 sub _journal_items_comment {
     my ($self, $items) = @_;
 
-    my $order_priority 
-        = $self->journal_timer->id ? $self->journal_timer->start_time->epoch
+    my $order_priority = eval {
+          $self->journal_timer->id ? $self->journal_timer->start_time->epoch
         :                            $self->created_on;
+    } || 0;
     $order_priority *= 10;
     $order_priority += 5;
 

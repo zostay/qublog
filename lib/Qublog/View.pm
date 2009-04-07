@@ -582,6 +582,7 @@ template 'journal/new_comment_entry' => sub {
 
     # The create entry form
     div { { class is 'new_comment_entry' }
+        show '/help/journal/new_comment_entry';
         form {
             render_action $action, [ qw/ task_entry comment / ];
             form_submit
@@ -1467,6 +1468,28 @@ template 'user/login' => page {
             url    => '/user/register',
             label  => _(q{Don't have an account? Register for one.}),
             ;
+    };
+};
+
+=head2 HELP
+
+=head3 help/journal/new_comment_entry
+
+On screen help for creating new comments and such.
+
+=cut
+
+template 'help/journal/new_comment_entry' => sub {
+    div { { class is 'inline-help' }
+        h3 { 'Quick Reference' };
+        ul {
+            li { 'On #xyz123: Keyword to create a timer.' };
+            li { 'On #xyz123 to comment on a task.' };
+            li { 'Use #xyz123 to create/reference tags.' };
+            li { '[ ] #xyz123: Create a new task' };
+            li { '-[x] #xyz123: Create a new completed subtask' };
+            li { '[!] #xyz123: Delete a task' };
+        };
     };
 };
 

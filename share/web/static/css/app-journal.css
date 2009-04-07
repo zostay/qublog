@@ -35,6 +35,31 @@
     position: relative;
 }
 
+.new_comment_entry .inline-help {
+    top: 0;
+    right: 3px;
+    position: absolute;
+    width: 280px;
+    border: 2px solid #333;
+    border-left: 1px solid #666;
+    border-top: 1px solid #666;
+    font-size: 0.8em;
+    background-color: #ffc;
+}
+
+.new_comment_entry .inline-help h3 {
+    font-size: 1em;
+    margin: 0;
+    padding: 0 3px;
+    background-color: #333;
+    color: #ffc;
+}
+
+.new_comment_entry .inline-help ul {
+    padding: 0 0 0 20px;
+    margin: 0;
+}
+
 .new_comment_entry div.argument-task_entry {
     margin: 0 300px 0 110px;
 }
@@ -66,7 +91,8 @@
 .new_comment_entry textarea.argument-comment {
     width: 100%;
     font-family: Optima;
-    min-height: 1em;
+    height: 5em;
+    min-height: 5em;
 }
 
 input.new_comment_entry_submit {

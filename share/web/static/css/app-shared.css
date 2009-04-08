@@ -85,7 +85,7 @@ div#jifty-wait-message {
     height: 19px;
     width: 220px;
     top: 28px;
-    left: 200px;
+    right: 300px;
     text-indent: 250px;
     overflow: hidden;
 }

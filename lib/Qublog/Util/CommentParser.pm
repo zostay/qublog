@@ -204,19 +204,48 @@ sub _decide_parent(\@$) {
 }
 
 sub _eval_tag_name {
-    my ($self, $tag) = @_;
+    my ($self, $tag_name) = @_;
 
     my $task = Qublog::Model::Task->new;
-    $task->load_by_tag_name($tag);
+    $task->load_by_tag_name($tag_name);
 
+    # Found a task? Create a task log item
     my $task_log = Qublog::Model::TaskLog->new;
-    $task_log->create(
-        task     => $task,
-        log_type => 'note',
-        comment  => $self->comment,
+    if ($task->id) {
+        $task_log->create(
+            task     => $task,
+            log_type => 'note',
+            comment  => $self->comment,
+        );
+    }
+
+    my $tag = Qublog::Model::Tag->new;
+    $tag->load_or_create( name => $tag_name );
+
+    my $comment_tag = Qublog::Model::CommentTag->new;
+    $comment_tag->load_or_create(
+        comment => $self->comment,
+        tag     => $tag,
     );
 
-    return '#' . $tag . '*' . $task_log->id;
+    my $journal_timer = $self->comment->journal_timer;
+    my $first_comment = $journal_timer->comments->first;
+    if (defined $first_comment and $first_comment->id == $self->comment->id) {
+        
+        my $journal_entry = $journal_timer->journal_entry;
+        my $first_timer = $journal_entry->timers->first;
+        if (defined $first_timer and $first_timer->id == $journal_timer->id) {
+            
+            my $journal_entry_tag = Qublog::Model::JournalEntryTag->new;
+            $journal_entry_tag->load_or_create(
+                journal_entry => $journal_entry,
+                tag           => $tag,
+            );
+        }
+    }
+    
+    return '#' . $tag_name . '*' . $task_log->id if $task_log->id;
+    return '#' . $tag_name;
 }
 
 sub execute {
@@ -381,20 +410,23 @@ sub _replace_task_nicknames {
     my $task = Qublog::Model::Task->new;
     $task->load_by_tag_name($nickname);
 
-    return '#'.$nickname 
-        if not $task->id
-            or $log->task->id != $task->id;
+    if ($task->id and $log->id and $log->task->id == $task->id) {
+        my $old_task = $task->historical_values($log->created_on);
 
-    my $old_task = $task->historical_values($log->created_on);
+        my $action = join ' ', 'task-reference', ($log->log_type || '');
+        my $status = join ' ', ($old_task->{task_type} || ''), 
+                            ($old_task->{status}    || '');
 
-    my $action = join ' ', 'task-reference', ($log->log_type || '');
-    my $status = join ' ', ($old_task->{task_type} || ''), 
-                           ($old_task->{status}    || '');
+        my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
+        my $name = $task->name;
+        return qq{<span class="$action">}
+            .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
+    }
 
-    my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
-    my $name = $task->name;
-    return qq{<span class="$action">}
-          .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
+    my $tag = Qublog::Model::Tag->new;
+    $tag->load_or_create( name => $nickname );
+
+    return qq{<span class="tag"><a href="/tag/$nickname">#$nickname</a></span>};
 }
 
 sub htmlify {

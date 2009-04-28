@@ -170,6 +170,7 @@ sub take_entry_action {
             my $nickname = $self->nickname('short');
             my $task = Qublog::Model::Task->new;
             $task->load_by_tag_name($nickname) if $nickname;
+            $task = $task->project_none unless $task->id;
 
             $entry = $self->_do_it(
                 CreateJournalEntry => {

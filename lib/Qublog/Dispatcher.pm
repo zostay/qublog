@@ -29,6 +29,8 @@ before '**' => run {
     if (Jifty->web->current_user->id) {
         $top->child( Tasks    => url        => '/project',
                                  sort_order => 10 );
+        $top->child( Tags     => url        => '/tag',
+                                 sort_order => 20 );
     }
 
     else {

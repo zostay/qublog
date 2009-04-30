@@ -1413,6 +1413,87 @@ private template 'project/project_summary' => sub {
     };
 };
 
+=head2 TAG PAGES
+
+=head3 tag
+
+Shows a summary of tags in the system.
+
+=cut
+
+template 'tag' => page {
+    { title is 'Tags' }
+
+    p {
+        my $sql = qq{
+            SELECT tags.name, comments.created_on
+            FROM tags INNER JOIN comment_tags ON (tags.id = comment_tags.tag)
+                      INNER JOIN comments ON (comment_tags.comment = comments.id)
+            WHERE comments.owner = ?
+
+            UNION
+
+            SELECT tags.name, journal_entries.start_time
+            FROM tags INNER JOIN journal_entry_tags ON (tags.id = journal_entry_tags.tag)
+                      INNER JOIN journal_entries ON (journal_entry_tags.journal_entry = journal_entries.id)
+            WHERE journal_entries.owner = ?
+
+            UNION
+
+            SELECT tags.name, tasks.created_on
+            FROM tags INNER JOIN task_tags ON (tags.id = task_tags.tag)
+                       INNER JOIN tasks ON (task_tags.task = tasks.id)
+            WHERE tasks.owner = ?
+        };
+
+        my $sth = Jifty->handle->dbh->prepare($sql);
+        $sth->execute( (Jifty->web->current_user->id) x 3 );
+
+        my %tags;
+        my $max_total = 1;
+        my $min_total = 4_000_000_000;
+        my $now = Jifty::DateTime->now;
+        while (my ($name, $timestamp) = $sth->fetchrow_array) {
+            my $dt     = Jifty::DateTime->new_from_string($timestamp);
+            my $months = ($now->epoch - $dt->epoch) / 2592000;
+            
+            $tags{ $name } += 2.5 / (log(0.25 * $months + 1.5)) - 1;
+            
+            $max_total = $tags{ $name } if $tags{ $name } > $max_total;
+            $min_total = $tags{ $name } if $tags{ $name } < $min_total;
+        }
+        
+        for my $tag_name (keys %tags) {
+            my $total = ($tags{ $tag_name } - $min_total) * 3 / ($max_total - $min_total);
+
+            span { 
+                { style is "font-size: ".(0.8 + $total)."em" }
+                outs ' ';
+                hyperlink
+                    label => '#' . $tag_name,
+                    url   => '/tag/' . $tag_name,
+                    ;
+                outs ' ';
+            };
+
+        }
+    };
+};
+
+=head3 tag/view
+
+Used to view the comments, entries, and tasks linked to a particular tag.
+
+=cut
+
+template 'tag/view' => page {
+    my $tag = get 'tag';
+
+    { title is '#' . $tag->name }
+
+
+};
+
 =head2 USER PAGES
 
 =head3 user/register

@@ -132,6 +132,7 @@ sub _journal_items_timer {
     if ($collapse_start) {
         $items->{$collapse_start}{content}{attributes}{title}
             .= _('(Start %1)', $journal_entry->name);
+        $items->{$collapse_start}{row}{class} .= ' start';
     }
     else {
         $items->{$id.'start'} = {

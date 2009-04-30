@@ -167,24 +167,6 @@ on 'journal/popup/edit_entry'        => \&load_entry;
 on 'journal/popup/change_start_stop' => \&load_entry;
 on 'journal/popup/show_tasks'        => \&load_entry;
 
-=head2 on project/edit/*
-
-Loads the L<Qublog::Model::Task> named by the wildcard parameter.
-
-=cut
-
-on 'project/edit/*' => run {
-    my $nickname = $1;
-
-    my $task = Qublog::Model::Task->new;
-    $task->load_by_tag_name($nickname);
-
-    last_rule unless $task->id;
-
-    set task => $task;
-    show 'project/view';
-};
-
 =head2 on journal/thingy_button
 
 Ajax helper to see what the button should read for a given value of C<task_entry>. See L<Qublog::Action::CreateJournalThingy>.
@@ -204,6 +186,25 @@ on 'journal/thingy_button' => run {
 
     last_rule;
 };
+
+=head2 on project/edit/*
+
+Loads the L<Qublog::Model::Task> named by the wildcard parameter.
+
+=cut
+
+on 'project/edit/*' => run {
+    my $nickname = $1;
+
+    my $task = Qublog::Model::Task->new;
+    $task->load_by_tag_name($nickname);
+
+    last_rule unless $task->id;
+
+    set task => $task;
+    show 'project/view';
+};
+
 
 =head2 on logout
 

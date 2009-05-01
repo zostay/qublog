@@ -40,14 +40,14 @@
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/folder_lightbulb.png);
+    background-image: url(/images/icons/folder.png);
 }
 
 .task h4.subject {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/lightbulb.png);
+    background-image: url(/images/icons/ticket.png);
 }
 
 .subject p {

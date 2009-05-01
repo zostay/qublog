@@ -202,7 +202,7 @@ input.new_comment_entry_submit {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: left bottom;
-    background-image: url(/images/icons/lightbulb.png);
+    background-image: url(/images/icons/ticket.png);
 }
 
 
@@ -258,7 +258,7 @@ input.new_comment_entry_submit {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/lightbulb.png);
+    background-image: url(/images/icons/ticket.png);
 }
 
 .task-reference .open {
@@ -291,7 +291,7 @@ input.new_comment_entry_submit {
 }
 
 .icon.lightbulb {
-    background-image: url(/images/icons/lightbulb.png);
+    background-image: url(/images/icons/ticket.png);
 }
 
 .icon.folder_lightbulb {

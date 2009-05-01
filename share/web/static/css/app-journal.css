@@ -195,7 +195,7 @@ input.new_comment_entry_submit {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: left bottom;
-    background-image: url(/images/icons/folder_lightbulb.png);
+    background-image: url(/images/icons/folder.png);
 }
 
 .project-summary .subject.action {
@@ -251,7 +251,7 @@ input.new_comment_entry_submit {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/folder_lightbulb.png);
+    background-image: url(/images/icons/folder.png);
 }
 
 .task-reference .action {
@@ -295,7 +295,7 @@ input.new_comment_entry_submit {
 }
 
 .icon.folder_lightbulb {
-    background-image: url(/images/icons/folder_lightbulb.png);
+    background-image: url(/images/icons/folder.png);
 }
 
 .icon.briefcase {

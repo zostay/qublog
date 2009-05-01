@@ -223,7 +223,7 @@ input.new_comment_entry_submit {
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/add.png);
+    background-image: url(/images/icons/plus-circle-frame.png);
 }
 
 .task-reference.update {

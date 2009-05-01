@@ -50,6 +50,12 @@ use Qublog::Record schema {
 
     column task_tags =>
         references Qublog::Model::TaskTagCollection by 'tag';
+
+    column comment_tags =>
+        references Qublog::Model::CommentTagCollection by 'tag';
+
+    column journal_entry_tags =>
+        references Qublog::Model::CommentTagCollection by 'tag';
 };
 
 =head1 METHODS
@@ -75,6 +81,78 @@ sub task {
     $tasks->limit( tag => $self );
     $tasks->limit( nickname => 1 );
     return $tasks->first;
+}
+
+=head2 tasks
+
+Finds all tasks linked to this tag.
+
+=cut
+
+sub tasks {
+    my $self = shift;
+
+    my $tasks = Qublog::Model::TaskCollection->new;
+    my $task_tag_alias = $tasks->join(
+        column1 => 'id',
+        table2  => Qublog::Model::TaskTag->table,
+        column2 => 'task',
+    );
+    $tasks->limit(
+        alias  => $task_tag_alias,
+        column => 'tag',
+        value  => $self,
+    );
+
+    return $tasks;
+}
+
+=head2 comments
+
+Finds all comments linked to this tag.
+
+=cut
+
+sub comments {
+    my $self = shift;
+
+    my $comments = Qublog::Model::CommentCollection->new;
+    my $comment_tag_alias = $comments->join(
+        column1 => 'id',
+        table2  => Qublog::Model::CommentTag->table,
+        column2 => 'comment',
+    );
+    $comments->limit(
+        alias  => $comment_tag_alias,
+        column => 'tag',
+        value  => $self,
+    );
+
+    return $comments;
+}
+
+=head2 journal_entries
+
+Finds all journal entries linked to this tag.
+
+=cut
+
+sub journal_entries {
+    my $self = shift;
+
+    my $journal_entries = Qublog::Model::JournalEntryCollection->new;
+    my $journal_entry_tag_alias = $journal_entries->join(
+        column1 => 'id',
+        table2  => Qublog::Model::JournalEntryTag->table,
+        column2 => 'journal_entry',
+    );
+    $journal_entries->limit(
+        alias  => $journal_entry_tag_alias,
+        column => 'tag',
+        value  => $self,
+    );
+
+    return $journal_entries;
 }
 
 =head1 INTERNAL HELPERS

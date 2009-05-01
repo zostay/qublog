@@ -79,7 +79,7 @@
     margin: 0 300px 0 90px;
     padding-top: 0;
     padding-left: 20px;
-    background-image: url(/images/icons/comment_add.png);
+    background-image: url(/images/icons/bubble--plus.png);
     background-repeat: no-repeat;
     background-position: 1px 1px;
 }
@@ -279,7 +279,7 @@ input.new_comment_entry_submit {
 /*** Journal Icons ***/
 
 .icon.comment {
-    background-image: url(/images/icons/comment.png);
+    background-image: url(/images/icons/bubble.png);
 }
 
 .icon.clock_play {
@@ -339,7 +339,7 @@ input.new_comment_entry_submit {
 }
 
 .icon.comment_edit {
-    background-image: url(/images/icons/comment_edit.png);
+    background-image: url(/images/icons/bubble--pencil.png);
 }
 
 span.preamble.icon {

@@ -90,19 +90,3 @@ h2.subject.hoverbox {
 .project-view .text {
     width: 100%;
 }
-
-.icon.open {
-    background-image: url(/images/icons/door-open.png);
-}
-
-.icon.done {
-    background-image: url(/images/icons/tick.png);
-}
-
-.icon.edit {
-    background-image: url(/images/icons/pencil.png);
-}
-
-.icon.nix {
-    background-image: url(/images/icons/cross.png);
-}

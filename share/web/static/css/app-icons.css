@@ -43,13 +43,14 @@ h2.icon, h2.icon.left {
 
 /*** Icon Verbs ***/
 
-.v-check-off      { background-image: url(/images/icons/tick.png) }
 .v-delete         { background-image: url(/images/icons/minus-circle-frame.png) }
+.v-done           { background-image: url(/images/icons/tick.png) }
 .v-edit           { background-image: url(/images/icons/pencil.png) }
 .v-edit.o-comment { background-image: url(/images/icons/balloon--pencil.png) }
 .v-edit.o-entry   { background-image: url(/images/icons/report--pencil.png) }
 .v-edit.o-timer   { background-image: url(/images/icons/alarm-clock--pencil.png) }
-.v-reopen.o-task  { background-image: url(/images/icons/door-open.png) }
+.v-nix            { background-image: url(/images/icons/cross.png) }
+.v-open           { background-image: url(/images/icons/door-open.png) }
 .v-start          { background-image: url(/images/icons/control-record.png) }
 .v-stop           { background-image: url(/images/icons/control-stop.png) }
 .v-view           { }

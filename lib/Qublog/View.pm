@@ -370,11 +370,31 @@ sub _journal_items_task {
     }
 }
 
+sub _journal_items_tag {
+    my ($self, $items) = @_;
+    
+    my $comments = $self->comments;
+    while (my $comment = $comments->next) {
+        journal_items($comment, $items);
+    }
+
+    my $tasks = $self->tasks;
+    while (my $task = $tasks->next) {
+        journal_items($task, $items);
+    }
+
+    my $journal_entries = $self->journal_entries;
+    while (my $journal_entry = $journal_entries->next) {
+        journal_items($journal_entry, $items);
+    }
+}
+
 my %JOURNAL_ITEMS_HANDLER = (
     Comment      => \&_journal_items_comment,
     JournalDay   => \&_journal_items_day,
     JournalEntry => \&_journal_items_entry,
     JournalTimer => \&_journal_items_timer,
+    Tag          => \&_journal_items_tag,
     Task         => \&_journal_items_task,
 );
 
@@ -789,7 +809,7 @@ private template 'journal/item' => sub {
         my $row_id       = $options->{row}{id} || 'row_'.Jifty->web->serial;
         my $popup_region = $row_id . '_actions';
         my $popup_id     = Jifty->web->current_region->qualified_name
-                        . '-' . $popup_region;
+                         . '-' . $popup_region;
 
         attr {
             %{ $options->{row}{attributes} || {} },

@@ -306,10 +306,6 @@ input.new_comment_entry_submit {
     background-image: url(/images/icons/tick.png);
 }
 
-.icon.add {
-    background-image: url(/images/icons/add.png);
-}
-
 .icon.pencil {
     background-image: url(/images/icons/pencil.png);
 }

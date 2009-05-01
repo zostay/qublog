@@ -90,20 +90,3 @@ div#jifty-wait-message {
     overflow: hidden;
 }
 
-/*** Shared Icon Classes ***/
-
-.icon {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/shading.png);
-}
-
-.icon.only {
-    display: block;
-    overflow: hidden;
-    padding-left: 18px;
-    width: 0;
-    float: right;
-}
-

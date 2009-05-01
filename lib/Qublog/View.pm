@@ -1430,7 +1430,7 @@ private template 'project/project_summary' => sub {
             li { 
                 { 
                     id is 'summary-'.$task->tag, 
-                    class is 'subject '.$task->task_type,
+                    class is 'subject icon o-task a-'.$task->task_type,
                 }
                 span { { class is 'nickname' }
                     '#'.$task->tag.':'

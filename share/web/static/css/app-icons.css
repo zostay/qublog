@@ -4,7 +4,7 @@
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    background-image: url(/images/icons/shading.png);
+    /* background-image: url(/images/icons/shading.png); */
 }
 
 .icon.only {
@@ -24,6 +24,7 @@ h2.icon, h2.icon.left {
 .o-comment { background-image: url(/images/icons/balloon.png) }
 .o-entry   { background-image: url(/images/icons/report.png) }
 .o-link    { background-image: url(/images/icons/chain.png) }
+.o-tag     { }
 .o-task    { background-image: url(/images/icons/ticket.png) }
 .o-time    { background-image: url(/images/icons/clock.png) }
 .o-timer   { background-image: url(/images/icons/alarm-clock.png) }
@@ -32,14 +33,17 @@ h2.icon, h2.icon.left {
 
 .a-action  { }
 .a-begin   { }
-.a-done    { }
+.a-create  { background-image: url(/images/icons/plus-circle-frame.png) }
+.a-done    { background-image: url(/images/icons/tick.png) }
 .a-end     { }
 .a-group   { background-image: url(/images/icons/folder.png) }
 .a-list    { }
-.a-nix     { }
+.a-note    { background-image: url(/images/icons/chain.png) }
+.a-nix     { background-image: url(/images/icons/nix.png) }
 .a-open    { }
 .a-project { background-image: url(/images/icons/briefcase.png) }
 .a-quit    { }
+.a-update  { background-image: url(/images/icons/pencil.png) }
 
 /*** Icon Verbs ***/
 

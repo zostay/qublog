@@ -419,14 +419,13 @@ sub _replace_task_nicknames {
 
         my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
         my $name = $task->name;
-        return qq{<span class="$action">}
-            .qq{<a href="$url" class="$status">#$nickname: $name</a></span>};
+        return qq{<a href="$url" class="icon a-$action a-$status o-task">#$nickname: $name</a>};
     }
 
     my $tag = Qublog::Model::Tag->new;
     $tag->load_or_create( name => $nickname );
 
-    return qq{<span class="tag"><a href="/tag/view/$nickname">#$nickname</a></span>};
+    return qq{<a class="icon o-tag" href="/tag/view/$nickname">#$nickname</a>};
 }
 
 sub htmlify {

@@ -182,30 +182,6 @@ input.new_comment_entry_submit {
     background-color: #eee;
 }
 
-/*** Journal Project Summary ***/
-
-.project-summary .subject.project {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    background-image: url(/images/icons/briefcase.png);
-}
-
-.project-summary .subject.group {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    background-image: url(/images/icons/folder.png);
-}
-
-.project-summary .subject.action {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    background-image: url(/images/icons/ticket.png);
-}
-
-
 /*** Journal Comment Style ***/
 
 .free-comment {
@@ -215,65 +191,6 @@ input.new_comment_entry_submit {
 
 .timer-comment {
     background-color: #eee;
-}
-
-/*** Journal Task References ***/
-
-.task-reference.create {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/plus-circle-frame.png);
-}
-
-.task-reference.update {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/pencil.png);
-}
-
-.task-reference.note {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/chain.png);
-}
-
-.task-reference .project {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/briefcase.png);
-}
-
-.task-reference .group {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/folder.png);
-}
-
-.task-reference .action {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/ticket.png);
-}
-
-.task-reference .open {
-}
-
-.task-reference .done {
-    color: #666;
-    text-decoration: line-through;
-    background-image: url(/images/icons/tick.png);
-}
-
-.task-reference .nix {
-    color: #933;
-    text-decoration: line-through;
-    background-image: url(/images/icons/cross.png);
 }
 
 span.preamble.icon {

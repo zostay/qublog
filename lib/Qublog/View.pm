@@ -1508,7 +1508,36 @@ template 'tag/view' => page {
 
     { title is '#' . $tag->name }
 
+    p {
+        hyperlink
+            label => _('Back to Tags'),
+            url   => '/tag',
+            ;
+    };
 
+    render_region
+        name      => 'journal_list',
+        path      => '/tag/items',
+        arguments => {
+            tag_name => $tag->name,
+        },
+        ;
+};
+
+=head2 TAG FRAGMENTS
+
+=head3 tag/items
+
+Show the items associated with a tag.
+
+=cut
+
+template 'tag/items' => sub {
+    my $tag = get 'tag';
+
+    div { { class is 'journal' }
+        show '/journal/items', $tag;
+    };
 };
 
 =head2 USER PAGES

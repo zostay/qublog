@@ -222,6 +222,23 @@ on 'tag/view/*' => run {
     show 'tag/view';
 };
 
+=head2 tag/items
+
+Loads the L<Qublog::Model::Tag> for the given C<tag_name> parameter.
+
+=cut
+
+on 'tag/items' => run {
+    my $tag_name = get 'tag_name';
+
+    my $tag = Qublog::Model::Tag->new;
+    $tag->load_by_cols( name => $tag_name );
+
+    set tag_name => $tag_name;
+    set tag      => $tag;
+    show 'tag/items';
+};
+
 =head2 on logout
 
 Logout.

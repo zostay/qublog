@@ -145,14 +145,14 @@ sub _journal_items_timer {
             timestamp => $self->start_time,
             content   => {
                 content => _('Started %1', $journal_entry->name),
-                icon    => 'clock',
+                icon    => 'a-begin o-timer',
                 format  => [ 'p' ],
             },
             info3     => '&nbsp;',
             links     => [
                 {
                     label   => _('Change'),
-                    class   => 'icon clock_edit',
+                    class   => 'icon v-edit o-timer',
                     tooltip => _('Set the start time for this timer span.'),
                     onclick => {
                         open_popup   => 1,
@@ -176,7 +176,7 @@ sub _journal_items_timer {
 
     my @stop_links = ({
         label   => _('Edit Info'),
-        class   => 'icon book_edit',
+        class   => 'icon v-edit o-entry',
         tooltip => _('Edit the journal information for this entry.'),
         onclick => {
             open_popup   => 1,
@@ -191,7 +191,7 @@ sub _journal_items_timer {
     if ($self->is_stopped) {
         push @stop_links, {
             label   => _('Change'),
-            class   => 'icon clock_edit',
+            class   => 'icon v-edit a-end o-timer',
             tooltip => _('Set the stop time for this timer span.'),
             onclick => {
                 open_popup   => 1,
@@ -207,7 +207,7 @@ sub _journal_items_timer {
         if ($journal_entry->is_stopped) {
             push @stop_links, {
                 label   => _('Restart'),
-                class   => 'icon clock_play',
+                class   => 'icon v-start o-timer',
                 tooltip => _('Start a new timer for this entry.'),
                 as_link => 1,
                 onclick => {
@@ -223,7 +223,7 @@ sub _journal_items_timer {
     else {
         push @stop_links, {
             label   => _('Stop'),
-            class   => 'icon clock_stop',
+            class   => 'icon v-stop o-timer',
             tooltip => _('Stop this timer.'),
             as_link => 1,
             onclick => {
@@ -238,7 +238,7 @@ sub _journal_items_timer {
 
     push @stop_links, {
         label   => _('List Actions'),
-        class   => 'icon lightbulb',
+        class   => 'icon v-view a-list o-task',
         tooltip => _('Show the list of tasks for this project.'),
         onclick => {
             open_popup   => 1,
@@ -269,7 +269,7 @@ sub _journal_items_timer {
         timestamp => $self->stop_time || Jifty::DateTime->now,
         content   => {
             content => $journal_entry->name,
-            icon    => 'clock',
+            icon    => 'a-end o-timer',
             format  => [ 'p' ],
         },
         info1     => {
@@ -335,7 +335,7 @@ sub _journal_items_comment {
         links     => [
             {
                 label   => _('Edit'),
-                class   => 'icon comment_edit',
+                class   => 'icon v-edit o-comment',
                 onclick => {
                     open_popup => 1,
                     replace_with => 'journal/popup/edit_comment',
@@ -346,7 +346,7 @@ sub _journal_items_comment {
             },
             {
                 label   => _('Remove'),
-                class   => 'icon delete',
+                class   => 'icon v-delete o-comment',
                 as_link => 1,
                 onclick => {
                     refresh => 'journal_list',
@@ -504,7 +504,7 @@ template 'journal/summary' => sub {
                     format_time $quitting_time;
                 };
             },
-            icon    => 'clock',
+            icon    => 'a-quit o-time',
             format  => [ 
                 {
                     format  =>  'p',
@@ -772,12 +772,12 @@ my %defaults = (
     timestamp => {
         _name  => 'timestamp',
         format => [ 'time' ],
-        icon   => 'time',
+        icon   => 'o-time',
     },
     content   => {
         _name  => 'item-content',
         format => [ 'htmlify' ],
-        icon   => 'comment',
+        icon   => 'o-comment',
     },
     info1     => {
         _name  => 'info1',
@@ -1330,7 +1330,7 @@ private template 'project/view_task' => sub {
                         hyperlink
                             label   => $label,
                             tooltip => _("%1 this task", $label),
-                            class   => "icon only $status",
+                            class   => "icon only a-$status o-task",
                             as_link => 1,
                             onclick => {
                                 refresh      => Jifty->web->current_region->parent,
@@ -1356,7 +1356,7 @@ private template 'project/view_task' => sub {
                 hyperlink(
                     label   => _('Edit'),
                     tooltip => _('Edit this task'),
-                    class   => 'icon only edit',
+                    class   => 'icon only v-edit o-task',
                     url     => '/project/edit/'.$task->tag
                 );
             }

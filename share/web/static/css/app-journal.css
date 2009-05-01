@@ -283,11 +283,11 @@ input.new_comment_entry_submit {
 }
 
 .icon.clock_play {
-    background-image: url(/images/icons/clock_play.png);
+    background-image: url(/images/icons/control-record.png);
 }
 
 .icon.clock_stop {
-    background-image: url(/images/icons/clock_stop.png);
+    background-image: url(/images/icons/control-stop.png);
 }
 
 .icon.lightbulb {
@@ -319,7 +319,7 @@ input.new_comment_entry_submit {
 }
 
 .icon.clock_edit {
-    background-image: url(/images/icons/clock_edit.png);
+    background-image: url(/images/icons/alarm-clock--pencil.png);
 }
  
 .icon.clock {

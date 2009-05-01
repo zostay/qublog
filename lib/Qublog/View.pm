@@ -1371,13 +1371,31 @@ private template 'project/view_task' => sub {
 
         # Use a different header for each task type
         if ($task->task_type eq 'project') {
-            h2 { { id is $task->tag, class is 'subject' } $subject->() };
+            h2 { 
+                { 
+                    id is $task->tag, 
+                    class is 'icon a-project o-task subject' 
+                } 
+                $subject->() 
+            };
         }
         elsif ($task->task_type eq 'group') {
-            h3 { { id is $task->tag, class is 'subject' } $subject->() };
+            h3 { 
+                { 
+                    id is $task->tag, 
+                    class is 'icon a-group o-task subject' 
+                } 
+                $subject->() 
+            };
         }
         else {
-            h4 { { id is $task->tag, class is 'subject' } $subject->() };
+            h4 { 
+                { 
+                    id is $task->tag, 
+                    class is 'icon a-action o-task subject' 
+                } 
+                $subject->() 
+            };
         }
 
         # If this can have children (group or project) try to show them

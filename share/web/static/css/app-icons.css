@@ -15,6 +15,10 @@
     float: right;
 }
 
+h2.icon, h2.icon.left {
+    background-position: 3px center;
+}
+
 /*** Icon Nouns ***/
 
 .o-comment { background-image: url(/images/icons/balloon.png) }
@@ -26,6 +30,7 @@
 
 /*** Icon Adjectives ***/
 
+.a-action  { }
 .a-begin   { }
 .a-done    { }
 .a-end     { }

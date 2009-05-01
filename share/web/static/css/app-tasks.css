@@ -28,27 +28,13 @@
     border-bottom: 2px solid #333;
 
     padding: 0 25px;
-
-    background-repeat: no-repeat;
-    background-position: 3px center;
-    background-image: url(/images/icons/briefcase.png);
 }
 
 .task h3.subject {
     font-weight: bold;
-
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/folder.png);
 }
 
-.task h4.subject {
-    padding-left: 18px;
-    background-repeat: no-repeat;
-    background-position: 1px 1px;
-    background-image: url(/images/icons/ticket.png);
-}
+.task h4.subject { }
 
 .subject p {
     display: inline;

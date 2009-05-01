@@ -413,13 +413,15 @@ sub _replace_task_nicknames {
     if ($task->id and $log->id and $log->task->id == $task->id) {
         my $old_task = $task->historical_values($log->created_on);
 
-        my $action = join ' ', 'task-reference', ($log->log_type || '');
-        my $status = join ' ', ($old_task->{task_type} || ''), 
-                            ($old_task->{status}    || '');
+        my $classes   
+            = join ' ', 
+                map { $_ ? 'a-'.$_ : () } 
+                    $log->log_type, $old_task->{task_type}, 
+                    $old_task->{status};
 
         my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
         my $name = $task->name;
-        return qq{<a href="$url" class="icon a-$action a-$status o-task">#$nickname: $name</a>};
+        return qq{<a href="$url" class="icon task-reference $classes o-task">#$nickname: $name</a>};
     }
 
     my $tag = Qublog::Model::Tag->new;

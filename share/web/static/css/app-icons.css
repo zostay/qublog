@@ -34,16 +34,18 @@ h2.icon, h2.icon.left {
 .a-action  { }
 .a-begin   { }
 .a-create  { background-image: url(/images/icons/plus-circle-frame.png) }
-.a-done    { background-image: url(/images/icons/tick.png) }
 .a-end     { }
 .a-group   { background-image: url(/images/icons/folder.png) }
 .a-list    { }
 .a-note    { background-image: url(/images/icons/chain.png) }
-.a-nix     { background-image: url(/images/icons/nix.png) }
 .a-open    { }
 .a-project { background-image: url(/images/icons/briefcase.png) }
 .a-quit    { }
 .a-update  { background-image: url(/images/icons/pencil.png) }
+
+/* more important adjectives later */
+.a-done    { background-image: url(/images/icons/tick.png) }
+.a-nix     { background-image: url(/images/icons/nix.png) }
 
 /*** Icon Verbs ***/
 

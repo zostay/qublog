@@ -198,3 +198,15 @@ span.preamble.icon {
     background-image: none;
 }
 
+/*** Task References ***/
+
+.task-reference.a-done.o-task {
+    color: #666;
+    text-decoration: line-through;
+}
+
+.task-reference.a-nix.o-task {
+    color: #933;
+    text-decoration: line-through;
+}
+

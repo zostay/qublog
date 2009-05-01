@@ -426,7 +426,7 @@ sub _replace_task_nicknames {
     my $tag = Qublog::Model::Tag->new;
     $tag->load_or_create( name => $nickname );
 
-    return qq{<span class="tag"><a href="/tag/$nickname">#$nickname</a></span>};
+    return qq{<span class="tag"><a href="/tag/view/$nickname">#$nickname</a></span>};
 }
 
 sub htmlify {

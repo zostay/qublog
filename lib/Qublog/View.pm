@@ -1468,7 +1468,7 @@ template 'tag' => page {
                 outs ' ';
                 hyperlink
                     label => '#' . $tag_name,
-                    url   => '/tag/' . $tag_name,
+                    url   => '/tag/view/' . $tag_name,
                     ;
                 outs ' ';
             };

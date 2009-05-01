@@ -205,19 +205,20 @@ on 'project/edit/*' => run {
     show 'project/view';
 };
 
-=head2 on tag/*
+=head2 on tag/view/*
 
 Loads the L<Qublog::Model::Tag> named by the wildcard parameter.
 
 =cut
 
-on 'tag/*' => run {
+on 'tag/view/*' => run {
     my $nickname = $1;
 
     my $tag = Qublog::Model::Tag->new;
     $tag->load_by_cols( name => $nickname );
 
-    set tag => $tag;
+    set tag_name => $nickname;
+    set tag      => $tag;
     show 'tag/view';
 };
 

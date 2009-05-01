@@ -334,10 +334,6 @@ input.new_comment_entry_submit {
     background-image: url(/images/icons/door_open.png);
 }
  
-.icon.accept {
-    background-image: url(/images/icons/accept.png);
-}
- 
 .icon.delete {
     background-image: url(/images/icons/delete.png);
 }

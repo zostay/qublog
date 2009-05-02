@@ -64,7 +64,7 @@ h2.icon, h2.icon.left {
 
 /* more important adjectives later */
 .a-done          { background-image: url(/images/icons/tick.png) }
-.a-nix           { background-image: url(/images/icons/nix.png) }
+.a-nix           { background-image: url(/images/icons/cross.png) }
 
 /*** Icon Verbs ***/
 

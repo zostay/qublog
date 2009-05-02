@@ -90,3 +90,12 @@ div#jifty-wait-message {
     overflow: hidden;
 }
 
+html > body span.message,
+div#jGrowl.jGrowl .result-message .message {
+    background-image: url(/images/icons/information-frame.png);
+}
+
+html > body span.error,
+div#jGrowl.jGrowl .result-error .message {
+    background-image: url(/images/icons/exclamation--frame.png);
+}

@@ -76,6 +76,27 @@ ul.menu {
     border-bottom: 2px solid #666;
 }
 
+input.button {
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #666;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #666;
+}
+
+input.button:active {
+    border-top: none;
+    border-bottom: none;
+    border-left: 2px solid 666;
+    border-right: 1px solid #CCC;
+    border-top: 2px solid #666;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 0px;
+    padding-right: 10px;
+}
+
+
 div#jGrowl.jGrowl.top-right {
     top: 80px;
 }

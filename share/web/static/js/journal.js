@@ -91,9 +91,11 @@ Qublog.Journal.updateActiveTimers = function() {
 Qublog.Journal.updateJournalThingyButton = function() {
     jQuery.get('/journal/thingy_button', { task_entry: jQuery(this).val() },
         function(data) {
-            console.log(data);
             if (data.match(/^(?:Post|Start|Restart|Comment|Taskinate)$/)) {
-                jQuery('.new_comment_entry_submit').val(data);
+                jQuery('.new_comment_entry_submit')
+                    .removeClass('v-comment v-taskinate v-post v-start v-restart')
+                    .addClass('v-' + data.toLowerCase())
+                    .val(data);
             }
         }
     );

@@ -24,17 +24,21 @@ before '**' => run {
 
     $top->child( Home   => url        => '/journal',
                            label      => 'Journal',
+                           class      => 'icon o-journal',
                            sort_order => 0 );
 
     if (Jifty->web->current_user->id) {
         $top->child( Tasks    => url        => '/project',
+                                 class      => 'icon o-task',
                                  sort_order => 10 );
         $top->child( Tags     => url        => '/tag',
+                                 class      => 'icon o-tag',
                                  sort_order => 20 );
     }
 
     else {
         $top->child( Register => url        => '/user/register',
+                                 class      => 'icon v-register o-user',
                                  sort_order => 10 );
     }
 
@@ -52,6 +56,7 @@ login is required.
 on '**' => run {
     my $path = $1;
     next_rule if $path =~ m[^user/];
+    next_rule if $path =~ m[^images/];
 
     my $users = Qublog::Model::UserCollection->new;
     $users->unlimit;

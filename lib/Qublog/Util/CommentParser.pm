@@ -427,7 +427,7 @@ sub _replace_task_nicknames {
     my $tag = Qublog::Model::Tag->new;
     $tag->load_or_create( name => $nickname );
 
-    return qq{<a class="icon o-tag" href="/tag/view/$nickname">#$nickname</a>};
+    return qq{<a class="icon center-left v-view o-tag" href="/tag/view/$nickname">#$nickname</a>};
 }
 
 sub htmlify {

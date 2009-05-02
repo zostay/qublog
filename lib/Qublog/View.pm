@@ -562,6 +562,7 @@ template 'journal/list' => sub {
             render_action $go_to_date;
             form_submit
                 label  => _('Go'),
+                class  => 'icon v-view o-day',
                 submit => $go_to_date,
                 ;
         };
@@ -603,7 +604,8 @@ template 'journal/new_comment_entry' => sub {
         form {
             render_action $action, [ qw/ task_entry comment / ];
             form_submit
-                class   => 'new_comment_entry_submit',
+                class   => 'new_comment_entry_submit '
+                         . 'icon v-'.(lc $post_label).' o-thingy',
                 label   => $post_label,
                 onclick => {
                     submit  => $action,
@@ -1506,6 +1508,7 @@ template 'tag' => page {
                 outs ' ';
                 hyperlink
                     label => '#' . $tag_name,
+                    class => 'icon v-view o-tag',
                     url   => '/tag/view/' . $tag_name,
                     ;
                 outs ' ';
@@ -1604,14 +1607,16 @@ template 'user/login' => page {
         render_action $login;
         form_return
             label  => _('Login'),
+            class  => 'icon v-sign-in',
             submit => $login,
             ;
     };
 
     p {
         tangent
-            url    => '/user/register',
-            label  => _(q{Don't have an account? Register for one.}),
+            url   => '/user/register',
+            class => 'icon v-register o-user',
+            label => _(q{Don't have an account? Register for one.}),
             ;
     };
 };
@@ -1656,6 +1661,7 @@ template 'salutation' => sub {
             outs ' (';
             hyperlink
                 url   => '/logout',
+                class => 'icon v-sign-out',
                 label => _('sign out'),
                 ;
             outs ')';
@@ -1665,11 +1671,13 @@ template 'salutation' => sub {
             outs 'Please ';
             hyperlink 
                 url   => '/user/login',
+                class => 'icon v-sign-in',
                 label => _('sign in'),
                 ;
             outs ' or ';
             hyperlink
                 url   => '/user/register',
+                class => 'icon v-register o-user',
                 label => _('register'),
                 ;
             outs '.';

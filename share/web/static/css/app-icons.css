@@ -12,11 +12,6 @@ input.button.icon {
     background-position: 11px 1px;
 }
 
-input.button.icon:active {
-    padding: 1px 11px 0px 28px;
-    background-position: 11px 1px;
-}
-
 .icon.left, .icon.top-left   { background-position: 1px 1px }
 .icon.center-left            { background-position: 1px 50% }
 .icon.right, .icon.top-right { background-position: -1px 1px }

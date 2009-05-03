@@ -80,7 +80,9 @@ h2.icon, h2.icon.left {
 .v-nix              { background-image: url(/images/icons/cross-circle-frame.png) }
 .v-open             { background-image: url(/images/icons/door-open.png) }
 .v-post             { background-image: url(/images/icons/plus-circle-frame.png) }
+.v-return           { background-image: url(/images/icons/arrow-180.png) }
 .v-restart          { background-image: url(/images/icons/control-record.png) }
+.v-save             { background-image: url(/images/icons/disk.png) }
 .v-sign-in          { background-image: url(/images/icons/door-open-in.png) }
 .v-sign-out         { background-image: url(/images/icons/door-open-out.png) }
 .v-start            { background-image: url(/images/icons/control-record.png) }
@@ -92,3 +94,18 @@ h2.icon, h2.icon.left {
 .v-view.o-task      { background-image: url(/images/icons/ticket--arrow.png) }
 
 /*** Icon Adverbs ***/
+
+/*** Extra Embellishments ***/
+
+.icon.v-view.o-tag {
+    background-color: #ffd;
+    color: #666;
+    margin: 1px;
+    padding: 1px 1px 1px 18px;
+    text-decoration: none;
+}
+
+.icon.v-view.o-tag:hover {
+    color: #333;
+    background-color: #eeb;
+}

@@ -1056,6 +1056,7 @@ template 'project/view' => page {
     p {
         hyperlink
             label => _('Back to Tasks'),
+            class => 'icon v-return o-task',
             url   => '/project',
             ;
     };
@@ -1072,6 +1073,7 @@ template 'project/view' => page {
 
             form_submit
                 label  => _('Save'),
+                class  => 'icon v-save o-comment',
                 submit => $action,
                 ;
         };
@@ -1508,7 +1510,7 @@ template 'tag' => page {
                 outs ' ';
                 hyperlink
                     label => '#' . $tag_name,
-                    class => 'icon v-view o-tag',
+                    class => 'icon center-left v-view o-tag',
                     url   => '/tag/view/' . $tag_name,
                     ;
                 outs ' ';

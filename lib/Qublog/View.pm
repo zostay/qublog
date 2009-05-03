@@ -1012,6 +1012,7 @@ template 'journal/popup/show_tasks' => sub {
 
     popup_submit
         label   => _('Close'),
+        class   => 'icon v-collapse',
         onclick => [
             {
                 close_popup => 1,

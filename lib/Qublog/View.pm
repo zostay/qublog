@@ -1535,6 +1535,7 @@ template 'tag/view' => page {
     p {
         hyperlink
             label => _('Back to Tags'),
+            class => 'icon v-return o-tag',
             url   => '/tag',
             ;
     };

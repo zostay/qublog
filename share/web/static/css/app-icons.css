@@ -68,6 +68,7 @@ h2.icon, h2.icon.left {
 
 /*** Icon Verbs ***/
 
+.v-cancel           { background-image: url(/images/icons/cross.png) }
 .v-collapse         { background-image: url(/images/icons/chevron-collapse.png) }
 .v-comment          { background-image: url(/images/icons/balloon--plus.png) }
 .v-delete           { background-image: url(/images/icons/minus-circle-frame.png) }
@@ -81,7 +82,7 @@ h2.icon, h2.icon.left {
 .v-expand           { background-image: url(/images/icons/chevron.png) }
 .v-nix              { background-image: url(/images/icons/cross-circle-frame.png) }
 .v-open             { background-image: url(/images/icons/door-open.png) }
-.v-post             { background-image: url(/images/icons/plus-circle-frame.png) }
+.v-post             { background-image: url(/images/icons/plus.png) }
 .v-return           { background-image: url(/images/icons/arrow-180.png) }
 .v-restart          { background-image: url(/images/icons/control-record.png) }
 .v-save             { background-image: url(/images/icons/disk.png) }

@@ -877,6 +877,7 @@ template 'journal/popup/edit_comment' => sub {
 
     popup_submit
         label   => _("Save"),
+        class   => 'icon v-save a-existing o-comment',
         onclick => [ 
             {
                 submit      => $action,
@@ -890,6 +891,7 @@ template 'journal/popup/edit_comment' => sub {
 
     popup_submit
         label   => _('Cancel'),
+        class   => 'icon v-cancel',
         onclick => [
             {
                 close_popup => 1,
@@ -919,6 +921,7 @@ template 'journal/popup/edit_entry' => sub {
 
     popup_submit
         label   => _("Save"),
+        class   => 'icon v-save a-existing o-entry',
         onclick => [ 
             {
                 submit      => $action,
@@ -932,6 +935,7 @@ template 'journal/popup/edit_entry' => sub {
 
     popup_submit
         label   => _('Cancel'),
+        class   => 'icon v-cancel',
         onclick => [
             {
                 close_popup => 1,
@@ -968,6 +972,7 @@ template 'journal/popup/change_start_stop' => sub {
 
     popup_submit
         label   => _("Set \u$which Time"),
+        class   => 'icon v-save a-existing o-time',
         onclick => [ 
             {
                 submit      => $action,
@@ -981,6 +986,7 @@ template 'journal/popup/change_start_stop' => sub {
 
     popup_submit
         label   => _('Cancel'),
+        class   => 'icon v-cancel',
         onclick => [
             {
                 close_popup => 1,
@@ -1162,6 +1168,7 @@ template 'project/new_task' => sub {
             render_action $action, [ qw/ name / ];
             form_submit
                 label   => _('Create'),
+                class   => 'icon v-save a-new o-task',
                 onclick => {
                     submit  => $action,
                     refresh => Jifty->web->current_region->parent,

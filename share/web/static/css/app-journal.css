@@ -35,10 +35,10 @@
     position: relative;
 }
 
-.new_comment_entry .inline-help {
-    top: 0;
+#inline-help {
+    top: 100px;
     right: 3px;
-    position: absolute;
+    position: fixed;
     width: 280px;
     border: 2px solid #333;
     border-left: 1px solid #666;
@@ -47,7 +47,7 @@
     background-color: #ffc;
 }
 
-.new_comment_entry .inline-help h3 {
+#inline-help h3 {
     font-size: 1em;
     margin: 0;
     padding: 0 3px;
@@ -55,8 +55,29 @@
     color: #ffc;
 }
 
-.new_comment_entry .inline-help ul {
+#inline-help ul {
     padding: 0 0 0 20px;
+    margin: 0;
+}
+
+#inline-help dl {
+    margin: 0;
+}
+
+#inline-help dl dt {
+    width: 30%;
+    font-weight: bold;
+    float: left;
+    clear: left;
+    padding: 0;
+    margin: 0;
+}
+
+#inline-help dl dd {
+    width: 70%;
+    float: left;
+    clear: right;
+    padding: 0;
     margin: 0;
 }
 

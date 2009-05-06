@@ -128,24 +128,29 @@ Behaviour.register({
             Jifty.Form.Element.clickDefaultButton(event.target);
         });
     },
-    'textarea.argument-name': function(e) {
+    'textarea.argument-name,textarea.argument-comment': function(e) {
         jQuery(e).keypress(Qublog.Journal.handleEnter)
-                 .autogrow()
-                 .focus();
-    },
-    'textarea.argument-comment': function(e) {
-        jQuery(e).keypress(Qublog.Journal.handleEnter)
+                 .helpContext('keypress', '#inline-help', 'thingy-comment')
+                 .helpContext('blur', '#inline-help', 'clear')
                  .autogrow()
                  .focus();
     },
     'input.argument-task_entry': function(e) {
-        jQuery(e).change(Qublog.Journal.updateJournalThingyButton);
-        jQuery(e).focus(function() { jQuery(this).select() });
+        jQuery(e).change(Qublog.Journal.updateJournalThingyButton)
+                 .helpContext('focus', '#inline-help', 'thingy-on')
+                 .helpContext('blur', '#inline-help', 'clear')
+                 .focus(function() { jQuery(this).select() });
     },
     'div.item': function(e) {
-        jQuery('.links', e).css({ visibility: 'hidden' });
         jQuery(e)
             .mouseover(function() {jQuery('.links', this).css({ visibility: 'visible' })})
-            .mouseout(function() {jQuery('.links', this).css({ visibility: 'hidden' })});
-    }
+            .mouseout(function() {jQuery('.links', this).css({ visibility: 'hidden' })})
+            .find('.links').css({ visibility: 'hidden' });
+    },
+    '#inline-help': function(e) {
+        var $e = jQuery(e);
+        $e.help('initialize')
+        jQuery('input.argument-task_entry')
+        jQuery('textarea.argument-name,textarea.argument-comment')
+    },
 });

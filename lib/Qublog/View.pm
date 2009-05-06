@@ -1641,15 +1641,29 @@ On screen help for creating new comments and such.
 =cut
 
 template 'help/journal/new_comment_entry' => sub {
-    div { { class is 'inline-help' }
+    div { 
+        { 
+            id    is 'inline-help',
+            style is 'display:none'
+        }
+
         h3 { 'Quick Reference' };
-        ul {
-            li { 'On #xyz123: Keyword to create a timer.' };
-            li { 'On #xyz123 to comment on a task.' };
-            li { 'Use #xyz123 to create/reference tags.' };
-            li { '[ ] #xyz123: Create a new task' };
-            li { '-[x] #xyz123: Create a new completed subtask' };
-            li { '[!] #xyz123: Delete a task' };
+
+        div { { id is 'thingy-on', class is 'context' }
+            dl {
+                dt { '#tag' };        dd { 'Create a task with tagged "#tag" or comment on that task' };
+                dt { '#tag: Title' }; dd { 'Start, restart, or comment upon a journal entry linked to #tag' };
+            };
+        };
+
+        div { { id is 'thingy-comment', class is 'context' }
+            dl {
+                dt { '#tag' };             dd { 'create or references a tag' };
+                dt { '[ ] #tag: title' };  dd { 'create or update a task' };
+                dt { '-[ ] #tag: title' }; dd { 'create a subtask' };
+                dt { '[x] #tag' };         dd { 'mark a task as complete' };
+                dt { '[!] #tag' };         dd { 'cancel a task' };
+            };
         };
     };
 };

@@ -43,9 +43,9 @@
 }
 
 #inline-help h3 {
-    font-size: 1em;
+    background-position: 1px 2px;
+    font-size: 1.2em;
     margin: 0;
-    padding: 0 3px;
     background-color: #333;
     color: #ffc;
 }

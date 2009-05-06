@@ -39,6 +39,7 @@ h2.icon, h2.icon.left {
 .o-comment { background-image: url(/images/icons/balloon.png) }
 .o-day     { background-image: url(/images/icons/calendar.png) }
 .o-entry   { background-image: url(/images/icons/report.png) }
+.o-help    { background-image: url(/images/icons/question-frame.png) }
 .o-link    { background-image: url(/images/icons/chain.png) }
 .o-journal { background-image: url(/images/icons/book-open.png) }
 .o-tag     { background-image: url(/images/icons/tag.png) }
@@ -95,7 +96,6 @@ h2.icon, h2.icon.left {
 .v-view.o-task      { background-image: url(/images/icons/ticket--arrow.png) }
 .v-view.a-done.o-task { background-image: url(/images/icons/tick.png) }
 .v-view.a-nix.o-task  { background-image: url(/images/icons/cross.png) }
-
 
 /*** Icon Adverbs ***/
 

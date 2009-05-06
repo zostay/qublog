@@ -1648,7 +1648,7 @@ template 'help/journal/new_comment_entry' => sub {
             style is 'display:none'
         }
 
-        h3 { 'Quick Reference' };
+        h3 { { class is 'icon o-help' } 'Quick Reference' };
 
         div { { id is 'thingy-on', class is 'context' }
             dl {

@@ -53,18 +53,16 @@ h2.icon, h2.icon.left {
 .a-begin         { }
 .o-timer.a-begin { background-image: url(/images/icons/alarm-clock-blue.png) }
 .a-create        { background-image: url(/images/icons/plus.png) }
+.a-done          { background-image: url(/images/icons/tick.png) }
 .a-end           { }
 .a-group         { background-image: url(/images/icons/folder.png) }
 .a-list          { }
+.a-nix           { background-image: url(/images/icons/cross.png) }
 .a-note          { background-image: url(/images/icons/chain.png) }
 .a-open          { }
 .a-project       { background-image: url(/images/icons/briefcase.png) }
 .a-quit          { }
 .a-update        { background-image: url(/images/icons/pencil.png) }
-
-/* more important adjectives later */
-.a-done          { background-image: url(/images/icons/tick.png) }
-.a-nix           { background-image: url(/images/icons/cross.png) }
 
 /*** Icon Verbs ***/
 
@@ -95,6 +93,9 @@ h2.icon, h2.icon.left {
 .v-view.o-day       { background-image: url(/images/icons/calendar--arrow.png) }
 .v-view.o-tag       { background-image: url(/images/icons/tag--arrow.png) }
 .v-view.o-task      { background-image: url(/images/icons/ticket--arrow.png) }
+.v-view.a-done.o-task { background-image: url(/images/icons/tick.png) }
+.v-view.a-nix.o-task  { background-image: url(/images/icons/cross.png) }
+
 
 /*** Icon Adverbs ***/
 

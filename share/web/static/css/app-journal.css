@@ -218,12 +218,12 @@ span.preamble.icon {
 
 /*** Task References ***/
 
-.task-reference.a-done.o-task {
+.icon.task-reference.v-view.a-done.o-task {
     color: #666;
     text-decoration: line-through;
 }
 
-.task-reference.a-nix.o-task {
+.icon.task-reference.v-view.a-nix.o-task {
     color: #933;
     text-decoration: line-through;
 }

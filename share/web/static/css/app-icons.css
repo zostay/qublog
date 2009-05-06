@@ -100,7 +100,7 @@ h2.icon, h2.icon.left {
 
 /*** Extra Embellishments ***/
 
-.icon.v-view.o-tag {
+.icon.v-view.o-tag, .icon.task-reference.v-view.o-task {
     background-color: #ffd;
     color: #666;
     margin: 1px;
@@ -108,7 +108,7 @@ h2.icon, h2.icon.left {
     text-decoration: none;
 }
 
-.icon.v-view.o-tag:hover {
+.icon.v-view.o-tag:hover, .icon.task-reference.v-view.o-task:hover {
     color: #333;
     background-color: #eeb;
 }

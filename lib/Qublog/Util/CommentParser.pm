@@ -419,9 +419,9 @@ sub _replace_task_nicknames {
                     $log->log_type, $old_task->{task_type}, 
                     $old_task->{status};
 
-        my $url  = Jifty->web->url(path => '/project').'#'.$task->tag;
+        my $url  = Jifty->web->url(path => '/project/edit/'.$task->tag);
         my $name = $task->name;
-        return qq{<a href="$url" class="icon task-reference $classes o-task">#$nickname: $name</a>};
+        return qq{<a href="$url" class="icon task-reference v-view $classes o-task">#$nickname: $name</a>};
     }
 
     my $tag = Qublog::Model::Tag->new;

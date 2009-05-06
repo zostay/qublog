@@ -32,6 +32,7 @@ sub start {
         ui/effects.core.js
         ui/effects.highlight.js
         ui/effects.shake.js
+        help.js
         journal.js
         tasks.js
     ));

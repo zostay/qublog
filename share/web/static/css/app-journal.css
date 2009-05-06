@@ -189,10 +189,6 @@ input.new_comment_entry_submit {
     font-style: italic;
 }
 
-.timer .links {
-    background-color: #ccc;
-}
-
 .timer .info1 p,
 .timer .info2 p,
 .timer .info3 p {

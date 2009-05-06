@@ -22,7 +22,8 @@
             if ($context.length) {
                 $context.show()
                         .addClass('visible-context');
-                $help.fadeIn('normal');
+                $help.css('top', options.top)
+                     .fadeIn('normal');
             }
         };
 
@@ -65,7 +66,10 @@
 
         else {
             this.bind(type, function() {
-                $help.help('update', { context: context });
+                $help.help('update', { 
+                    top:      $(this).offset().top
+                    ,context: context 
+                });
             });
         }
 

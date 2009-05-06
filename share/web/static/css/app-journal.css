@@ -29,16 +29,11 @@
     clear: none;
 }
 
-/*** Journal Entry Form ***/
-
-.new_comment_entry {
-    position: relative;
-}
+/*** Inline Help ***/
 
 #inline-help {
-    top: 100px;
     right: 3px;
-    position: fixed;
+    position: absolute;
     width: 280px;
     border: 2px solid #333;
     border-left: 1px solid #666;
@@ -79,6 +74,12 @@
     clear: right;
     padding: 0;
     margin: 0;
+}
+
+/*** Journal Thingy Form ***/
+
+.new_comment_entry {
+    position: relative;
 }
 
 .new_comment_entry div.argument-task_entry {

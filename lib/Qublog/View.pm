@@ -600,7 +600,6 @@ template 'journal/new_comment_entry' => sub {
 
     # The create entry form
     div { { class is 'new_comment_entry' }
-        show '/help/journal/new_comment_entry';
         form {
             render_action $action, [ qw/ task_entry comment / ];
             form_submit
@@ -614,6 +613,8 @@ template 'journal/new_comment_entry' => sub {
                 ;
         };
     };
+
+    show '/help/journal/new_comment_entry';
 };
 
 =head2 JOURNAL PRIVATE TEMPLATES

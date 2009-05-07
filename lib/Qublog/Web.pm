@@ -6,6 +6,7 @@ use Jifty::View::Declare -base;
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
+use Qublog::Web::Emoticon;
 
 require Exporter;
 our @ISA = qw/ Exporter /;
@@ -31,6 +32,19 @@ Qublog::Web - Helper subroutines for use in views
   };
 
 =head1 METHODS
+
+=head2 smileyize TEXT
+
+Converts emoticons to smileys.
+
+=cut
+
+sub smileyize($) {
+    my $text = shift;
+
+    my $emoticons = Qublog::Web::Emoticon->new;
+    return $emoticons->filter($text);
+}
 
 =head2 htmlify TEXT
 
@@ -58,7 +72,7 @@ sub htmlify($) {
     );
     $parser->htmlify;
 
-    return typography(markdown($parser->text));
+    return typography(markdown(smileyize($parser->text)));
 }
 
 =head2 format_time DATETIME

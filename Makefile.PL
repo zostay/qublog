@@ -10,6 +10,7 @@ requires    'Lingua::EN::Inflect';
 requires    'Math::BaseCalc';
 requires    'Moose';
 requires    'Test::MockModule';
+requires    'Text::Emoticon';
 requires    'Text::Markdown';
 requires    'Text::Typography';
 

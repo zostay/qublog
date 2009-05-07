@@ -35,6 +35,7 @@ sub start {
         help.js
         journal.js
         tasks.js
+        emoticon.js
     ));
 }
 

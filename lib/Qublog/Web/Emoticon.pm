@@ -78,6 +78,26 @@ sub default_config {
     };
 }
 
+sub filter {
+    my($self, $text) = @_;
+    return unless defined $text;
+    my $re = $self->pattern;
+    if ($self->{strict}) {
+      $text =~ s{(?<!\w)$re(?!\w)}{$self->do_filter($self->map->{$1}, $1)}eg;
+    } else {
+      $text =~ s{$re}{$self->do_filter($self->map->{$1}, $1)}eg;
+    }
+    return $text;
+}
+
+sub do_filter {
+    my($self, $icon, $original) = @_;
+    my $class = $self->{class} ? qq( class="$self->{class}") : "";
+    my $xhtml = $self->{xhtml} ? qq( /) : "";
+
+    return qq(<img title="$original" src="$self->{imgbase}/$icon"$class$xhtml>); 
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< hanenkamp@cpan.org >>

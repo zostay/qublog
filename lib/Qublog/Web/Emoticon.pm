@@ -28,7 +28,7 @@ The following emoticons are supported.
   :D :-D :^D 
   XD X-D X^D
   X[ X-[ X^[ 
-  :| :-| :^| 
+  :| :-| :^| :/ :-/ :^/
   :p :-p :^P :P :-P :^P 
   :$ :-$ :^$ 
   /:| /:-| /:^| 
@@ -49,7 +49,7 @@ my %icons = (
     grin     => [ qw{ :D :-D :^D } ],
     lol      => [ qw{ XD X-D X^D } ],
     mad      => [ qw{ X[ X-[ X^[ } ],
-    neutral  => [ qw{ :| :-| :^| } ],
+    neutral  => [ qw{ :| :-| :^| :/ :-/ :^/ } ],
     razz     => [ qw{ :p :-p :^P :P :-P :^P } ],
     red      => [ qw{ :$ :-$ :^$ } ],
     roll     => [ qw{ /:| /:-| /:^| } ],

@@ -68,11 +68,11 @@ sub htmlify($) {
     my ($scalar) = @_;
 
     my $parser = Qublog::Util::CommentParser->new( 
-        text      => $scalar,
+        text      => smileyize($scalar),
     );
     $parser->htmlify;
 
-    return typography(markdown(smileyize($parser->text)));
+    return typography(markdown($parser->text));
 }
 
 =head2 format_time DATETIME

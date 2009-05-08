@@ -3,4 +3,6 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Qublog::Test::Loader qw( t/lib );
+use lib 't/tests';
+
+use Qublog::Test::Loader qw( t/tests );

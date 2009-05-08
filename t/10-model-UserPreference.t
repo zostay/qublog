@@ -10,6 +10,9 @@ A basic test harness for the UserPreference model.
 
 use Jifty::Test tests => 11;
 
+TODO: {
+our $TODO = 'UserPreference is not used yet. Testing not yet needed.';
+
 # Make sure we can load the model
 use_ok('Qublog::Model::UserPreference');
 
@@ -47,3 +50,4 @@ is($collection->count, 0, "Deleted row is gone");
 $collection->unlimit;
 is($collection->count, 1, "Still one left");
 
+}

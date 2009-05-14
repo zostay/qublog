@@ -95,6 +95,7 @@ sub do_filter {
     my $class = $self->{class} ? qq( class="$self->{class}") : "";
     my $xhtml = $self->{xhtml} ? qq( /) : "";
 
+    $original = Jifty->web->escape($original);
     return qq(<img title="$original" src="$self->{imgbase}/$icon"$class$xhtml>); 
 }
 

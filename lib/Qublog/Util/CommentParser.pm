@@ -383,8 +383,8 @@ sub execute {
             # If this doesn't include a [*] line, clear the @parent_stack
             @parent_stack = (); 
 
-            m{#\w+} && do {
-                s/#(\w+)/$self->_eval_tag_name($1)/ge;
+            m{(?<!&)#\w+} && do {
+                s/(?<!&)#(\w+)/$self->_eval_tag_name($1)/ge;
                 last SWITCH;
             };
         }
@@ -434,7 +434,7 @@ sub htmlify {
     my $self = shift;
     my $text = $self->text;
 
-    $text =~ s/#(\w+)(?:\*(\d+))?/_replace_task_nicknames($1, $2)/ge;
+    $text =~ s/(?<!&)#(\w+)(?:\*(\d+))?/_replace_task_nicknames($1, $2)/ge;
 
     $self->text($text);
 }

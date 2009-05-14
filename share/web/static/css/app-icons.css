@@ -94,6 +94,7 @@ h2.icon, h2.icon.left {
 .v-view.o-day       { background-image: url(/images/icons/calendar--arrow.png) }
 .v-view.o-tag       { background-image: url(/images/icons/tag--arrow.png) }
 .v-view.o-task      { background-image: url(/images/icons/ticket--arrow.png) }
+.v-view.a-create.o-task { background-image: url(/images/icons/plus.png) }
 .v-view.a-done.o-task { background-image: url(/images/icons/tick.png) }
 .v-view.a-nix.o-task  { background-image: url(/images/icons/cross.png) }
 

@@ -8,17 +8,16 @@ A basic test harness for the Task model.
 
 =cut
 
-use Jifty::Test tests => 11;
+use lib 't/lib';
+use Jifty::Test tests => 10;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::Task');
 
-# Grab a system user
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, "Found a system user");
-
 # Try testing a create
-my $o = Qublog::Model::Task->new(current_user => $system_user);
+my $o = Qublog::Model::Task->new;
 my ($id) = $o->create( name => 'Task 1' );
 ok($id, "Task create returned success");
 ok($o->id, "New Task has valid id set");
@@ -30,7 +29,7 @@ ok($o->id, "Task create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 
 # Searches in general
-my $collection =  Qublog::Model::TaskCollection->new(current_user => $system_user);
+my $collection =  Qublog::Model::TaskCollection->new;
 $collection->unlimit;
 is($collection->count, 3, "Finds three records");
 

@@ -2,15 +2,14 @@
 use strict;
 use warnings;
 
-use Jifty::Test tests => 13;
+use lib 't/lib';
+use Jifty::Test tests => 12;
+use Qublog::Test;
+setup_test_user;
 
 use_ok('Qublog::Model::Task');
 
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, 'got a system user');
-my %su = ( current_user => $system_user );
-
-my $task = Qublog::Model::Task->new(%su);
+my $task = Qublog::Model::Task->new;
 $task->create( name => 'Testing' );
 ok($task->id, 'got a task');
 

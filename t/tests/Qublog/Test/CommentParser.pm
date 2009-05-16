@@ -6,12 +6,14 @@ use base qw( Test::Class );
 
 INIT { Test::Class->runtests }
 
+use lib 't/lib';
 use Jifty::Everything;
 use Jifty::Test;
+use Qublog::Test;
 
 # Some initial setup
 Jifty->new;
-Jifty::Test->web;
+setup_test_user;
 
 our $NOT_A_TEST = 1;
 

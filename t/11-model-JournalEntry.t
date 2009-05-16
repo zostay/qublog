@@ -8,7 +8,10 @@ A basic test harness for the JournalEntry model.
 
 =cut
 
+use lib 't/lib';
 use Jifty::Test tests => 11;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::JournalEntry');
@@ -18,7 +21,7 @@ my $system_user = Qublog::CurrentUser->superuser;
 ok($system_user, "Found a system user");
 
 # Try testing a create
-my $o = Qublog::Model::JournalEntry->new(current_user => $system_user);
+my $o = Qublog::Model::JournalEntry->new;
 my ($id) = $o->create( name => 'test 1' );
 ok($id, "JournalEntry create returned success");
 ok($o->id, "New JournalEntry has valid id set");
@@ -30,7 +33,7 @@ ok($o->id, "JournalEntry create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 
 # Searches in general
-my $collection =  Qublog::Model::JournalEntryCollection->new(current_user => $system_user);
+my $collection =  Qublog::Model::JournalEntryCollection->new;
 $collection->unlimit;
 is($collection->count, 2, "Finds two records");
 

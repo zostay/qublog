@@ -8,17 +8,16 @@ A basic test harness for the TaskChange model.
 
 =cut
 
-use Jifty::Test tests => 15;
+use lib 't/lib';
+use Jifty::Test tests => 14;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::Task');
 use_ok('Qublog::Model::TaskChange');
 
-# Grab a system user
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, "Found a system user");
-
-my $task = Qublog::Model::Task->new(current_user => $system_user);
+my $task = Qublog::Model::Task->new;
 $task->create(
     name => 'This is a new test task',
 );

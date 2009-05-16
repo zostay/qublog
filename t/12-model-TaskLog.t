@@ -8,26 +8,25 @@ A basic test harness for the TaskLog model.
 
 =cut
 
-use Jifty::Test tests => 13;
+use lib 't/lib';
+use Jifty::Test tests => 12;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::Task');
 use_ok('Qublog::Model::TaskLog');
 
-# Grab a system user
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, "Found a system user");
-
 # Get the default task for testing
 my $task = Qublog::Model::Task->project_none;
 
 # Check to make sure the initial user exists
-my $collection =  Qublog::Model::TaskLogCollection->new(current_user => $system_user);
+my $collection =  Qublog::Model::TaskLogCollection->new;
 $collection->unlimit;
 is($collection->count, 1, "Finds one record from creating the none project");
 
 # Try testing a create
-my $o = Qublog::Model::TaskLog->new(current_user => $system_user);
+my $o = Qublog::Model::TaskLog->new;
 my ($id) = $o->create(
     task     => $task,
     log_type => 'note',
@@ -45,7 +44,7 @@ ok($o->id, "TaskLog create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 
 # Searches in general
-$collection =  Qublog::Model::TaskLogCollection->new(current_user => $system_user);
+$collection =  Qublog::Model::TaskLogCollection->new;
 $collection->unlimit;
 is($collection->count, 3, "Finds three records");
 

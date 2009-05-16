@@ -8,32 +8,31 @@ A basic test harness for the CommentTag model.
 
 =cut
 
-use Jifty::Test tests => 14;
+use lib 't/lib';
+use Jifty::Test tests => 13;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::CommentTag');
 
-# Grab a system user
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, "Found a system user");
-
-my $comment = Qublog::Model::Comment->new(current_user => $system_user);
+my $comment = Qublog::Model::Comment->new;
 $comment->create( 
     journal_day => Qublog::Model::JournalDay->for_today,
     name        => 'This is some comment',
 );
 ok($comment->id, 'got a comment');
 
-my $tag1 = Qublog::Model::Tag->new(current_user => $system_user);
+my $tag1 = Qublog::Model::Tag->new;
 $tag1->create( name => 'tag1' );
 ok($tag1->id, 'got tag1');
 
-my $tag2 = Qublog::Model::Tag->new(current_user => $system_user);
+my $tag2 = Qublog::Model::Tag->new;
 $tag2->create( name => 'tag2' );
 ok($tag2->id, 'got tag2');
 
 # Try testing a create
-my $o = Qublog::Model::CommentTag->new(current_user => $system_user);
+my $o = Qublog::Model::CommentTag->new;
 my ($id) = $o->create( comment => $comment, tag => $tag1 );
 ok($id, "CommentTag create returned success");
 ok($o->id, "New CommentTag has valid id set");
@@ -45,7 +44,7 @@ ok($o->id, "CommentTag create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 
 # Searches in general
-my $collection =  Qublog::Model::CommentTagCollection->new(current_user => $system_user);
+my $collection =  Qublog::Model::CommentTagCollection->new;
 $collection->unlimit;
 is($collection->count, 2, "Finds two records");
 

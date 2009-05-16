@@ -8,23 +8,22 @@ A basic test harness for the JournalTimer model.
 
 =cut
 
-use Jifty::Test tests => 13;
+use lib 't/lib';
+use Jifty::Test tests => 12;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the model
 use_ok('Qublog::Model::JournalEntry');
 use_ok('Qublog::Model::JournalTimer');
 
-# Grab a system user
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, "Found a system user");
-
 # Try creating an entry
-my $entry = Qublog::Model::JournalEntry->new(current_user => $system_user);
+my $entry = Qublog::Model::JournalEntry->new;
 $entry->create( name => 'testing' );
 ok($entry->id, 'we have a journal entry');
 
 # Try testing a create
-my $o = Qublog::Model::JournalTimer->new(current_user => $system_user);
+my $o = Qublog::Model::JournalTimer->new;
 my ($id) = $o->create( journal_entry => $entry );
 ok($id, "JournalTimer create returned success");
 ok($o->id, "New JournalTimer has valid id set");
@@ -36,7 +35,7 @@ ok($o->id, "JournalTimer create returned another value");
 isnt($o->id, $id, "And it is different from the previous one");
 
 # Searches in general
-my $collection =  Qublog::Model::JournalTimerCollection->new(current_user => $system_user);
+my $collection =  Qublog::Model::JournalTimerCollection->new;
 $collection->unlimit;
 is($collection->count, 3, "Finds three records");
 

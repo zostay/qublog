@@ -8,7 +8,7 @@ Test the various features of the create journal thingy action.
 
 =cut
 
-use Jifty::Test tests => 70;
+use Jifty::Test tests => 71;
 Jifty::Test->web;
 
 # Make sure we can load the action

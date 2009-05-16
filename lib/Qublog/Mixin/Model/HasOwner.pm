@@ -22,9 +22,16 @@ sub register_triggers {
 sub before_create {
     my ($self, $args) = @_;
 
-    if (not defined $args->{owner} and Jifty->web->current_user->id) {
-        $args->{owner} = Jifty->web->current_user->id;
+    if (not defined $args->{owner}) {
+        if ($self->current_user->id) {
+            $args->{owner} = $self->current_user->id;
+        }
+        elsif (Jifty->web->current_user->id) {
+            $args->{owner} = Jifty->web->current_user->id
+        }
     }
+
+    die "Owner is required." unless $args->{owner};
 
     return 1;
 }

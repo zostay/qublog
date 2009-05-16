@@ -8,21 +8,13 @@ Test the various features of the create journal thingy action.
 
 =cut
 
-use Jifty::Test tests => 71;
-Jifty::Test->web;
+use lib 't/lib';
+use Jifty::Test tests => 69;
+use Qublog::Test;
+setup_test_user;
 
 # Make sure we can load the action
 use_ok('Qublog::Action::CreateJournalThingy');
-
-my $user = Qublog::Model::User->new;
-$user->create( name => 'test_user', password => 'secret' );
-ok($user->id, 'got a user');
-
-my $current_user = Qublog::CurrentUser->new( id => $user->id );
-ok($current_user, 'got a current user');
-my %su = ();
-
-Jifty->web->current_user($current_user);
 
 sub new_cjt {
     my %arguments = @_;
@@ -90,14 +82,14 @@ sub verify_comment {
 
 # We should now have some tasks
 {
-    my $tasks = Qublog::Model::TaskCollection->new(%su);
+    my $tasks = Qublog::Model::TaskCollection->new();
     $tasks->unlimit;
 
     is($tasks->count, 2, 'we now have two tasks');
     verify_task($tasks, 3, 'none');
     verify_task($tasks, 'blah', 'This is a task');
 
-    my $comments = Qublog::Model::CommentCollection->new(%su);
+    my $comments = Qublog::Model::CommentCollection->new();
     $comments->unlimit;
 
     is($comments->count, 0, 'we have no comments yet');
@@ -115,13 +107,13 @@ sub verify_comment {
 
 # We should now have a comment on a task
 {
-    my $tasks = Qublog::Model::TaskCollection->new(%su);
+    my $tasks = Qublog::Model::TaskCollection->new();
     $tasks->unlimit;
 
     is($tasks->count, 2, 'we still have two tasks');
     my $task = $tasks->items_array_ref->[1];
 
-    my $comments = Qublog::Model::CommentCollection->new(%su);
+    my $comments = Qublog::Model::CommentCollection->new();
     $comments->unlimit;
 
     is($comments->count, 1, 'we have one comment');
@@ -140,21 +132,21 @@ sub verify_comment {
 
 # We should now have a comment on a timer
 {
-    my $journals = Qublog::Model::JournalEntryCollection->new(%su);
+    my $journals = Qublog::Model::JournalEntryCollection->new();
     $journals->unlimit;
 
     is($journals->count, 1, 'we now have one entry');
     my $journal = $journals->first;
     is($journal->name, '#blah: foo', 'journal is #blah: foo');
 
-    my $timers = Qublog::Model::JournalTimerCollection->new(%su);
+    my $timers = Qublog::Model::JournalTimerCollection->new();
     $timers->unlimit;
 
     is($timers->count, 1, 'we now have one timer');
     my $timer = $timers->first;
     is($timer->journal_entry->id, $journal->id, 'timer belongs to the expected entry');
 
-    my $comments = Qublog::Model::CommentCollection->new(%su);
+    my $comments = Qublog::Model::CommentCollection->new();
     $comments->unlimit;
 
     is($comments->count, 2, 'we now have 2 comments');
@@ -174,21 +166,21 @@ sub verify_comment {
 
 # We should have two comments on the same timer
 {
-    my $journals = Qublog::Model::JournalEntryCollection->new(%su);
+    my $journals = Qublog::Model::JournalEntryCollection->new();
     $journals->unlimit;
 
     is($journals->count, 1, 'we now have one entry');
     my $journal = $journals->first;
     is($journal->name, '#blah: foo', 'journal is #blah: foo');
 
-    my $timers = Qublog::Model::JournalTimerCollection->new(%su);
+    my $timers = Qublog::Model::JournalTimerCollection->new();
     $timers->unlimit;
 
     is($timers->count, 1, 'we now have one timer');
     my $timer = $timers->first;
     is($timer->journal_entry->id, $journal->id, 'timer belongs to the expected entry');
 
-    my $comments = Qublog::Model::CommentCollection->new(%su);
+    my $comments = Qublog::Model::CommentCollection->new();
     $comments->unlimit;
 
     is($comments->count, 3, 'we now have 3 comments');
@@ -212,14 +204,14 @@ sub verify_comment {
 
 # We should have three comments on the same entry
 {
-    my $journals = Qublog::Model::JournalEntryCollection->new(%su);
+    my $journals = Qublog::Model::JournalEntryCollection->new();
     $journals->unlimit;
 
     is($journals->count, 1, 'we now have one entry');
     my $journal = $journals->first;
     is($journal->name, '#blah: foo', 'journal is #blah: foo');
 
-    my $timers = Qublog::Model::JournalTimerCollection->new(%su);
+    my $timers = Qublog::Model::JournalTimerCollection->new();
     $timers->unlimit;
 
     is($timers->count, 2, 'we now have two timers');
@@ -228,7 +220,7 @@ sub verify_comment {
     my $timer2 = $timers->next;
     is($timer2->journal_entry->id, $journal->id, 'timer belongs to the expected entry');
 
-    my $comments = Qublog::Model::CommentCollection->new(%su);
+    my $comments = Qublog::Model::CommentCollection->new();
     $comments->unlimit;
 
     is($comments->count, 4, 'we now have 4 comments');

@@ -18,6 +18,8 @@ use Qublog::Record schema {
 
 sub since { '0.6.0' }
 
+sub owner { shift->comment->owner }
+
 sub current_user_can {
     my $self = shift;
     my ($op, %args) = @_;
@@ -29,13 +31,11 @@ sub current_user_can {
             $comment->load($comment);
         }
 
-        return 1 if $comment->id 
-                and $comment->owner->id == Jifty->web->current_user->id;
+        return 1 if $self->current_user->owns($comment);
     }
 
     if ($op eq 'delete') {
-        return 1 if $self->comment->id
-                and $self->comment->owner->id == Jifty->web->current_user->id;
+        return 1 if $self->current_user->owns($self);
     }
 
     return $self->SUPER::current_user_can(@_);

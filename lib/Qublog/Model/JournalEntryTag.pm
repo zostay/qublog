@@ -18,6 +18,8 @@ use Qublog::Record schema {
 
 sub since { '0.6.0' }
 
+sub owner { shift->journal_entry->owner }
+
 sub current_user_can {
     my $self = shift;
     my ($op, %args) = @_;
@@ -29,14 +31,11 @@ sub current_user_can {
             $journal_entry->load($journal_entry);
         }
 
-        return 1 if $journal_entry->id 
-                and $journal_entry->owner->id == Jifty->web->current_user->id;
+        return 1 if $self->current_user->owns($journal_entry);
     }
 
     if ($op eq 'delete') {
-        return 1 if $self->journal_entry->id
-                and $self->journal_entry->owner->id 
-                    == Jifty->web->current_user->id;
+        return 1 if $self->current_user->owns($self);
     }
 
     return $self->SUPER::current_user_can(@_);

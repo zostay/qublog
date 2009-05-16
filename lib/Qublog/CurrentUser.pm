@@ -18,4 +18,16 @@ sub _init {
     return 1;
 }
 
+sub owns {
+    my $self = shift;
+    my $object = shift;
+
+    return $self->id
+       and $object
+       and $object->can('owner')
+       and $object->owner
+       and $object->owner->id
+       and $self->id == $object->owner->id;
+}
+
 1;

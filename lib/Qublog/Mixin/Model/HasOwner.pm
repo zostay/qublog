@@ -10,6 +10,8 @@ use Jifty::DBI::Record schema {
         ;
 };
 
+use Carp;
+
 sub register_triggers {
     my $self = shift;
 
@@ -31,7 +33,7 @@ sub before_create {
         }
     }
 
-    die "Owner is required." unless $args->{owner};
+    confess "Owner is required." unless $args->{owner};
 
     return 1;
 }

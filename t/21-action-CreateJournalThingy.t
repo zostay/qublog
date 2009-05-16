@@ -14,9 +14,15 @@ Jifty::Test->web;
 # Make sure we can load the action
 use_ok('Qublog::Action::CreateJournalThingy');
 
-my $system_user = Qublog::CurrentUser->superuser;
-ok($system_user, 'got a system user');
-my %su = (current_user => $system_user);
+my $user = Qublog::Model::User->new;
+$user->create( name => 'test_user', password => 'secret' );
+ok($user->id, 'got a user');
+
+my $current_user = Qublog::CurrentUser->new( id => $user->id );
+ok($current_user, 'got a current user');
+my %su = ();
+
+Jifty->web->current_user($current_user);
 
 sub new_cjt {
     my %arguments = @_;

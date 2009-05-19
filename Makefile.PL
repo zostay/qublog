@@ -4,6 +4,7 @@ name        'Qublog';
 all_from    'lib/Qublog.pm';
 
 requires    'DateTime';
+requires    'DateTime::Set';
 requires    'Hash::Merge';
 requires    'Jifty' => '0.80408';
 requires    'Lingua::EN::Inflect';

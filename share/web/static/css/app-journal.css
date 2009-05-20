@@ -93,7 +93,7 @@
 }
 
 .new_comment_entry input.argument-task_entry {
-    font-family: Optima;
+    font-family: Optima, URW Palladio L;
     width: 30%;
 }
 
@@ -112,7 +112,7 @@
 
 .new_comment_entry textarea.argument-comment {
     width: 100%;
-    font-family: Optima;
+    font-family: Optima, URW Palladio L;
     height: 5em;
     min-height: 5em;
 }

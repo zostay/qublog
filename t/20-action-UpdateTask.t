@@ -9,7 +9,7 @@ A test harness for the UpdateTask action.
 =cut
 
 use lib 't/lib';
-use Jifty::Test tests => 10;
+use Jifty::Test tests => 12;
 use Qublog::Test;
 setup_test_user;
 
@@ -30,6 +30,9 @@ my $action = Jifty->web->new_action(
 );
 $action->argument_value( name => 'This is a test.' );
 $action->run;
+
+ok($action->result->success, 'successful action');
+is($action->result->message, 'Updated task.', 'update message');
 
 {
     my $logs = $task->task_logs;

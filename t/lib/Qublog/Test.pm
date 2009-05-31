@@ -11,6 +11,9 @@ our @EXPORT = qw(
     test_user 
     test_current_user 
     setup_test_user 
+
+    test_entry
+    test_timer
 );
 
 =head1 NAME
@@ -74,7 +77,7 @@ sub test_current_user(;$$) {
     return Qublog::CurrentUser->new( id => $user->id );
 }
 
-=head1 setup_test_user
+=head2 setup_test_user
 
 This method creates a test user (or uses the same arguments as L</test_current_user> to get one). It then calls C<< Jifty::Test->web >> and sets C<< Jifty->web->current_user >> to the new current user object.
 
@@ -85,6 +88,42 @@ sub setup_test_user(;$$) {
 
     Jifty::Test->web;
     Jifty->web->current_user($current_user);
+}
+
+=head2 test_entry
+
+Create a test L<Qublog::Model::JournalEntry>. Use the given options hash to create a test entry.
+
+=cut
+
+sub test_entry {
+    my (%options) = @_;
+
+    $options{journal_day} ||= Qublog::Model::JournalDay->for_today;
+    $options{name}        ||= 'Testing';
+
+    my $entry = Qublog::Model::JournalEntry->new;
+    $entry->create(%options);
+
+    return $entry;
+}
+
+=head2 test_timer
+
+Create a test L<Qublog::Model::JournalTimer>. Use the given options hash to create a test timer.
+
+=cut
+
+sub test_timer {
+    my (%options) = @_;
+
+    $options{journal_entry} = test_entry()
+        unless defined $options{journal_entry};
+
+    my $timer = Qublog::Model::JournalTimer->new;
+    $timer->create(%options);
+
+    return $timer;
 }
 
 =head1 AUTHOR

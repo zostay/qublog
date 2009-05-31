@@ -14,6 +14,7 @@ our @EXPORT = qw(
 
     test_entry
     test_timer
+    test_task
 );
 
 =head1 NAME
@@ -124,6 +125,23 @@ sub test_timer {
     $timer->create(%options);
 
     return $timer;
+}
+
+=head2 test_task
+
+Create a L<Qublog::Model::Task> for testing. Uses the given options hash to override defaults.
+
+=cut
+
+sub test_task {
+    my (%options) = @_;
+
+    $options{name} ||= 'Testing';
+
+    my $task = Qublog::Model::Task->new;
+    $task->create(%options);
+
+    return $task;
 }
 
 =head1 AUTHOR

@@ -22,12 +22,14 @@ sub owns {
     my $self = shift;
     my $object = shift;
 
-    return $self->id
+    return (
+           $self->id
        and $object
        and $object->can('owner')
        and $object->owner
        and $object->owner->id
-       and $self->id == $object->owner->id;
+       and ($self->id == $object->owner->id)
+   );
 }
 
 1;

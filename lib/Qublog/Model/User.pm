@@ -94,6 +94,17 @@ This class was added in schema version 0.5.0.
 
 sub since { '0.5.0' }
 
+=head2 owner
+
+Returns self.
+
+=cut
+
+sub owner {
+    my $self = shift;
+    return $self;
+}
+
 =head2 current_user_can
 
 The user can. Everyone else can't.

@@ -150,6 +150,10 @@ for internal use only at this time.
 
 L<Jifty::DBI::Filter>, L<Digest::MD5>
 
+=head1 AUTHOR
+
+This code was originally taken from the L<Jifty::DBI::Filter::SaltHash> module and modified to better suit the needs of Qublog.
+
 =cut
 
 1;

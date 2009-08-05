@@ -273,7 +273,7 @@ sub _journal_items_timer {
             format  => [ 'p' ],
         },
         info1     => {
-            content => capture {
+            content => scalar div {
                 # Output the duration elapsed for the current timer
                 span { { class is 'number' } 
                     sprintf '%.2f', $self->hours 
@@ -290,7 +290,7 @@ sub _journal_items_timer {
             ],
         },
         info2     => {
-            content => capture {
+            content => scalar div {
                 # Output the total duration for the current entry
                 span { { class is 'number' } 
                     sprintf '%.2f', $self->journal_entry->hours 
@@ -498,7 +498,7 @@ template 'journal/summary' => sub {
             },
         },
         content => {
-            content => capture {
+            content => scalar div {
                 span { { class is 'unit' } _('Quitting time ') };
                 span { { class is 'time' } 
                     format_time $quitting_time;
@@ -515,7 +515,7 @@ template 'journal/summary' => sub {
             ],
         },
         info1 => {
-            content => capture {
+            content => scalar div {
                 span { { class is 'number' } sprintf '%.2f', $total_hours };
                 span { { class is 'unit' } _('hours so far') };
             },
@@ -529,7 +529,7 @@ template 'journal/summary' => sub {
             ],
         },
         info2 => {
-            content => capture {
+            content => scalar div {
                 span { { class is 'number' } sprintf '%.2f', $hours_left };
                 span { { class is 'unit' } _('hours to go') };
             },

@@ -16,7 +16,6 @@ our @EXPORT = qw/
     format_time
     format_date
     format_links
-    capture
 /;
 
 =head1 NAME
@@ -152,26 +151,6 @@ sub format_links(\@) {
     Template::Declare->new_buffer_frame;
     {
         show_links @$links;
-        $content = Template::Declare->buffer->data || '';
-    }
-    Template::Declare->end_buffer_frame;
-
-    return $content;
-}
-
-=head2 capture CODE
-
-This snags a L<Template::Declare> template and returns it as a string.
-
-=cut
-
-sub capture(&) {
-    my $code = shift;
-
-    my $content;
-    Template::Declare->new_buffer_frame;
-    {
-        $code->();
         $content = Template::Declare->buffer->data || '';
     }
     Template::Declare->end_buffer_frame;

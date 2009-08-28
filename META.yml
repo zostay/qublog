@@ -2,8 +2,12 @@
 abstract: 'An application to help you journal your work'
 author:
   - 'Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>'
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.77'
+generated_by: 'Module::Install version 0.91'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -11,20 +15,24 @@ meta-spec:
 name: Qublog
 no_index:
   directory:
-    - share
     - inc
+    - share
     - t
 requires:
   DateTime: 0
+  DateTime::Set: 0
   Hash::Merge: 0
   Jifty: 0.80408
   Lingua::EN::Inflect: 0
   Math::BaseCalc: 0
   Moose: 0
+  Number::RecordLocator: 0
   Test::Class: 0
   Test::MockModule: 0
   Text::Emoticon: 0
   Text::Markdown: 0
   Text::Typography: 0
   perl: 5.8.0
+resources:
+  license: http://opensource.org/licenses/artistic-license.php
 version: 0.01

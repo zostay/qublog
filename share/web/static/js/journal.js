@@ -16,9 +16,9 @@ Qublog.Journal.updateActiveTimers = function() {
 
     jQuery('.entry-running').each(function() {
         var summary_el   = jQuery(this);
-        var timestamp_el = jQuery('.timestamp .time', this);
-        var elapsed_el   = jQuery('.elapsed .number', this);
-        var total_el     = jQuery('.total .number', this);
+		var timestamp_el = summary_el.find('.timestamp .o-time');
+        var elapsed_el   = summary_el.find('.elapsed .number');
+        var total_el     = summary_el.find('.total .number');
 
         var stop  = new Date();
         var load  = new Date(Date.parse(summary_el.attr('load_time')));
@@ -52,9 +52,9 @@ Qublog.Journal.updateActiveTimers = function() {
 
     jQuery('.day-summary').each(function() {
         var summary_el  = jQuery(this);
-        var quitting_el = jQuery('.quit .time', this);
-        var total_el    = jQuery('.total .number', this);
-        var to_go_el    = jQuery('.remaining .number', this);
+        var quitting_el = summary_el.find('.quit .time');
+        var total_el    = summary_el.find('.total .number');
+        var to_go_el    = summary_el.find('.remaining .number');
 
         var to_go_hours = Math.max(0, 8.0 - day_summary_total);
         var hours       = Math.floor(to_go_hours);

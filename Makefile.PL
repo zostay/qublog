@@ -10,6 +10,7 @@ requires    'Jifty' => '0.80408';
 requires    'Lingua::EN::Inflect';
 requires    'Math::BaseCalc';
 requires    'Moose';
+requires    'Number::RecordLocator';
 requires    'Test::Class';
 requires    'Test::MockModule';
 requires    'Text::Emoticon';

@@ -2,9 +2,23 @@ use strict;
 use warnings;
 
 package Qublog;
+use Moose;
+use MooseX::ClassAttribute;
 use 5.008;
 
 our $VERSION = '0.01';
+
+use Qublog::Schema;
+
+class_has schema => (
+    is        => 'rw',
+    isa       => 'Qublog::Schema',
+    lazy      => 1,
+    default   => sub { Qublog::Schema->connect( sub { Jifty->handle->dbh } ) },
+    handles   => [ qw(
+        resultset sources source class txn_do
+    ) ],
+);
 
 =head1 NAME
 

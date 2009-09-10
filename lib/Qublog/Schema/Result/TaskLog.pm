@@ -9,7 +9,7 @@ __PACKAGE__->add_columns(
     id         => { data_type => 'int' },
     task       => { data_type => 'int' },
     log_type   => { data_type => 'text' },
-    created_on => { data_type => 'datetime' },
+    created_on => { data_type => 'datetime', timezone => 'UTC' },
     comment    => { data_type => 'int' },
 );
 __PACKAGE__->set_primary_key('id');

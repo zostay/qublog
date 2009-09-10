@@ -16,7 +16,7 @@ sub find_by_date {
 
 sub find_today {
     my $self = shift;
-    return $self->find_by_date( Jifty::DateTime->today );
+    return $self->find_by_date( Qublog::DateTime->today );
 }
 
 1;

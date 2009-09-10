@@ -2,7 +2,18 @@ use strict;
 use warnings;
 
 package Qublog::Web;
-use Jifty::View::Declare -base;
+
+BEGIN {
+    if (defined $Jifty::VERSION) {
+        eval "use Jifty::View::Declare -base;";
+    }
+    else {
+        eval qq{
+            use Qublog::Server::View::Common;
+            use Template::Declare::Tags;
+        };
+    }
+};
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';

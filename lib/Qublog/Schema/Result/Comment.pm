@@ -9,9 +9,9 @@ __PACKAGE__->add_columns(
     id            => { data_type => 'int' },
     journal_day   => { data_type => 'int' },
     journal_timer => { data_type => 'int' },
-    created_on    => { data_type => 'datetime' },
+    created_on    => { data_type => 'datetime', timezone => 'UTC' },
     name          => { data_type => 'text' },
-));
+);
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( journal_day => 'Qublog::Schema::Result::JournalDay' );
 __PACKAGE__->belongs_to( journal_timer => 'Qublog::Schema::Result::JournalTimer' );

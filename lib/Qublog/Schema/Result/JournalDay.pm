@@ -11,7 +11,19 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->has_many( journal_entries => 'Qublog::Schema::Result::JournalEntry', 'journal_day' );
+__PACKAGE__->many_to_many( journal_timers => journal_entries => 'journal_timers' );
 __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_day' );
-__PACKAGE__->result_set_class('Qublog::Schema::ResultSet::JournalDay');
+__PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalDay');
+
+sub is_today {
+    my $self = shift;
+    return $self->datestamp->ymd eq Qublog::DateTime->today->ymd;
+}
+
+sub journal_items {
+    my $self = shift;
+
+    # TODO Fill this in
+}
 
 1;

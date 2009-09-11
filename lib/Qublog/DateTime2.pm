@@ -5,6 +5,8 @@ use DateTime;
 use DateTime::TimeZone;
 use DateTime::Format::Natural;
 
+use constant JS_DATETIME_FORMAT => 'eee MMM dd HH:mm:ss zzz yyy';
+
 has human_formatter => (
     is        => 'rw',
     lazy      => 1,
@@ -36,12 +38,18 @@ sub format_human_time {
     return $date->hms;
 }
 
+sub format_js_datetime {
+    my ($self, $date) = @_;
+
+    return $date->format_cldr(JS_DATETIME_FORMAT);
+}
+
 sub now {
-    return DateTime->now;
+    return DateTime->now( time_zone => 'UTC' );
 }
 
 sub today {
-    return DateTime->today;
+    return DateTime->today( time_zone => 'UTC' );
 }
 
 1;

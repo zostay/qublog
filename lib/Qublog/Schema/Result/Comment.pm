@@ -11,10 +11,12 @@ __PACKAGE__->add_columns(
     journal_timer => { data_type => 'int' },
     created_on    => { data_type => 'datetime', timezone => 'UTC' },
     name          => { data_type => 'text' },
+    owner         => { data_type => 'int' },
 );
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( journal_day => 'Qublog::Schema::Result::JournalDay' );
 __PACKAGE__->belongs_to( journal_timer => 'Qublog::Schema::Result::JournalTimer' );
+__PACKAGE__->belongs_to( owner => 'Qublog::Schema::Result::User' );
 __PACKAGE__->has_many( task_logs => 'Qublog::Schema::Result::TaskLog', 'comment' );
 __PACKAGE__->has_many( comment_tags => 'Qublog::Schema::Result::CommentTag', 'comment' );
 __PACKAGE__->many_to_many( tags => comment_tags => 'tag' );

@@ -1,7 +1,8 @@
 package Qublog::Schema::Result::JournalEntry;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+
+extends qw( DBIx::Class );
+with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('journal_entries');
@@ -23,5 +24,21 @@ __PACKAGE__->has_many( journal_timers => 'Qublog::Schema::Result::JournalTimer',
 __PACKAGE__->has_many( journal_entry_tags => 'Qublog::Schema::Result::JournalEntryTag', 'journal_entry' );
 __PACKAGE__->many_to_many( comments => journal_timer => 'comments' );
 __PACKAGE__->many_to_many( tags => journal_entry_tags => 'tag' );
+
+sub as_journal_item {}
+
+sub journal_items {
+    my ($self, $c) = @_;
+
+    my $timers = $self->journal_timers;
+    $timers->search({
+        'journal_entry.owner' => $c->user->id,
+    }, {
+        join     => [ 'journal_entry' ],
+        order_by => { -asc => 'start_time' },
+    });
+
+    return [ $timers ];
+}
 
 1;

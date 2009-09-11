@@ -1,7 +1,8 @@
 package Qublog::Schema::Result::JournalDay;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+extends qw( DBIx::Class );
+
+with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('journal_days');
@@ -20,10 +21,20 @@ sub is_today {
     return $self->datestamp->ymd eq Qublog::DateTime->today->ymd;
 }
 
-sub journal_items {
-    my $self = shift;
+sub as_journal_item {}
 
-    # TODO Fill this in
+sub journal_items {
+    my ($self, $c) = @_;
+
+    my $entries = $self->journal_entries;
+    $entries->search({
+        'journal_entry.owner' => $c->user->id,
+    }, {
+        join     => [ 'journal_entry' ],
+        order_by => { -asc => 'start_time' },
+    });
+
+    return [ $entries ];
 }
 
 1;

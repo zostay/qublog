@@ -1,7 +1,7 @@
 package Qublog::Schema::Result::Tag;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+extends qw( DBIx::Class );
+with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( Core ));
 __PACKAGE__->table('tags');
@@ -16,5 +16,18 @@ __PACKAGE__->has_many( journal_entry_tags => 'Qublog::Schema::Result::JournalEnt
 __PACKAGE__->many_to_many( tasks => task_tags => 'task' );
 __PACKAGE__->many_to_many( comments => comment_tags => 'comment' );
 __PACKAGE__->many_to_many( journal_entries => journal_entry_tags => 'journal_entry' );
+
+sub as_journal_item { }
+
+sub list_journal_item_resultsets {
+    my ($self, $c) = @_;
+    
+    my @result_sets;
+    push @result_sets, $self->comments;
+    push @result_sets, $self->tasks;
+    push @result_sets, $self->journal_entries;
+
+    return [ grep { $_ } @result_sets ];
+}
 
 1;

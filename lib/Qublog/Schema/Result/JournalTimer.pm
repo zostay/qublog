@@ -15,9 +15,10 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( journal_entry => 'Qublog::Schema::Result::JournalEntry', 'id' );
 __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_timer' );
+__PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalDay');
 
 sub as_journal_item {
-    my ($self, $c, $items) = shift;
+    my ($self, $c, $items) = @_;
     my $journal_entry = $self->journal_entry;
 
     my $collapse_start;
@@ -209,7 +210,7 @@ sub as_journal_item {
     };
 }
 
-sub journal_items {
+sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
     my $comments = $self->comments;

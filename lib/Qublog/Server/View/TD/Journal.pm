@@ -160,7 +160,7 @@ template 'journal/bits/new_comment_entry' => sub {
 template 'journal/bits/items' => sub {
     my ($self, $c, $object) = @_;
    
-    my $items = $object->journal_items;
+    my $items = $object->journal_items($c);
     for my $item (sort {
                 $b->{timestamp}      <=> $a->{timestamp}      ||
                 $b->{order_priority} <=> $a->{order_priority} ||

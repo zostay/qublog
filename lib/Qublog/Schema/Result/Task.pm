@@ -1,7 +1,8 @@
 package Qublog::Schema::Result::Task;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+extends qw( DBIx::Class );
+
+with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('tasks');
@@ -24,6 +25,14 @@ __PACKAGE__->has_many( journal_entries => 'Qublog::Schema::Result::JournalEntry'
 __PACKAGE__->has_many( task_logs => 'Qublog::Schema::Result::TaskLog', 'task' );
 __PACKAGE__->has_many( task_tags => 'Qublog::Schema::Result::TaskTag', 'task' );
 __PACKAGE__->many_to_many( tags => task_tags => 'tag' );
+__PACKAGE__->many_to_many( comments => task_logs => 'comment' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::Task');
+
+sub as_journal_item {}
+
+sub list_journal_item_resultsets {
+    my ($self, $c) = @_;
+    return [ $self->comments ];
+}
 
 1;

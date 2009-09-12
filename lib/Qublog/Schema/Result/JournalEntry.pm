@@ -27,7 +27,7 @@ __PACKAGE__->many_to_many( tags => journal_entry_tags => 'tag' );
 
 sub as_journal_item {}
 
-sub journal_items {
+sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
     my $timers = $self->journal_timers;
@@ -39,6 +39,18 @@ sub journal_items {
     });
 
     return [ $timers ];
+}
+
+sub hours {
+    my ($self, %args) = @_;
+
+    my $hours = 0;
+    my $timers = $self->journal_timers;
+    $timers = $timers->search_by_running(0) if $args{stopped_only};
+    while (my $timer = $timers->next) {
+        $hours += $timer->hours;
+    }
+    return $hours;
 }
 
 1;

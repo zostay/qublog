@@ -23,7 +23,7 @@ sub is_today {
 
 sub as_journal_item {}
 
-sub journal_items {
+sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
     my $entries = $self->journal_entries;

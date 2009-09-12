@@ -125,7 +125,10 @@ template 'journal/bits/list' => sub {
     };
 
     show './new_comment_entry', $c;
-    show './items', $c, $day;
+
+    if ($c->user_exists) {
+        show './items', $c, $day;
+    }
 };
 
 template 'journal/bits/new_comment_entry' => sub {

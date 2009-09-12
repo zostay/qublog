@@ -11,7 +11,7 @@ __PACKAGE__->add_columns(
     name     => { data_type => 'text' },
     site_url => { data_type => 'text' },
 );
-__PACKAGE__->set_primary_key('id');\
+__PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( user => 'Qublog::Schema::Result::User' );
 
 1;

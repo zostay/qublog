@@ -116,8 +116,9 @@ create_wrapper page => sub {
                     if ($c->user_exists) {
                         my $user = $c->user->get_object;
 
-                        outs 'Hello, ' . $c->user->get_object->profile->name;
-                        $logged = !$user->guest_account;
+                        outs 'Hello, ' . $c->user->name;
+                        $logged = 1;
+                        #$logged = !$user->guest_account;
                     }
                     else {
                         outs 'No account.';
@@ -128,20 +129,20 @@ create_wrapper page => sub {
                         if ($logged) {
                             hyperlink
                                 label => 'Sign in as someone else.',
-                                goto  => $c->uri_for_action('user/login'),
+                                goto  => $c->uri_for('/user/login'),
                                 ;
                         }
                         else {
                             hyperlink
                                 label => 'Sign in',
-                                goto  => $c->uri_for_action('user/login'),
+                                goto  => $c->uri_for('/user/login'),
                                 ;
 
                             outs ' or ';
 
                             hyperlink
                                 label => 'Register',
-                                goto  => $c->uri_for_action('user/register'),
+                                goto  => $c->uri_for('/user/register'),
                                 ;
                         }
                             
@@ -157,11 +158,14 @@ create_wrapper page => sub {
             div { 
                 { id is 'messages' }
 
-                for my $type (qw( errors warnings messages )) {
-                    div { { class is $type }
-                        render_message($c->flash->{$type});
+                for my $message (@{ $c->flash->{messages} || [] }) {
+                    div { { class is $message->{type} }
+                        render_message($message->{message});
                     };
                 }
+
+                delete $c->flash->{messages};
+                '';
             }
 
             div {
@@ -279,36 +283,36 @@ sub form_submit(@) {
 
 sub render_message($) {
     my ($message, $not_top) = @_;
-    my $class = ($not_type ? 'sub-message' : 'message');
-
-    if (ref $message) {
-        if ('HASH' eq reftype $message) {
-            div { { class is $class }
-                p { 'The following problems need to be corrected:' };
-                ul {
-                    for my $field (%$message) {
-                        li { render_message($message->{$field}, 1) };
-                    }
-                };
-            };
-        }
-        elsif ('ARRAY' eq reftype $message) {
-            if (@$message > 1) {
-                ul {
-                    for my $one_message (@$message) {
-                        li { render_message($one_message) };
-                    }
-                };
-            }
-            elsif (@$message == 1) {
-                render_message($message->[0]);
-            }
-        }
-    }
-
-    elsif ($message) {
+#    my $class = ($not_type ? 'sub-message' : 'message');
+#
+#    if (ref $message) {
+#        if ('HASH' eq reftype $message) {
+#            div { { class is $class }
+#                p { 'The following problems need to be corrected:' };
+#                ul {
+#                    for my $field (%$message) {
+#                        li { render_message($message->{$field}, 1) };
+#                    }
+#                };
+#            };
+#        }
+#        elsif ('ARRAY' eq reftype $message) {
+#            if (@$message > 1) {
+#                ul {
+#                    for my $one_message (@$message) {
+#                        li { render_message($one_message) };
+#                    }
+#                };
+#            }
+#            elsif (@$message == 1) {
+#                render_message($message->[0]);
+#            }
+#        }
+#    }
+#
+#    elsif ($message) {
         p { { class is $class } ucfirst $message . '.' };
-    }
+#    }
 }
 
 1;

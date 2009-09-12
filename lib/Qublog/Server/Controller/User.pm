@@ -34,7 +34,56 @@ sub index :Path :Args(0) {
 sub login :Local {
     my ($self, $c) = @_;
 
-    $c->response->body('TODO Not yet implemented');
+    if ($c->request->params->{submit} eq 'Login') {
+        my $username    = $c->request->params->{username};
+        my $password    = $c->request->params->{password};
+        my $next_action = $c->request->params->{next_action} || '/journal';
+
+        if ($username and $password) {
+            if ($c->authenticate({ name => $username, password => $password })) {
+                push @{ $c->flash->{messages} }, {
+                    type    => 'info',
+                    message => sprintf('welcome back, %s', $username),
+                };
+
+                $c->response->redirect($c->uri_for($next_action));
+            }
+            else {
+                push @{ $c->flash->{messages} }, {
+                    type    => 'error',
+                    message => 'no account matches that username and password',
+                };
+            }
+        }
+
+        if (not $username) {
+            push @{ $c->flash->{messages} }, {
+                type    => 'error',
+                field   => 'username',
+                message => 'please enter a username',
+            };
+        }        
+
+        if (not $password) {
+            push @{ $c->flash->{messages} }, {
+                type    => 'error',
+                field   => 'password',
+                message => 'please enter a password',
+            };
+        }
+    }
+
+    $c->stash->{template} = '/user/login';
+}
+
+=head2 logout
+
+=cut
+
+sub logout :Local {
+    my ($self, $c) = @_;
+    $c->logout();
+    $c->stash->{template} = '/user/logout';
 }
 
 =head2 register

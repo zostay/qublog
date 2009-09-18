@@ -4,6 +4,7 @@ use MooseX::Singleton;
 use DateTime;
 use DateTime::TimeZone;
 use DateTime::Format::Natural;
+use DateTime::Format::SQLite;
 
 # Homo Sapiens formats
 use constant HS_FULL_DATE_FORMAT  => 'eeee, MMMM d, yyy';
@@ -24,6 +25,13 @@ has human_formatter => (
             time_zone => 'UTC' 
         ),
     },
+);
+
+has sql_formatter => (
+    is        => 'rw',
+    lazy      => 1,
+    required  => 1,
+    default   => sub { 'DateTime::Format::SQLite' },
 );
 
 sub parse_human_datetime {
@@ -73,6 +81,16 @@ sub format_js_datetime {
     my ($self, $date) = @_;
 
     return $date->format_cldr(JS_DATETIME_FORMAT);
+}
+
+sub format_sql_date {
+    my ($self, $date) = @_;
+    return $self->sql_formatter->format_date($date);
+}
+
+sub format_sql_datetime {
+    my ($self, $date) = @_;
+    return $self->sql_formatter->format_datetime($date);
 }
 
 sub now {

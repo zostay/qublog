@@ -63,10 +63,10 @@ sub as_journal_item {
                 onclick => {
                     refresh => 'journal_list',
                     confirm => 'Are you sure? This cannot be undone.',
-                    submit  => new_action(
-                        class  => 'DeleteComment',
-                        record => $self,
-                    ),
+#                    submit  => new_action(
+#                        class  => 'DeleteComment',
+#                        record => $self,
+#                    ),
                 },
             },
         ],

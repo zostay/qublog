@@ -17,6 +17,7 @@ BEGIN {
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
+use Qublog::Util::CommentParser;
 use Qublog::Web::Emoticon;
 
 require Exporter;

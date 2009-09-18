@@ -16,6 +16,14 @@ Catalyst Controller.
 
 =cut
 
+=head2 begin
+
+Cancel the actions of the root begin, which redirects without a user.
+
+=cut
+
+sub begin :Private { }
+
 
 =head2 index
 

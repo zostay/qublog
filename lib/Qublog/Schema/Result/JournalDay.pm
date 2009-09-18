@@ -11,6 +11,9 @@ __PACKAGE__->add_columns(
     datestamp => { data_type => 'date' },
 );
 __PACKAGE__->set_primary_key('id');
+__PACKAGE__->add_unique_constraint(
+    datestamp => [ qw( datestamp ) ],
+);
 __PACKAGE__->has_many( journal_entries => 'Qublog::Schema::Result::JournalEntry', 'journal_day' );
 __PACKAGE__->many_to_many( journal_timers => journal_entries => 'journal_timers' );
 __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_day' );
@@ -26,9 +29,11 @@ sub as_journal_item {}
 sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
+    return [] unless $c->user_exists;
+
     my $entries = $self->journal_entries;
     $entries->search({
-        'journal_entry.owner' => $c->user->id,
+        'journal_entry.owner' => $c->user->get_object->id,
     }, {
         join     => [ 'journal_entry' ],
         order_by => { -asc => 'start_time' },

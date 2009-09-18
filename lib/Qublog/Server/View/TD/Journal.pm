@@ -30,7 +30,7 @@ template 'journal/bits/summary' => sub {
 
     my $total_hours = 0;
     while (my $timer = $timers->next) {
-        $total_hours += $timer->horus;
+        $total_hours += $timer->hours;
     }
 
     my $hours_left = max(0, 8 - $total_hours);
@@ -130,10 +130,7 @@ template 'journal/bits/list' => sub {
     };
 
     show './new_comment_entry', $c;
-
-    if ($c->user_exists) {
-        show './items', $c, $day;
-    }
+    show './items', $c, $day;
 };
 
 template 'journal/bits/new_comment_entry' => sub {
@@ -192,7 +189,7 @@ template 'journal/bits/item_box' => sub {
                 class => $class,
             };
 
-            outs_raw Qublog::Web->apply_format(
+            outs_raw apply_format(
                 $options->{content}, $options->{format}
             );
         };
@@ -267,11 +264,11 @@ template 'journal/bits/item' => sub {
                     }
 
                     div { { class is 'item-wrapper' }
-                        show './item/box', $c, \%box_options;
+                        show './item_box', $c, \%box_options;
                     };
                 }
                 else {
-                    show './item/box', $c, \%box_options;
+                    show './item_box', $c, \%box_options;
                 }
             }
         }

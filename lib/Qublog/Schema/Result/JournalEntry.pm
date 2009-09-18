@@ -30,9 +30,11 @@ sub as_journal_item {}
 sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
+    return [] unless $c->user_exists;
+
     my $timers = $self->journal_timers;
     $timers->search({
-        'journal_entry.owner' => $c->user->id,
+        'journal_entry.owner' => $c->user->get_object->id,
     }, {
         join     => [ 'journal_entry' ],
         order_by => { -asc => 'start_time' },
@@ -51,6 +53,16 @@ sub hours {
         $hours += $timer->hours;
     }
     return $hours;
+}
+
+sub is_running {
+    my $self = shift;
+    return not defined $self->stop_time;
+}
+
+sub is_stopped {
+    my $self = shift;
+    return defined $self->stop_time;
 }
 
 1;

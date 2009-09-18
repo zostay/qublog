@@ -149,7 +149,7 @@ sub as_journal_item {
                 entry_id => $journal_entry->id,
             },
         },
-    } if $journal_entry->project->id;
+    } if $journal_entry->project;
 
     $items->{$id.'stop'} = {
         id             => $self->id,
@@ -213,9 +213,11 @@ sub as_journal_item {
 sub list_journal_item_resultsets {
     my ($self, $c) = @_;
 
+    return [] unless $c->user_exists;
+
     my $comments = $self->comments;
     $comments->search({
-        'owner' => $c->user->id,
+        'owner' => $c->user->get_object->id,
     }, {
         order_by => { -asc => 'created_on' },
     });
@@ -237,6 +239,16 @@ sub hours {
          + $duration->delta_minutes / 60
          + $duration->delta_seconds / 3600
          ;
+}
+
+sub is_running {
+    my $self = shift;
+    return not defined $self->stop_time;
+}
+
+sub is_stopped {
+    my $self = shift;
+    return defined $self->stop_time;
 }
 
 1;

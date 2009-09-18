@@ -7,8 +7,11 @@ sub find_by_date {
     my ($self, $date) = @_;
     my $day = $date->clone->truncate( to => 'day' );
 
-    my $journal_day = $self->find_or_create({
-        datestamp => $day
+    my $journal_day;
+    $self->result_source->schema->txn_do(sub {
+        $journal_day = $self->find_or_create({
+            datestamp => Qublog::DateTime->format_sql_date($day),
+        });
     });
 
     return $journal_day;

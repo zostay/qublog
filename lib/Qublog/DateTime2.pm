@@ -5,6 +5,14 @@ use DateTime;
 use DateTime::TimeZone;
 use DateTime::Format::Natural;
 
+# Homo Sapiens formats
+use constant HS_FULL_DATE_FORMAT  => 'eeee, MMMM d, yyy';
+use constant HS_MONTH_DATE_FORMAT => 'eeee, MMMM d';
+use constant HS_WEEK_DATE_FORMAT  => 'eeee';
+use constant HS_TIME_FORMAT       => 'h:mm a';
+use constant HS_DATETIME_FORMAT  => HS_FULL_DATE_FORMAT . ' ' . HS_TIME_FORMAT;
+
+# JavaScript formats
 use constant JS_DATETIME_FORMAT => 'eee MMM dd HH:mm:ss zzz yyy';
 
 has human_formatter => (
@@ -27,15 +35,38 @@ sub parse_human_datetime {
 sub format_human_date {
     my ($self, $date) = @_;
 
-    # TODO Make smarter. Dis id reel dumm.
-    return $date->ymd;
+    my $today = $self->today;
+    my $days  = $today->delta_days($date)->delta_days
+              * ($today > $date) ? 1 : -1
+              ; 
+
+    if (($days < 0 or $days >= 7) and $today->year == $date->year) {
+        return $date->format_cldr(HS_MONTH_DATE_FORMAT);
+    }
+    elsif ($days < 0) {
+        return $date->format_cldr(HS_FULL_DATE_FORMAT);
+    }
+    elsif ($days == 0) {
+        return 'Today';
+    }
+    elsif ($days < 7) {
+        return $date->format_cldr(HS_WEEK_DATE_FORMAT);
+    }
+    else {
+        return $date->format_cldr(HS_FULL_DATE_FORMAT);
+    }
 }
 
 sub format_human_time {
     my ($self, $date) = @_;
 
-    # TODO Make smarter. DIs id reel dumm.
-    return $date->hms;
+    if ($date) {
+        return $date->format_cldr(HS_TIME_FORMAT);
+    }
+
+    else {
+        return '-:--';
+    }
 }
 
 sub format_js_datetime {

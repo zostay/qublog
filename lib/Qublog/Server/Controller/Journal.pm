@@ -18,7 +18,6 @@ Catalyst Controller.
 
 =cut
 
-
 =head2 index
 
 =cut
@@ -27,6 +26,39 @@ sub index :Path {
     my ( $self, $c ) = @_;
     $c->forward('/journal/day/today');
 }
+
+=head2 goto
+
+=cut
+
+sub goto :Local {
+    my ($self, $c) = @_;
+
+    my $date_str = $c->request->params->{date};
+    my $date     = Qublog::DateTime->parse_human_datetime($date_str);
+
+    if ($date) {
+        $c->response->redirect(
+            $c->uri_for('/journal/day', $date_str)
+        );
+    }
+
+    else {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            field   => 'date',
+            message => 'that date could not be understood, try again',
+        };
+
+        my $from_page = $c->request->params->{from_page} 
+                     || '/journal/day/today';
+        $c->response->redirect($c->uri_for($from_page))
+    }
+}
+
+=head2 day
+
+=cut
 
 sub day :Local :Args(1) {
     my ( $self, $c, $date_str ) = @_;

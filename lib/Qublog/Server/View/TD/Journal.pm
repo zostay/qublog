@@ -111,6 +111,11 @@ template 'journal/bits/list' => sub {
     div { { id is 'goto_date' }
         form { { action is '/journal/goto', method is 'POST' }
             input {
+                type is 'hidden',
+                name is 'from_page',
+                value is $c->request->uri,
+            };
+            input {
                 type is 'text',
                 name is 'date',
                 value is $day->datestamp->ymd,

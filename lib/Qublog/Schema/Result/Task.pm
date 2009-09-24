@@ -4,6 +4,14 @@ extends qw( DBIx::Class );
 
 with qw( Qublog::Schema::Role::Itemized );
 
+use Moose::Util::TypeConstraints;
+
+enum 'Qublog::Schema::Result::Task::Status' => qw( open done nix );
+enum 'Qublog::Schema::Result::Task::ChildHandling' => qw( serial parallel );
+enum 'Qublog::Schema::Result::Task::Type' => qw( project group action );
+
+no Moose::Util::TypeConstraints;
+
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('tasks');
 __PACKAGE__->add_columns(

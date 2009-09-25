@@ -123,3 +123,18 @@ had.};
         make( task => 2, 'open', 1, 'XYZ', undef, 'Task 9'),
     ], 'more variations');
 }
+
+# Task log reference
+{
+    my $text = q{Blah blah foo bar bazzle boxey boo.
+ * #ABC*123 
+ * #XYZ*789 
+Foobie fabbo.};
+    test_parsing_of($text, [
+        make( text => "Blah blah foo bar bazzle boxey boo.\n * " ),
+        make( task_log => 'ABC', 123 ),
+        make( text => " \n * " ),
+        make( task_log => 'XYZ', 789 ),
+        make( text => " \nFoobie fabbo."),
+    ], 'task log references');
+}

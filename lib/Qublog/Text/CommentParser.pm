@@ -14,6 +14,8 @@ comment:            token(s?)
 
 token:              task_reference 
                     { $return = $item{task_reference} }
+                |   <skip: '[\\n\\r]*'> task_log_reference
+                    { $return = $item{task_log_reference} }
                 |   <skip: '[\\n\\r]*'> tag_reference 
                     { $return = make( tag => $item{tag_reference} ) }
                 |   <skip: '[\\n\\r]*'> description
@@ -56,6 +58,16 @@ nickname:           '#' <skip: ''> keyword
                     { $return = $item{keyword} }
 
 description:         /^(?:#\\s|[^\\#\\n\\r])+/
+
+task_log_reference: nickname '*' record_identifier
+                    { 
+                        $return = make( task_log => 
+                            $item{nickname}, 
+                            $item{record_identifier} 
+                        ) 
+                    }
+
+record_identifier:  /^\\d+/
 
 tag_reference:      nickname
 
@@ -103,7 +115,14 @@ sub _make {
     elsif ($type eq 'tag') {
         my $nickname = shift;
         return Qublog::Text::CommentParser::Token::TagReference->new( 
-            nickname => $nickname
+            nickname => $nickname,
+        );
+    }
+    elsif ($type eq 'task_log') {
+        my ($nickname, $log_reference) = @_;
+        return Qublog::Text::CommentParser::Token::TaskLogReference->new(
+            nickname => $nickname,
+            task_log => $log_reference,
         );
     }
     elsif ($type eq 'task') {
@@ -485,6 +504,24 @@ sub _make {
         required  => 1,
     );
 
+}
+
+{
+    package Qublog::Text::CommentParser::Token::TaskLogReference;
+    use Moose;
+
+    extends qw( Qublog::Text::CommentParser::Token );
+    with qw( Qublog::Text::CommentParser::Token::Role::Reference );
+
+    has '+nickname' => (
+        required  => 1,
+    );
+
+    has task_log => (
+        is        => 'rw',
+        isa       => 'Int',
+        required  => 1,
+    );
 }
 
 1;

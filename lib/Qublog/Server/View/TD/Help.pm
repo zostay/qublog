@@ -1,4 +1,4 @@
-package Qublog::Server::View::TD::Journal;
+package Qublog::Server::View::TD::Help;
 use strict;
 use warnings;
 

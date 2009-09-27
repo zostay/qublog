@@ -190,7 +190,7 @@ template 'journal/bits/item_box' => sub {
             };
 
             outs_raw apply_format(
-                $options->{content}, $options->{format}
+                $options->{content}, $options->{format}, $c
             );
         };
     };

@@ -72,7 +72,7 @@ The formats are applied in the order given. In the second call in the example ab
 =cut
 
 sub apply_format {
-    my ($scalar, $formats) = @_;
+    my ($scalar, $formats, $c) = @_;
 
     $formats = [ $formats ] unless ref $formats eq 'ARRAY';
 
@@ -87,6 +87,8 @@ sub apply_format {
         else {
             $function = $format;
         }
+
+        $options->{c} = $c if $c;
 
         if (length $function == 0 || $function =~ /\W/) {
             warn qq{The format "$function" is invalid.};
@@ -118,7 +120,8 @@ This is a L<Qublog::Model::TaskLogCollection> object.
 
 sub htmlify {
     my ($scalar, $options) = @_;
-    return Qublog::Web::htmlify($scalar);
+    my $c = $options->{c};
+    return Qublog::Web::htmlify($scalar, $c);
 }
 
 =head2 time

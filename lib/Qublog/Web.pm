@@ -5,20 +5,24 @@ package Qublog::Web;
 
 BEGIN {
     if (defined $Jifty::VERSION) {
-        eval "use Jifty::View::Declare -base;";
+        eval q{
+            use Jifty::View::Declare -base;
+            use Qublog::Util::CommentParser;
+        };
     }
     else {
-        eval qq{
+        eval q{
             use Qublog::Server::View::Common;
             use Template::Declare::Tags;
+            use Qublog::Web::CommentFormat;
         };
     }
 };
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
-use Qublog::Util::CommentParser;
 use Qublog::Web::Emoticon;
+use Qublog::Web::Format::Comment;
 
 require Exporter;
 our @ISA = qw/ Exporter /;
@@ -75,15 +79,26 @@ The optional second argument provides some context. This should be a L<Qublog::M
 
 =cut
 
-sub htmlify($) {
-    my ($scalar) = @_;
+sub htmlify($;$) {
+    my ($scalar, $c) = @_;
+    $scalar = smileyize($scalar);
 
-    my $parser = Qublog::Util::CommentParser->new( 
-        text      => smileyize($scalar),
-    );
-    $parser->htmlify;
+    if (defined $Jifty::VERSION) {
+        my $parser = Qublog::Util::CommentParser->new( 
+            text      => $scalar,
+        );
+        $parser->htmlify;
+        $scalar = $parser->text;
+    }
 
-    return typography(markdown($parser->text));
+    else {
+        my $formatter = Qublog::Web::Format::Comment->new(
+            schema => $c->model('DB'),
+        );
+        $scalar = $formatter->format($scalar);
+    }
+
+    return typography(markdown($scalar));
 }
 
 =head2 format_time DATETIME

@@ -75,12 +75,16 @@ keyword:            /^\\w+/
 
 );
 
+my $parser;
 has parser => (
     is        => 'rw',
     isa       => 'Parse::RecDescent',
     required  => 1,
     lazy      => 1,
-    default   => sub { Parse::RecDescent->new($grammar) },
+    default   => sub { 
+        return $parser if $parser; 
+        return $parser = Parse::RecDescent->new($grammar);
+    },
 );
 
 sub parse {

@@ -12,6 +12,7 @@ __PACKAGE__->add_columns(
     journal_timer => { data_type => 'int' },
     created_on    => { data_type => 'datetime', timezone => 'UTC' },
     name          => { data_type => 'text' },
+    processed_name_cache => { data_type => 'text' },
     owner         => { data_type => 'int' },
 );
 __PACKAGE__->set_primary_key('id');
@@ -21,6 +22,17 @@ __PACKAGE__->belongs_to( owner => 'Qublog::Schema::Result::User' );
 __PACKAGE__->has_many( task_logs => 'Qublog::Schema::Result::TaskLog', 'comment' );
 __PACKAGE__->has_many( comment_tags => 'Qublog::Schema::Result::CommentTag', 'comment' );
 __PACKAGE__->many_to_many( tags => comment_tags => 'tag' );
+
+sub store_column {
+    my ($self, $name, $value) = @_;
+
+    # Clear the processed name cache if the name changes
+    if ($name eq 'name') {
+        $self->processed_name_cache(undef);
+    }
+
+    $self->next::method($name, $value);
+}
 
 sub as_journal_item {
     my ($self, $c, $items) = @_;
@@ -32,6 +44,14 @@ sub as_journal_item {
     $order_priority *= 10;
     $order_priority +=  5;
 
+    # Cache this info because not caching is expensive
+    my $processed_name_cache = $self->processed_name_cache;
+    unless ($processed_name_cache) {
+        $processed_name_cache = Qublog::Web::htmlify($self->name);
+        $self->processed_name_cache($processed_name_cache);
+        $self->update;
+    }
+
     $items->{'Comment-'.$self->id} = {
         id             => $self->id,
         order_priority => $order_priority,
@@ -42,7 +62,10 @@ sub as_journal_item {
         },
 
         timestamp => $self->created_on,
-        content   => $self->name,
+        content   => {
+            content => $processed_name_cache,
+            format  => [ 'div' ],
+        },
 
         links => [
             {

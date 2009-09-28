@@ -32,19 +32,20 @@ __PACKAGE__->belongs_to( parent => 'Qublog::Schema::Result::Task' );
 __PACKAGE__->has_many( children => 'Qublog::Schema::Result::Task', 'parent' );
 __PACKAGE__->has_many( journal_entries => 'Qublog::Schema::Result::JournalEntry', 'project' );
 __PACKAGE__->has_many( task_logs => 'Qublog::Schema::Result::TaskLog', 'task' );
-__PACKAGE__->has_many( task_tags => 'Qublog::Schema::Result::TaskTag', 'task', { order_by => { -desc => 'id' } });
+__PACKAGE__->has_many( task_tags => 'Qublog::Schema::Result::TaskTag', 'task', { order_by => { -desc => 'me.id' } });
 __PACKAGE__->many_to_many( tags => task_tags => 'tag' );
 __PACKAGE__->many_to_many( comments => task_logs => 'comment' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::Task');
 
 sub tag {
     my $self = shift;
-    return $self->tags->single->name;
+    return $self->tags({}, { rows => 1 })->single->name;
 }
 
 sub autotag {
     my $self = shift;
-    return $self->tags({ order_by => { -asc => 'id' } })->single->name;
+    return $self->tags({ rows => 1, order_by => { -asc => 'id' } })
+        ->single->name;
 }
 
 sub as_journal_item {}
@@ -167,7 +168,7 @@ sub historical_values {
         while (my $task_log = $task_logs->next) {
             my $task_changes = $task_log->task_changes;
             while (my $task_change = $task_changes->next) {
-                $args{ $task_change->{name} } = $task_change->old_value;
+                $args{ $task_change->name } = $task_change->old_value;
             }
         }
 

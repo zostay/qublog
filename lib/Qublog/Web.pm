@@ -93,7 +93,7 @@ sub htmlify($;$) {
 
     else {
         my $formatter = Qublog::Web::Format::Comment->new(
-            schema => $c->model('DB'),
+            schema => $c->model('DB')->schema,
         );
         $scalar = $formatter->format($scalar);
     }

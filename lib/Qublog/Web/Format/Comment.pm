@@ -34,14 +34,15 @@ sub format {
             $output .= $token->text;
         }
         elsif ($token->isa(TASK) or $token->isa(TAG)) {
+            my $nickname = $token->nickname;
+
             my $log;
             $log = $self->resultset('TaskLog')->find($token->task_log)
                 if $token->isa(TASK);
             my $task = $self->resultset('Task')->find_by_tag_name($token->nickname);
 
-            my $nickname = $task->tag;
             if ($log and $task and $log->task->id == $task->id) {
-                my $old_task = $task->historical_value($log->created_on);
+                my $old_task = $task->historical_values($log->created_on);
 
                 my $classes
                     = join ' ',
@@ -56,7 +57,7 @@ sub format {
 
             else {
                 my $tag;
-                $self->schema->do_txn(sub {
+                $self->schema->txn_do(sub {
                     $tag = $self->resultset('Tag')->find_or_create( 
                         name => $nickname 
                     );

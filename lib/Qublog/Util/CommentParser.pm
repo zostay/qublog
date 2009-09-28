@@ -1,10 +1,7 @@
-use strict;
-use warnings;
-
 package Qublog::Util::CommentParser;
+use Moose;
 
 use List::Util qw/ min /;
-use Moose;
 
 =head1 NAME
 

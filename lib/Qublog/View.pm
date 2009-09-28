@@ -320,7 +320,14 @@ sub _journal_items_comment {
     $order_priority *= 10;
     $order_priority += 5;
 
-    $items->{'Comment-'.$self->id} = {
+    # HACK There should be a cleaner way
+    my $processed_name_cache = $self->processed_name_cache;
+    unless ($processed_name_cache) {
+        $processed_name_cache = Qublog::Web::htmlify($self->name);
+        $self->set_processed_name_cache($processed_name_cache);
+    }
+
+    my $comment_item = $items->{'Comment-'.$self->id} = {
         id             => $self->id,
         order_priority => $order_priority,
 
@@ -330,7 +337,10 @@ sub _journal_items_comment {
         },
 
         timestamp => $self->created_on,
-        content   => $self->name,
+        content   => {
+            content => $processed_name_cache,
+            format  => [ 'div' ],
+        },
 
         links     => [
             {

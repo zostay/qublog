@@ -68,6 +68,12 @@ use Qublog::Record schema {
         render as 'textarea',
         ;
 
+    column processed_name_cache =>
+        type is 'text',
+        render as 'unrendered',
+        since '0.6.1',
+        ;
+
     column task_logs =>
         references Qublog::Model::TaskLogCollection by 'comment';
 };
@@ -87,6 +93,18 @@ sub before_create {
 
     $args->{created_on} = Jifty::DateTime->now;
 
+    return 1;
+}
+
+=head2 after_set_name
+
+Clears the processed name cache.
+
+=cut
+
+sub after_set_name {
+    my ($self, $args) = @_;
+    $self->processed_name_cache(undef);    
     return 1;
 }
 

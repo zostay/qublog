@@ -71,26 +71,17 @@ sub as_journal_item {
             {
                 label   => 'Edit',
                 class   => 'icon v-edit o-comment',
-                onclick => {
-                    open_popup   => 1,
-                    replace_with => 'journal/popup/edit_comment',
-                    arguments    => {
-                        comment_id => $self->id,
-                    },
-                },
+                goto    => $c->request->uri_with({
+                    action  => 'edit_comment',
+                    comment => $self->id,
+                }),
             },
             {
                 label   => 'Remove',
                 class   => 'icon v-delete o-comment',
-                as_link => 1,
-                onclick => {
-                    refresh => 'journal_list',
-                    confirm => 'Are you sure? This cannot be undone.',
-#                    submit  => new_action(
-#                        class  => 'DeleteComment',
-#                        record => $self,
-#                    ),
-                },
+                action  => $c->uri_for('/compat/comment/delete', $self->id, {
+                    return_to => $c->request->uri,
+                }),
             },
         ],
     };

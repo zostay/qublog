@@ -1,4 +1,4 @@
-package Qublog::Schema::ResultSet::JournalTimer;
+package Qublog::Schema::ResultSet::JournalEntry;
 use Moose;
 extends qw( DBIx::Class::ResultSet );
 

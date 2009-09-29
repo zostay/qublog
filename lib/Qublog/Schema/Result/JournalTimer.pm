@@ -13,7 +13,7 @@ __PACKAGE__->add_columns(
     stop_time     => { data_type => 'datetime', timezone => 'UTC' },
 );
 __PACKAGE__->set_primary_key('id');
-__PACKAGE__->belongs_to( journal_entry => 'Qublog::Schema::Result::JournalEntry', 'id' );
+__PACKAGE__->belongs_to( journal_entry => 'Qublog::Schema::Result::JournalEntry' );
 __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_timer' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalTimer');
 
@@ -57,15 +57,11 @@ sub as_journal_item {
                     label   => 'Change',
                     class   => 'icon v-edit o-timer',
                     tooltip => 'See the start time for this timer span.',
-                    onclick => {
-                        open_popup   => 1,
-                        replace_with => 'journal/popup/change_start_stop',
-                        arguments    => {
-                            entry_id => $journal_entry->id,
-                            which    => 'start',
-                            timer_id => $self->id,
-                        },
-                    },
+                    action  => $c->request->uri_with({
+                        action        => 'change_start_stop',
+                        journal_entry => $journal_entry->id,
+                        which         => 'start',
+                    }),
                 },
             ],
         };
@@ -80,14 +76,10 @@ sub as_journal_item {
         label   => 'Edit Info',
         class   => 'icon v-edit o-entry',
         tooltip => 'Edit the journal information for this entry.',
-        onclick => {
-            open_popup   => 1,
-            replace_with => 'journal/popup/edit_entry',
-            arguments    => {
-                entry_id => $journal_entry->id,
-                timer_id => $self->id,
-            },
-        },
+        goto    => $c->request->uri_with({
+            action        => 'edit_entry',
+            journal_entry => $journal_entry->id,
+        }),
     });
 
     if ($self->is_stopped) {
@@ -95,15 +87,11 @@ sub as_journal_item {
             label   => 'Change',
             class   => 'icon v-edit a-end o-timer',
             tooltip => 'Set the stop time for this timer span.',
-            onclick => {
-                open_popup   => 1,
-                replace_with => 'journal/popup/change_start_stop',
-                arguments    => {
-                    entry_id => $journal_entry->id,
-                    which    => 'stop',
-                    timer_id => $self->id,
-                },
-            },
+            goto    => $c->request->uri_with({ 
+                action        => 'change_start_stop',
+                journal_entry => $journal_entry->id,
+                which         => 'stop',
+            }),
         };
 
         if ($journal_entry->is_stopped) {
@@ -111,14 +99,9 @@ sub as_journal_item {
                 label   => 'Restart',
                 class   => 'icon v-start o-timer',
                 tooltip => 'Start a new timer for this entry.',
-                as_link => 1,
-                onclick => {
-                    refresh => 'journal_list',
-#                    submit  => new_action(
-#                        class  => 'StartTimer',
-#                        record => $journal_entry,
-#                    ),
-                },
+                action  => $c->uri_for('/compat/timer/start', $journal_entry->id, {
+                    return_to => $c->request->uri,
+                }),
             };
         }
     }
@@ -127,14 +110,9 @@ sub as_journal_item {
             label   => 'Stop',
             class   => 'icon v-stop o-timer',
             tooltip => 'Stop this timer.',
-            as_link => 1,
-            onclick => {
-                refresh => 'journal_list',
-#                    submit  => new_action(
-#                        class  => 'StopTimer',
-#                        record => $journal_entry,
-#                    ),
-            },
+            action  => $c->uri_for('/compat/timer/stop', $journal_entry->id, {
+                return_to => $c->request->uri,
+            }),
         };
     }
 
@@ -142,13 +120,10 @@ sub as_journal_item {
         label   => 'List Actions',
         class   => 'icon v-view a-list o-task',
         tooltip => 'Show the list of tasks for this project.',
-        onclick => {
-            open_popup   => 1,
-            replace_with => 'journal/popup/show_tasks',
-            arguments    => {
-                entry_id => $journal_entry->id,
-            },
-        },
+        goto    => $c->request->uri_with({ 
+            action        => 'list_actions',
+            journal_entry => $journal_entry->id 
+        }),
     } if $journal_entry->project;
 
     $items->{$id.'stop'} = {

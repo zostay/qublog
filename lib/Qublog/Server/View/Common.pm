@@ -2,6 +2,7 @@ package Qublog::Server::View::Common;
 use Template::Declare::Tags;
 
 use Qublog::Menu;
+use Qublog::Server::Link;
 
 my @exports;
 BEGIN {
@@ -25,19 +26,30 @@ use Scalar::Util qw( reftype );
 
 sub hyperlink(@) {
     my (%params) = @_;
+    my $label = delete $params{label};
+
+    $params{title} = delete $params{tooltip} if $params{tooltip};
 
     # A plain link to another page
     if ($params{goto}) {
+        my $goto = delete $params{goto};
         a {
-            { href is $params{goto} }
-            $params{label};
+            attr { 
+                href => $goto,
+                %params,
+            };
+            $label;
         };
     }
 
     elsif ($params{action}) {
+        my $action = delete $params{action};
         a {
-            { href is $params{action} }
-            $params{label};
+            attr { 
+                href => $action,
+                %params,
+            };
+            $label;
         };
     }
 }
@@ -79,11 +91,26 @@ sub render_navigation($$) {
 create_wrapper page => sub {
     my ($content, $c) = @_;
 
+    my %links;
+    for my $type (qw( script style )) {
+        my $links = $c->config->{'View::Common'}{$type};
+        if (ref $links eq 'HASH') {
+            $links = [ $links ];
+        }
+
+        my @links = map { Qublog::Server::Link->new( type => $type, %$_ ) } 
+                       @{ $links };
+
+
+        push @links, @{ $c->stash->{ $type } || [] };
+        $links{ $type } = \@links;
+    }
+
     html {
         head {
             title { $c->stash->{title} };
 
-            for my $stylesheet (@{ $c->stash->{styles} || [] }) {
+            for my $stylesheet (@{ $links{style} }) {
                 if ($stylesheet->is_file) {
                     link { 
                         href is $stylesheet->path,
@@ -96,7 +123,7 @@ create_wrapper page => sub {
                 }
             }
 
-            for my $script (@{ $c->stash->{scripts} || [] }) {
+            for my $script (@{ $links{script} }) {
                 if ($script->is_file) {
                     script { src is $script->path };
                 }

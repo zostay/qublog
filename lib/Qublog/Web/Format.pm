@@ -169,6 +169,7 @@ sub _generate_wrap {
     return sub {
         my ($text, $opts) = @_;
         my %options = %{ $opts || {} }; # avoid side-effects
+        delete $options{c};
         my $tag = delete $options{tag} || $default;
 
         my $result = "<$tag";

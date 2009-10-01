@@ -7,6 +7,7 @@ use Qublog::Server::View::Common qw( page );
 use Qublog::Web;
 use Qublog::Web::Format;
 
+use List::MoreUtils qw( none );
 use List::Util qw( max );
 use Storable qw( dclone );
 
@@ -162,15 +163,47 @@ template 'journal/bits/new_comment_entry' => sub {
     show '/help/journal/new_comment_entry', $c;
 };
 
+my @JOURNAL_FORMS = qw(
+    edit_comment
+);
+
 template 'journal/bits/items' => sub {
     my ($self, $c, $object) = @_;
+
+    my $form;
+    my $form_name  = $c->stash->{form};
+    my $form_type  = $c->stash->{form_type};
+    my $form_place = $c->stash->{form_place};
+
+    if ($form_name and none { $form_name eq $_ } @JOURNAL_FORMS) {
+        warn "INVALID FORM NAME $form_name given.\n";
+        undef $form_name;
+    }
    
+    if ($form_name and $form_type and $form_place) {
+        $form = {
+            content => '/form/'.$form_name,
+            format  => [ 'show' ],
+        };
+    }
+
     my $items = $object->journal_items($c);
+    
     for my $item (sort {
                 $b->{timestamp}      <=> $a->{timestamp}      ||
                 $b->{order_priority} <=> $a->{order_priority} ||
                 $b->{id}             <=> $a->{id}
             } values %$items) {
+
+        if ($form and $item->{name} eq $form_place) {
+            if ($form_type eq 'replace') {
+                $item->{content} = $form;
+            }
+            else {
+                $item->{drawer}  = $form;
+            }
+        }
+
         show './item', $c, $item;
     }
 };
@@ -274,7 +307,11 @@ template 'journal/bits/item' => sub {
         }
 
         # empty region
-        div { attr { id => $popup_region }; };
+        div { attr { id => $options->{name}, class => 'item-drawer' }; 
+
+            show './item_box', $c, $options->{drawer} 
+                if $options->{drawer};
+        };
     };
 };
 

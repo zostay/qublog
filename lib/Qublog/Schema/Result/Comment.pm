@@ -52,8 +52,10 @@ sub as_journal_item {
         $self->update;
     }
 
-    $items->{'Comment-'.$self->id} = {
+    my $name = 'Comment-'.$self->id;
+    $items->{$name} = {
         id             => $self->id,
+        name           => $name,
         order_priority => $order_priority,
 
         row => {
@@ -72,8 +74,10 @@ sub as_journal_item {
                 label   => 'Edit',
                 class   => 'icon v-edit o-comment',
                 goto    => $c->request->uri_with({
-                    action  => 'edit_comment',
-                    comment => $self->id,
+                    form       => 'edit_comment',
+                    form_place => 'Comment-'.$self->id,
+                    form_type  => 'replace',
+                    comment    => $self->id,
                 }),
             },
             {

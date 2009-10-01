@@ -38,8 +38,10 @@ sub as_journal_item {
         $items->{$collapse_start}{row}{class} .= ' start';
     }
     else {
-        $items->{$id.'start'} = {
+        my $start_name = $id.'start';
+        $items->{$start_name} = {
             id             => $self->id,
+            name           => $start_name,
             order_priority => $self->start_time->epoch * 10 + 1,
 
             row => {
@@ -57,8 +59,9 @@ sub as_journal_item {
                     label   => 'Change',
                     class   => 'icon v-edit o-timer',
                     tooltip => 'See the start time for this timer span.',
-                    action  => $c->request->uri_with({
-                        action        => 'change_start_stop',
+                    goto    => $c->request->uri_with({
+                        form          => 'change_start_stop',
+                        form_place    => $id.'start',
                         journal_entry => $journal_entry->id,
                         which         => 'start',
                     }),
@@ -77,7 +80,8 @@ sub as_journal_item {
         class   => 'icon v-edit o-entry',
         tooltip => 'Edit the journal information for this entry.',
         goto    => $c->request->uri_with({
-            action        => 'edit_entry',
+            form          => 'edit_entry',
+            form_place    => $id.'stop',
             journal_entry => $journal_entry->id,
         }),
     });
@@ -88,7 +92,8 @@ sub as_journal_item {
             class   => 'icon v-edit a-end o-timer',
             tooltip => 'Set the stop time for this timer span.',
             goto    => $c->request->uri_with({ 
-                action        => 'change_start_stop',
+                form          => 'change_start_stop',
+                form_place    => $id.'stop',
                 journal_entry => $journal_entry->id,
                 which         => 'stop',
             }),
@@ -121,13 +126,16 @@ sub as_journal_item {
         class   => 'icon v-view a-list o-task',
         tooltip => 'Show the list of tasks for this project.',
         goto    => $c->request->uri_with({ 
-            action        => 'list_actions',
+            form          => 'list_actions',
+            form_place    => $id.'stop',
             journal_entry => $journal_entry->id 
         }),
     } if $journal_entry->project;
 
-    $items->{$id.'stop'} = {
+    my $stop_name = $id.'stop';
+    $items->{$stop_name} = {
         id             => $self->id,
+        name           => $stop_name,
         order_priority => $self->start_time->epoch * 10 + 9,
 
         row => {

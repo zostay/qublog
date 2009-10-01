@@ -18,6 +18,43 @@ Catalyst Controller.
 
 =cut
 
+=head2 begin
+
+Checks for "form" arguments and stashes that information for later rendering.
+
+=cut
+
+sub begin :Private {
+    my ($self, $c) = @_;
+
+    $c->forward('/begin');
+
+    my $form = $c->request->params->{form};
+    if ($form) {
+        $c->stash->{form}       = $form;
+        $c->stash->{form_place} = $c->request->params->{form_place};
+        $c->stash->{form_type}  = $c->request->params->{form_type} || 'drawer';
+
+        my $entry_id = $c->request->params->{journal_entry};
+        if ($entry_id) {
+            my $entry = $c->model('DB::JournalEntry')->find($entry_id);
+            $c->stash->{journal_entry} = $entry;
+        }
+
+        my $timer_id = $c->request->params->{journal_timer};
+        if ($timer_id) {
+            my $timer = $c->model('DB::JournalTimer')->find($timer_id);
+            $c->stash->{journal_timer} = $timer;
+        }
+
+        my $comment_id = $c->request->params->{comment};
+        if ($comment_id) {
+            my $comment = $c->model('DB::Comment')->find($comment_id);
+            $c->stash->{comment}   = $comment;
+        }
+    }
+}
+
 =head2 index
 
 =cut

@@ -267,6 +267,18 @@ sub links {
     return Qublog::Web::format_links(@$links);
 }
 
+=head2 show
+
+This uses L<Template::Declare> to render a template.
+
+=cut
+
+sub show {
+    my ($template, $options) = @_;
+    my $c = delete $options->{c};
+    return Template::Declare->show($template, $c, $options);
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp C<< hanenkamp@cpan.org >>

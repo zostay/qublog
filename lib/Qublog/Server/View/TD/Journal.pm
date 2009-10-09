@@ -143,7 +143,7 @@ template 'journal/bits/new_comment_entry' => sub {
 
     # The create entry form
     div { { class is 'new_comment_entry' }
-        form { { action is '/journal/new_comment_entry', method is 'POST' }
+        form { { action is '/compat/thingy/new', method is 'POST' }
             input {
                 type is 'text',
                 name is 'task_entry',

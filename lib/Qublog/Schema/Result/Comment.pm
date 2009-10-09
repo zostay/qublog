@@ -47,7 +47,7 @@ sub as_journal_item {
     # Cache this info because not caching is expensive
     my $processed_name_cache = $self->processed_name_cache;
     unless ($processed_name_cache) {
-        $processed_name_cache = Qublog::Web::htmlify($self->name);
+        $processed_name_cache = Qublog::Web::htmlify($self->name, $c);
         $self->processed_name_cache($processed_name_cache);
         $self->update;
     }

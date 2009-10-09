@@ -56,6 +56,24 @@ Qublog::Server - Catalyst based application
 
 [enter your description here]
 
+=head1 METHODS
+
+=cut
+
+sub field_defaults {
+    my ($c, $fields) = @_;
+
+    for my $key (keys %$fields) {
+        $fields->{ $key } 
+            = $c->request->params->{ $key } ? $c->request->params->{ $key }
+            : $c->flash->{fields}{ $key }   ? $c->flash->{fields}{ $key }
+            :                                 $fields->{ $key }
+            ;
+    }
+
+    return $c->flash->{fields} = $fields;
+}
+
 =head1 SEE ALSO
 
 L<Qublog::Server::Controller::Root>, L<Catalyst>

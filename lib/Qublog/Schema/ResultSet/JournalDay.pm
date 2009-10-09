@@ -22,4 +22,7 @@ sub find_today {
     return $self->find_by_date( Qublog::DateTime->today );
 }
 
+*for_date  = *find_date;
+*for_today = *find_today;
+
 1;

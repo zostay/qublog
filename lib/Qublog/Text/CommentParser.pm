@@ -4,6 +4,20 @@ use Moose;
 use List::Util qw( min );
 use Parse::RecDescent;
 
+use Sub::Exporter -setup => {
+    exports => [
+        qw( TEXT TAG TASK TASK_LOG )
+    ],
+    groups => {
+        default => [ qw( TEXT TAG TASK TASK_LOG ) ],
+    },
+};
+
+use constant TEXT     => 'Qublog::Text::CommentParser::Token::Text';
+use constant TAG      => 'Qublog::Text::CommentParser::Token::TagReference';
+use constant TASK     => 'Qublog::Text::CommentParser::Token::TaskReference';
+use constant TASK_LOG => 'Qublog::Text::CommentParser::Token::TaskLogReference';
+
 my $grammar = q(
 
 {
@@ -95,8 +109,8 @@ sub parse {
     my $parser_tokens = $self->parser->comment("\n".$text) || [];
     for my $token (@$parser_tokens) {
         if ($last_token 
-                and $last_token->isa('Qublog::Text::CommentParser::Token::Text')
-                and $token->isa('Qublog::Text::CommentParser::Token::Text')) {
+                and $last_token->isa(TEXT)
+                and $token->isa(TEXT)) {
 
             $last_token->text($last_token->text . "\n" . $token->text);
             next;

@@ -19,10 +19,6 @@ has parser => (
     handles   => [ qw( parse ) ],
 );
 
-use constant TEXT => 'Qublog::Text::CommentParser::Token::Text';
-use constant TAG  => 'Qublog::Text::CommentParser::Token::TagReference';
-use constant TASK => 'Qublog::Text::CommentParser::Token::TaskLogReference';
-
 sub format {
     my ($self, $scalar) = @_;
 
@@ -33,12 +29,12 @@ sub format {
         if ($token->isa(TEXT)) {
             $output .= $token->text;
         }
-        elsif ($token->isa(TASK) or $token->isa(TAG)) {
+        elsif ($token->isa(TASK_LOG) or $token->isa(TAG)) {
             my $nickname = $token->nickname;
 
             my $log;
             $log = $self->resultset('TaskLog')->find($token->task_log)
-                if $token->isa(TASK);
+                if $token->isa(TASK_LOG);
             my $task = $self->resultset('Task')->find_by_tag_name($token->nickname);
 
             if ($log and $task and $log->task->id == $task->id) {

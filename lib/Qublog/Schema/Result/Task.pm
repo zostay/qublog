@@ -25,6 +25,7 @@ __PACKAGE__->add_columns(
     order_by       => { data_type => 'int' },
     project        => { data_type => 'int' },
     parent         => { data_type => 'int' },
+    latest_comment => { data_type => 'int' },
 );
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( project => 'Qublog::Schema::Result::Task' );
@@ -46,6 +47,28 @@ sub autotag {
     my $self = shift;
     return $self->tags({ rows => 1, order_by => { -asc => 'id' } })
         ->single->name;
+}
+
+sub insert {
+    my ($self, @args) = @_;
+    $self->next::method(@args);
+    $self->task_logs->new({})->fill_related_to(insert => $self)->insert;
+    return $self;
+}
+
+sub update {
+    my ($self, @args) = @_;
+    $self->next::method(@args);
+    $self->task_logs->new({})->fill_related_to(update => $self)->insert;
+    return $self;
+}
+
+sub latest_task_log {
+    my $self = shift;
+    return $self->task_logs({}, { 
+        order_by => { -desc => 'created_on' }, 
+        rows     => 1,
+    })->single;
 }
 
 sub as_journal_item {}

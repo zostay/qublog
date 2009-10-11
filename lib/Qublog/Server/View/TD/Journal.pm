@@ -15,6 +15,16 @@ use Template::Declare::Tags;
 
 template 'journal/index' => sub {
     my ($self, $c) = @_;
+
+    $c->add_style( file => 'journal' );
+
+    my $day = $c->stash->{day};
+    $c->stash->{title} = 'Journal';
+    if (not $day->is_today) {
+        $c->stash->{title} .= ' for ';
+        $c->stash->{title} .= Qublog::DateTime->format_human_date($day->datestamp);
+    }
+
     page {
         div { { class is 'journal' }
             show './bits/summary', $c;
@@ -144,18 +154,24 @@ template 'journal/bits/new_comment_entry' => sub {
     # The create entry form
     div { { class is 'new_comment_entry' }
         form { { action is '/compat/thingy/new', method is 'POST' }
+            label { attr { for => 'task_entry' } 'On' };
             input {
-                type is 'text',
-                name is 'task_entry',
+                type  is 'text',
+                class is 'text task_entry',
+                name  is 'task_entry',
             };
             textarea {
+                class is 'comment',
                 name is 'comment',
             };
-            input {
-                type is 'submit',
-                name is 'submit',
-                class is 'new_comment_entry_submit icon v-'.(lc $post_label).' o-thingy',
-                value is $post_label,
+            div { { class is 'submit' }
+                input {
+                    type  is 'submit',
+                    class is 'submit',
+                    name  is 'submit',
+                    class is 'new_comment_entry_submit icon v-'.(lc $post_label).' o-thingy',
+                    value is $post_label,
+                };
             };
         };
     };

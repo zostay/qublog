@@ -104,11 +104,6 @@ sub day :Local :Args(1) {
             || Qublog::DateTime->today;
     my $day  = $c->model('DB')->resultset('JournalDay')->find_by_date($date);
 
-    $c->stash->{title} = 'Journal';
-    if (not $day->is_today) {
-        $c->stash->{title} .= ' for ';
-        $c->stash->{title} .= Qublog::DateTime->format_human_date($day->datestamp);
-    }
     $c->stash->{day}      = $day;
 
     $c->stash->{template} = '/journal/index';

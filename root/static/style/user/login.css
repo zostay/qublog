@@ -1,0 +1,16 @@
+div.login-form {
+    width: 25%;
+    margin: 5em auto;
+    padding: 1em;
+    background-color: #ccf;
+    border: 1px dashed #999;
+}
+
+div.login-form input.text, 
+div.login-form input.password {
+    width: 100%;
+}
+
+div.login-form div.submit {
+    margin: 1em 0 0 0;
+}

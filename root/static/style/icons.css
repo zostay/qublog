@@ -4,7 +4,7 @@
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    /* background-image: url(/images/icons/shading.png); */
+    /* background-image: url(/static/images/icons/shading.png); */
 }
 
 input.button.icon {
@@ -36,67 +36,67 @@ h2.icon, h2.icon.left {
 
 /*** Icon Nouns ***/
 
-.o-comment { background-image: url(/images/icons/balloon.png) }
-.o-day     { background-image: url(/images/icons/calendar.png) }
-.o-entry   { background-image: url(/images/icons/report.png) }
-.o-help    { background-image: url(/images/icons/question-frame.png) }
-.o-link    { background-image: url(/images/icons/chain.png) }
-.o-journal { background-image: url(/images/icons/book-open.png) }
-.o-tag     { background-image: url(/images/icons/tag.png) }
-.o-task    { background-image: url(/images/icons/ticket.png) }
-.o-time    { background-image: url(/images/icons/clock.png) }
-.o-timer   { background-image: url(/images/icons/alarm-clock.png) }
-.o-user    { background-image: url(/images/icons/user.png) }
+.o-comment { background-image: url(/static/images/icons/balloon.png) }
+.o-day     { background-image: url(/static/images/icons/calendar.png) }
+.o-entry   { background-image: url(/static/images/icons/report.png) }
+.o-help    { background-image: url(/static/images/icons/question-frame.png) }
+.o-link    { background-image: url(/static/images/icons/chain.png) }
+.o-journal { background-image: url(/static/images/icons/book-open.png) }
+.o-tag     { background-image: url(/static/images/icons/tag.png) }
+.o-task    { background-image: url(/static/images/icons/ticket.png) }
+.o-time    { background-image: url(/static/images/icons/clock.png) }
+.o-timer   { background-image: url(/static/images/icons/alarm-clock.png) }
+.o-user    { background-image: url(/static/images/icons/user.png) }
 
 /*** Icon Adjectives ***/
 
 .a-action        { }
 .a-begin         { }
-.o-timer.a-begin { background-image: url(/images/icons/alarm-clock-blue.png) }
-.a-create        { background-image: url(/images/icons/plus.png) }
-.a-done          { background-image: url(/images/icons/tick.png) }
+.o-timer.a-begin { background-image: url(/static/images/icons/alarm-clock-blue.png) }
+.a-create        { background-image: url(/static/images/icons/plus.png) }
+.a-done          { background-image: url(/static/images/icons/tick.png) }
 .a-end           { }
-.a-group         { background-image: url(/images/icons/folder.png) }
+.a-group         { background-image: url(/static/images/icons/folder.png) }
 .a-list          { }
-.a-nix           { background-image: url(/images/icons/cross.png) }
-.a-note          { background-image: url(/images/icons/chain.png) }
+.a-nix           { background-image: url(/static/images/icons/cross.png) }
+.a-note          { background-image: url(/static/images/icons/chain.png) }
 .a-open          { }
-.a-project       { background-image: url(/images/icons/briefcase.png) }
+.a-project       { background-image: url(/static/images/icons/briefcase.png) }
 .a-quit          { }
-.a-update        { background-image: url(/images/icons/pencil.png) }
+.a-update        { background-image: url(/static/images/icons/pencil.png) }
 
 /*** Icon Verbs ***/
 
-.v-cancel           { background-image: url(/images/icons/cross.png) }
-.v-collapse         { background-image: url(/images/icons/chevron-collapse.png) }
-.v-comment          { background-image: url(/images/icons/balloon--plus.png) }
-.v-delete           { background-image: url(/images/icons/minus-circle-frame.png) }
-.v-delete.o-comment { background-image: url(/images/icons/balloon--minus.png) }
-.v-done             { background-image: url(/images/icons/tick-circle-frame.png) }
-.v-edit             { background-image: url(/images/icons/pencil.png) }
-.v-edit.o-comment   { background-image: url(/images/icons/balloon--pencil.png) }
-.v-edit.o-entry     { background-image: url(/images/icons/report--pencil.png) }
-.v-edit.o-task      { background-image: url(/images/icons/ticket--pencil.png) }
-.v-edit.o-timer     { background-image: url(/images/icons/alarm-clock--pencil.png) }
-.v-expand           { background-image: url(/images/icons/chevron.png) }
-.v-nix              { background-image: url(/images/icons/cross-circle-frame.png) }
-.v-open             { background-image: url(/images/icons/door-open.png) }
-.v-post             { background-image: url(/images/icons/plus.png) }
-.v-return           { background-image: url(/images/icons/arrow-180.png) }
-.v-restart          { background-image: url(/images/icons/control-record.png) }
-.v-save             { background-image: url(/images/icons/disk.png) }
-.v-sign-in          { background-image: url(/images/icons/door-open-in.png) }
-.v-sign-out         { background-image: url(/images/icons/door-open-out.png) }
-.v-start            { background-image: url(/images/icons/control-record.png) }
-.v-stop             { background-image: url(/images/icons/control-stop-square.png) }
-.v-taskinate        { background-image: url(/images/icons/ticket--plus.png) }
-.v-view             { background-image: url(/images/icons/arrow.png) }
-.v-view.o-day       { background-image: url(/images/icons/calendar--arrow.png) }
-.v-view.o-tag       { background-image: url(/images/icons/tag--arrow.png) }
-.v-view.o-task      { background-image: url(/images/icons/ticket--arrow.png) }
-.v-view.a-create.o-task { background-image: url(/images/icons/plus.png) }
-.v-view.a-done.o-task { background-image: url(/images/icons/tick.png) }
-.v-view.a-nix.o-task  { background-image: url(/images/icons/cross.png) }
+.v-cancel           { background-image: url(/static/images/icons/cross.png) }
+.v-collapse         { background-image: url(/static/images/icons/chevron-collapse.png) }
+.v-comment          { background-image: url(/static/images/icons/balloon--plus.png) }
+.v-delete           { background-image: url(/static/images/icons/minus-circle-frame.png) }
+.v-delete.o-comment { background-image: url(/static/images/icons/balloon--minus.png) }
+.v-done             { background-image: url(/static/images/icons/tick-circle-frame.png) }
+.v-edit             { background-image: url(/static/images/icons/pencil.png) }
+.v-edit.o-comment   { background-image: url(/static/images/icons/balloon--pencil.png) }
+.v-edit.o-entry     { background-image: url(/static/images/icons/report--pencil.png) }
+.v-edit.o-task      { background-image: url(/static/images/icons/ticket--pencil.png) }
+.v-edit.o-timer     { background-image: url(/static/images/icons/alarm-clock--pencil.png) }
+.v-expand           { background-image: url(/static/images/icons/chevron.png) }
+.v-nix              { background-image: url(/static/images/icons/cross-circle-frame.png) }
+.v-open             { background-image: url(/static/images/icons/door-open.png) }
+.v-post             { background-image: url(/static/images/icons/plus.png) }
+.v-return           { background-image: url(/static/images/icons/arrow-180.png) }
+.v-restart          { background-image: url(/static/images/icons/control-record.png) }
+.v-save             { background-image: url(/static/images/icons/disk.png) }
+.v-sign-in          { background-image: url(/static/images/icons/door-open-in.png) }
+.v-sign-out         { background-image: url(/static/images/icons/door-open-out.png) }
+.v-start            { background-image: url(/static/images/icons/control-record.png) }
+.v-stop             { background-image: url(/static/images/icons/control-stop-square.png) }
+.v-taskinate        { background-image: url(/static/images/icons/ticket--plus.png) }
+.v-view             { background-image: url(/static/images/icons/arrow.png) }
+.v-view.o-day       { background-image: url(/static/images/icons/calendar--arrow.png) }
+.v-view.o-tag       { background-image: url(/static/images/icons/tag--arrow.png) }
+.v-view.o-task      { background-image: url(/static/images/icons/ticket--arrow.png) }
+.v-view.a-create.o-task { background-image: url(/static/images/icons/plus.png) }
+.v-view.a-done.o-task { background-image: url(/static/images/icons/tick.png) }
+.v-view.a-nix.o-task  { background-image: url(/static/images/icons/cross.png) }
 
 /*** Icon Adverbs ***/
 

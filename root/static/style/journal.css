@@ -1,0 +1,230 @@
+/*** Journal Day Form ***/
+
+#goto_date {
+    position: absolute;
+    top: 25px;
+    right: 15px;
+}
+
+#goto_date div.argument-date {
+    float: left;
+    clear: none;
+}
+
+#goto_date label.argument-date {
+    width: auto;
+}
+
+#goto_date input.date {
+    width: 15em;
+}
+
+#goto_date div.submit_button {
+    float: left;
+    clear: none;
+}
+
+#goto_date input.button {
+    float: left;
+    clear: none;
+}
+
+/*** Inline Help ***/
+
+#inline-help {
+    right: 3px;
+    position: absolute;
+    width: 280px;
+    border: 2px solid #333;
+    border-left: 1px solid #666;
+    border-top: 1px solid #666;
+    font-size: 0.8em;
+    background-color: #ffc;
+}
+
+#inline-help h3 {
+    background-position: 1px 2px;
+    font-size: 1.2em;
+    margin: 0;
+    background-color: #333;
+    color: #ffc;
+}
+
+#inline-help ul {
+    padding: 0 0 0 20px;
+    margin: 0;
+}
+
+#inline-help dl {
+    margin: 0;
+}
+
+#inline-help dl dt {
+    width: 30%;
+    font-weight: bold;
+    float: left;
+    clear: left;
+    padding: 0;
+    margin: 0;
+}
+
+#inline-help dl dd {
+    width: 70%;
+    float: left;
+    clear: right;
+    padding: 0;
+    margin: 0;
+}
+
+/*** Journal Thingy Form ***/
+
+.new_comment_entry {
+    position: relative;
+}
+
+.new_comment_entry div.argument-task_entry {
+    margin: 0 300px 0 110px;
+}
+
+.new_comment_entry div.argument-task_entry label.argument-task_entry {
+    margin: 0;
+    padding: 3px 3px 0 0;
+    width: auto;
+}
+
+.new_comment_entry input.argument-task_entry {
+    font-family: Optima, URW Palladio L;
+    width: 30%;
+}
+
+.new_comment_entry div.argument-comment {
+    margin: 0 300px 0 90px;
+    padding-top: 0;
+    padding-left: 20px;
+    background-image: url(/images/icons/balloon--plus.png);
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+}
+
+.new_comment_entry label.argument-comment {
+    display: none;
+}
+
+.new_comment_entry textarea.argument-comment {
+    width: 100%;
+    font-family: Optima, URW Palladio L;
+    height: 5em;
+    min-height: 5em;
+}
+
+input.new_comment_entry_submit {
+    position: absolute;
+    right: 300px;
+    top: 0px;
+}
+
+/*** Journal Item Basic Layout ***/
+
+.journal .item {
+    overflow: auto;
+}
+
+.journal .item .item-wrapper {
+    float: left;
+    width: 100%;
+}
+
+.journal .item .links {
+    margin: 0 300px 0 110px;
+}
+
+.journal .item .item-content {
+    margin: 0 300px 0 90px;
+}
+
+.journal .item .timestamp {
+    float: left;
+    margin-left: -100%;
+    width: 90px;
+}
+
+.journal .item .info1 {
+    float: left;
+    width: 150px;
+    margin-left: -300px;
+}
+
+.journal .item .info2 {
+    float: left;
+    width: 150px;
+    margin-left: -150px;
+}
+
+.journal .item .info3 {
+    float: left;
+    width: 300px;
+    margin-left: -300px;
+}
+
+.journal .item .item-content p,
+.journal .item .timestamp p,
+.journal .item .info1 p,
+.journal .item .info2 p,
+.journal .item .info3 p {
+    margin-top: 0;
+}
+
+/*** Journal Timer Style ***/
+
+.timer .item-content,
+.timer .timestamp,
+.timer .info1,
+.timer .info2,
+.timer .info3 {
+    background-color: #333;
+    color: #ccc;
+}
+
+.timer.stop .nested-start {
+    font-style: italic;
+}
+
+.timer .info1 p,
+.timer .info2 p,
+.timer .info3 p {
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.timer {
+    background-color: #eee;
+}
+
+/*** Journal Comment Style ***/
+
+.free-comment {
+    border-top: 1px #ccc solid;
+    border-bottom: 1px #ccc solid;
+}
+
+.timer-comment {
+    background-color: #eee;
+}
+
+span.preamble.icon {
+    padding-left: 0;
+    background-image: none;
+}
+
+/*** Task References ***/
+
+.icon.task-reference.v-view.a-done.o-task {
+    color: #666;
+    text-decoration: line-through;
+}
+
+.icon.task-reference.v-view.a-nix.o-task {
+    color: #933;
+    text-decoration: line-through;
+}
+

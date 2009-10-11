@@ -428,6 +428,7 @@ sub new_thingy_take_entry_action :Private {
         owner         => $c->user->get_object,
         journal_timer => $timer,
         comment_text  => $c->request->params->{comment},
+        project       => $timer->journal_entry->project,
     );
     $create_thingy->process;
 

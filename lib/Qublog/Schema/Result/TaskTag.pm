@@ -16,4 +16,13 @@ __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to( task => 'Qublog::Schema::Result::Task' );
 __PACKAGE__->belongs_to( tag => 'Qublog::Schema::Result::Tag' );
 
+sub new {
+    my ($class, $attrs) = @_;
+
+    $attrs->{sticky}   = 0 unless defined $attrs->{sticky};
+    $attrs->{nickname} = 0 unless defined $attrs->{nickname};
+
+    return $class->next::method($attrs);
+}
+
 1;

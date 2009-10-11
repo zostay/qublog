@@ -3,6 +3,8 @@ use Moose;
 
 use Qublog::Text::CommentParser;
 
+use List::Util qw( min );
+
 has parser => (
     is        => 'ro',
     isa       => 'Qublog::Text::CommentParser',
@@ -41,6 +43,14 @@ has comment_text => (
     is        => 'ro',
     isa       => 'Str',
     required  => 1,
+);
+
+has project => (
+    is        => 'ro',
+    isa       => 'Qublog::Schema::Result::Task',
+    required  => 1,
+    lazy      => 1,
+    default   => sub { shift->schema->resultset('Task')->project_none },
 );
 
 sub _create_comment_stub {
@@ -163,6 +173,10 @@ sub process {
             die "Unknown token type.";
         }
     }
+
+    my $comment = $self->comment;
+    $comment->name( $new_text );
+    $comment->update;
 
     });
 }

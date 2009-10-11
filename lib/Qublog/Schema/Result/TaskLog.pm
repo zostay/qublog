@@ -17,6 +17,15 @@ __PACKAGE__->belongs_to( task => 'Qublog::Schema::Result::Task' );
 __PACKAGE__->belongs_to( comment => 'Qublog::Schema::Result::Comment' );
 __PACKAGE__->has_many( task_changes => 'Qublog::Schema::Result::TaskChange', 'task_log' );
 
+sub new {
+    my ($class, $attrs) = @_;
+
+    $attrs->{created_on} = Qublog::DateTime->now 
+        unless defined $attrs->{created_on};
+
+    return $class->next::method($attrs);
+}
+
 sub fill_related_to {
     my ($self, $log_type, $task) = @_;
     $self->log_type($log_type);

@@ -38,6 +38,31 @@ __PACKAGE__->many_to_many( tags => task_tags => 'tag' );
 __PACKAGE__->many_to_many( comments => task_logs => 'comment' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::Task');
 
+sub new {
+    my ($class, $attrs) = @_;
+
+    $attrs->{order_by} = 0 
+        unless defined $attrs->{order_by};
+
+    return $class->next::method($attrs);
+}
+
+sub add_tag {
+    my ($self, $tag_name) = @_;
+
+    # Find or load the tag
+    my $tag = $self->result_source->schema->resultset('Tag')->find_or_create({
+        name => $tag_name,
+    });
+    
+    $self->create_related( task_tags => {
+        tag      => $tag,
+        nickname => 1,
+    });
+    
+    return $tag;
+}
+
 sub tag {
     my $self = shift;
     return $self->tags({}, { rows => 1 })->single->name;

@@ -93,6 +93,11 @@ sub format_sql_datetime {
     return $self->sql_formatter->format_datetime($date);
 }
 
+sub format_precise_datetime {
+    my ($self, $date) = @_;
+    return $date->clone->set_time_zone('UTC')->datetime;
+}
+
 sub now {
     return DateTime->now( time_zone => 'UTC' );
 }

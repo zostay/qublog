@@ -74,6 +74,22 @@ sub field_defaults {
     return $c->flash->{fields} = $fields;
 }
 
+sub add_style {
+    my ($c, $type, $code) = @_;
+    push @{ $c->stash->{style} }, Qublog::Server::Link->new(
+        $type => $code,
+        type  => 'style',
+    );
+}
+
+sub add_script {
+    my ($c, $type, $code) = @_;
+    push @{ $c->stash->{script} }, Qublog::Server::Link->new(
+        $type => $code,
+        type  => 'script',
+    );
+}
+
 =head1 SEE ALSO
 
 L<Qublog::Server::Controller::Root>, L<Catalyst>

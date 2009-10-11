@@ -1,6 +1,9 @@
 package Qublog::Server::View::Common;
 use Template::Declare::Tags;
 
+use strict;
+use warnings;
+
 use Qublog::Menu;
 use Qublog::Server::Link;
 
@@ -60,7 +63,28 @@ sub render_menu_item($$) {
     return if $item->show_when eq 'anonymous' and     $c->user_exists;
     return if $item->show_when eq 'logged'    and not $c->user_exists;
 
-    li { { class is join ' ', 'item', $item->class }
+    my @classes = ('item', $item->class);
+
+    # Dumb way of determining active
+    my $active = 1;
+    my (@active_parts) = split m{/}, $c->request->uri->path;
+    my (@test_parts)   = split m{/}, $item->url;
+    for my $test_part (@test_parts) {
+        unless (@active_parts) {
+            $active = 0;
+            last;
+        }
+
+        my $next_active_part = shift @active_parts;
+        if ($next_active_part ne $test_part) {
+            $active = 0;
+            last;
+        }
+    }
+
+    push @classes, 'active' if $active;
+
+    li { { class is join ' ', @classes }
         hyperlink
             action => $item->url,
             label  => $item->label,
@@ -310,6 +334,7 @@ sub form_submit(@) {
 
 sub render_message($) {
     my ($message, $not_top) = @_;
+    p { ucfirst $message . '.' };
 #    my $class = ($not_type ? 'sub-message' : 'message');
 #
 #    if (ref $message) {
@@ -338,7 +363,7 @@ sub render_message($) {
 #    }
 #
 #    elsif ($message) {
-        p { { class is $class } ucfirst $message . '.' };
+#        p { { class is $class } ucfirst $message . '.' };
 #    }
 }
 

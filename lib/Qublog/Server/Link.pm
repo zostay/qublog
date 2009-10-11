@@ -3,11 +3,13 @@ use Moose;
 
 use Moose::Util::TypeConstraints;
 
-enum LinkType => qw( script style );
+enum 'Qublog::Server::Link::LinkType' => qw( script style );
+
+no Moose::Util::TypeConstraints;
 
 has type => (
     is       => 'ro',
-    isa      => 'LinkType',
+    isa      => 'Qublog::Server::Link::LinkType',
     required => 1,
 );
 
@@ -38,5 +40,7 @@ sub path {
     return '/static/' . $self->type . '/' 
         . $self->file . '.' . $self->file_type;
 }
+
+no Moose;
 
 1;

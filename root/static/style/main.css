@@ -1,3 +1,7 @@
+/*
+ * General Tag Fixes
+ */
+
 body {
     font-family: Optima, URW Palladio L;
     color: #333;
@@ -5,8 +9,52 @@ body {
     padding: 0;
 }
 
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
+li {
+    margin-left: 2em;
+    list-style-type: disc;
+}
+
 pre {
     overflow: auto;
+}
+
+/*
+ * General Forms
+ */
+
+label, input.text, input.password {
+    display: block;
+}
+
+div.submit {
+    text-align: right;
+    margin: 3px 0 0 0;
+}
+
+/*
+ * Layout
+ */
+
+p#footer {
+    font-size: 0.8em;
+    text-align: center;
+    margin: 1em 0;
 }
 
 #salutation {
@@ -16,105 +64,59 @@ pre {
     color: #333;
 }
 
+/*
+ * Masthead Content
+ */
+
 div#navigation {
-    width: 100%;
-    height: auto;
+    background: white;
+    border-bottom: 1px solid #999;
+    padding-top: 5px;
 }
 
-div#navigation ul {
-    width: 100%;
-    height: 11px;
-}
-
-div#navigation ul.menu li {
+div#navigation li {
+    margin-left: 0.5em;
+    list-style-type: none;
+    display: inline-block;
     border-left: 1px solid #999;
     border-right: 1px solid #666;
-    margin-left: 5px;
 }
 
-div#navigation ul.menu a:link,
-div#navigation ul.menu a:visited,
-div#navigation ul.menu a:hover {
-    display: inline-block;
-    background-color: #aaa;
+div#navigation li ul {
+    display: none;
+}
+
+div #navigation li a {
     color: #333;
-    border-top-color: #999;
-    border-left: none;
-    border-right: none;
-    border-bottom-color: #999;
-    padding: 2px 25px 2px 25px;
+    background-color: #aaa;
+    padding: 0 25px 0 25px;
     text-transform: lowercase;
-}
-
-div#navigation ul.menu a:hover {
-    background-color: #ccc;
-    color: #444;
-}
-
-div#navigation ul.menu li.active a:link,
-div#navigation ul.menu li.active a:visited,
-div#navigation ul.menu li.active a:hover {
-    background-color: #ccc;
-    color: #444;
-    border-bottom-color: transparent;
-}
-
-ul.menu {
-    background-color: #fff;
+    border-top: 1px solid #999;
     border-bottom: 1px solid #999;
 }
 
-#content h1 {
+div#navigation a:hover {
+    background-color: #ccc;
+    color: #444;
+}
+
+div#navigation li.active a:link,
+div#navigation li.active a:visited,
+div#navigation li.active a:hover {
+    background-color: #ccc;
+    color: #444;
+    border-bottom: none;
+    padding-bottom: 1px;
+}
+
+div#masthead h1 {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-#content h1.title {
+div#masthead h1 {
     margin: 0 0 5px 0;
     padding: 0 10px;
     background-color: #ccc;
     border-bottom: 2px solid #666;
-}
-
-input.button {
-    border-top: none;
-    border-bottom: none;
-    border-left: 1px solid #CCC;
-    border-right: 1px solid #666;
-    border-top: 1px solid #CCC;
-    border-bottom: 1px solid #666;
-}
-
-input.button:active {
-    border-left: 2px solid #666;
-    border-right: 1px solid #CCC;
-    border-top: 2px solid #666;
-    border-bottom: 1px solid #CCC;
-    padding-bottom: 0px;
-    padding-right: 10px; 
-}
-
-
-div#jGrowl.jGrowl.top-right {
-    top: 80px;
-}
-
-div#jifty-wait-message {
-    background: #ccc url(/images/candy-cane.gif) no-repeat scroll center center;
-    height: 19px;
-    width: 220px;
-    top: 28px;
-    right: 300px;
-    text-indent: 250px;
-    overflow: hidden;
-}
-
-html > body span.message,
-div#jGrowl.jGrowl .result-message .message {
-    background-image: url(/images/icons/information-frame.png);
-}
-
-html > body span.error,
-div#jGrowl.jGrowl .result-error .message {
-    background-image: url(/images/icons/exclamation--frame.png);
 }

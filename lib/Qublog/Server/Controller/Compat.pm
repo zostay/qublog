@@ -272,7 +272,7 @@ sub new_thingy :Path('thingy/new') {
         my $day = $c->model('DB::JournalDay')->for_today;
 
         my $matching_entries = $c->model('DB::JournalEntry')->search({
-            journal_day => $day,
+            journal_day => $day->id,
             name        => $title,
         });
 
@@ -284,7 +284,7 @@ sub new_thingy :Path('thingy/new') {
             });
 
             if ($entries->count > 0) {
-                my $timer = $entries->single->timers->search_by_running
+                my $timer = $entries->single->journal_timers->search_by_running
                     ->search({}, {
                         order_by => { -desc => 'start_time' },
                         rows     => 1,
@@ -376,7 +376,7 @@ Add a new comment to a timer.
 sub new_thingy_take_timer_action :Private {
     my ($self, $c, $timer, $nickname, $nickname_short) = @_;
 
-    my $create_thingy = Qublog::Schema::Action::ScreateThingy->new(
+    my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
         schema        => $c->model('DB')->schema,
         owner         => $c->user->get_object,
         journal_timer => $timer,

@@ -1,6 +1,6 @@
 package Qublog::Schema::Result::User;
 use Moose;
-extends qw( DBIx::Class );
+extends qw( Qublog::Schema::Result );
 
 __PACKAGE__->load_components(qw( Core ));
 __PACKAGE__->table('users');

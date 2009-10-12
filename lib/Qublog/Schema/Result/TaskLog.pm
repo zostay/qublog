@@ -1,7 +1,6 @@
 package Qublog::Schema::Result::TaskLog;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+extends qw( Qublog::Schema::Result );
 
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('task_logs');

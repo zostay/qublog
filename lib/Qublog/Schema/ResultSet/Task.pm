@@ -1,7 +1,6 @@
 package Qublog::Schema::ResultSet::Task;
-use strict;
-use warnings;
-use base qw( DBIx::Class::ResultSet );
+use Moose;
+extends qw( Qublog::Schema::ResultSet );
 
 # Make this into configuration
 use constant NONE_PROJECT_NAME => 'none';

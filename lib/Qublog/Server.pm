@@ -5,6 +5,9 @@ use warnings;
 
 use Catalyst::Runtime 5.80;
 
+use Data::Dumper;
+$Data::Dumper::Freezer = '_dumper_hook';
+
 # Set flags and add plugins for the application
 #
 #         -Debug: activates the debug mode for very useful log messages

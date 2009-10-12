@@ -1,7 +1,7 @@
 package Qublog::Schema::Result::JournalEntry;
 use Moose;
 
-extends qw( DBIx::Class );
+extends qw( Qublog::Schema::Result );
 with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));

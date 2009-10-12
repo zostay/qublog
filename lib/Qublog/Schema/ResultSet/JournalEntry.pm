@@ -1,6 +1,6 @@
 package Qublog::Schema::ResultSet::JournalEntry;
 use Moose;
-extends qw( DBIx::Class::ResultSet );
+extends qw( Qublog::Schema::ResultSet );
 
 sub search_by_running {
     my ($self, $running) = @_;

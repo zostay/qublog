@@ -1,6 +1,6 @@
 package Qublog::Schema::Result::JournalDay;
 use Moose;
-extends qw( DBIx::Class );
+extends qw( Qublog::Schema::Result );
 
 with qw( Qublog::Schema::Role::Itemized );
 

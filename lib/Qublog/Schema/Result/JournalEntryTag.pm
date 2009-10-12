@@ -1,7 +1,7 @@
 package Qublog::Schema::Result::JournalEntryTag;
-use strict;
-use warnings;
-use base qw( DBIx::Class );
+use Moose;
+
+extends qw( Qublog::Schema::Result );
 
 __PACKAGE__->load_components(qw( Core ));
 __PACKAGE__->table('journal_entry_tags');

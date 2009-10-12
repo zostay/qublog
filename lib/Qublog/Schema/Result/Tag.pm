@@ -1,6 +1,6 @@
 package Qublog::Schema::Result::Tag;
 use Moose;
-extends qw( DBIx::Class );
+extends qw( Qublog::Schema::Result );
 with qw( Qublog::Schema::Role::Itemized );
 
 __PACKAGE__->load_components(qw( Core ));

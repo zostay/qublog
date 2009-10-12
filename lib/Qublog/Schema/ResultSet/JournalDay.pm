@@ -1,7 +1,7 @@
 package Qublog::Schema::ResultSet::JournalDay;
 use strict;
 use warnings;
-use base qw( DBIx::Class::ResultSet );
+use base qw( Qublog::Schema::ResultSet );
 
 sub find_by_date {
     my ($self, $date) = @_;

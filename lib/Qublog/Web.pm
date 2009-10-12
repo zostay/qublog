@@ -14,10 +14,10 @@ BEGIN {
         eval q{
             use Qublog::Server::View::Common;
             use Template::Declare::Tags;
-            use Qublog::Web::CommentFormat;
             use Qublog::Web::Format::Comment;
         };
     }
+    die $@ if $@;
 };
 
 use Text::Markdown 'markdown';

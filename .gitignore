@@ -2,5 +2,6 @@ Makefile
 blib
 pm_to_blib
 qublog
+qublog.db
 t/mailbox_t*
 var

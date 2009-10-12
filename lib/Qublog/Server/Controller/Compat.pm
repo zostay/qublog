@@ -29,7 +29,7 @@ sub delete_comment :Path('comment/delete') :Args(1) {
     if (!$comment) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Unable to delete that comment.',
+            message => 'unable to delete that comment',
         };
         
         return $c->detach('return');
@@ -38,7 +38,7 @@ sub delete_comment :Path('comment/delete') :Args(1) {
     if ($comment->owner->id != $c->user->get_object->id) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'You may not delete that comment.',
+            message => 'you may not delete that comment',
         };
     }
 
@@ -59,7 +59,7 @@ sub stop_timer :Path('timer/stop') :Args(1) {
     if (!$entry) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Unable to stop that timer.',
+            message => 'unable to stop that timer',
         };
         
         return $c->detach('return');
@@ -68,7 +68,7 @@ sub stop_timer :Path('timer/stop') :Args(1) {
     if ($entry->owner->id != $c->user->get_object->id) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'You may not stop that timer.',
+            message => 'you may not stop that timer',
         };
     }
 
@@ -76,7 +76,7 @@ sub stop_timer :Path('timer/stop') :Args(1) {
 
     push @{ $c->flash->{messages} }, {
         type    => 'info',
-        message => sprintf('Stopped the timer for %s', $entry->name),
+        message => sprintf('stopped the timer for %s', $entry->name),
     };
 
     $c->detach('return');
@@ -95,7 +95,7 @@ sub start_timer :Path('timer/start') :Args(1) {
     if (!$entry) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Unable to start that timer.',
+            message => 'unable to start that timer',
         };
         
         return $c->detach('return');
@@ -104,7 +104,7 @@ sub start_timer :Path('timer/start') :Args(1) {
     if ($entry->owner->id != $c->user->get_object->id) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'You may not start that timer.',
+            message => 'you may not start that timer',
         };
     }
 
@@ -112,7 +112,7 @@ sub start_timer :Path('timer/start') :Args(1) {
 
     push @{ $c->flash->{messages} }, {
         type    => 'info',
-        message => sprintf('Started the timer for %s', $entry->name),
+        message => sprintf('started the timer for %s', $entry->name),
     };
 
     $c->detach('return');
@@ -138,7 +138,7 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
     if (not $new_time) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Please enter a new time.',
+            message => 'please enter a new time',
         };
         return $c->detach('continue');
     }
@@ -155,7 +155,7 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
     if (not $new_datetime) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Unable to understand your date.',
+            message => 'unable to understand your date',
         };
         return $c->detach('continue');
     }
@@ -165,7 +165,7 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
 
     push @{ $c->flash->{messages} }, {
         type    => 'info',
-        message => "Updated the $which time.",
+        message => "updated the $which time",
     };
 
     $c->detach('return');
@@ -186,7 +186,7 @@ sub update_journal_entry :Path('journal_entry/update') :Args(1) {
     if (not $name) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Please set the name.',
+            message => 'please set the name',
         };
         return $c->detach('continue');
     }
@@ -198,7 +198,7 @@ sub update_journal_entry :Path('journal_entry/update') :Args(1) {
     if (not $project) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'Please choose a proejct.',
+            message => 'please choose a project',
         };
     }
 
@@ -240,7 +240,7 @@ sub new_thingy :Path('thingy/new') {
     if (not $title) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'You must make an entry in the "On" box.',
+            message => 'you must make an entry in the "On" box',
         };
         return $c->detach('continue');
     }
@@ -249,7 +249,7 @@ sub new_thingy :Path('thingy/new') {
     if (not $comment) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => 'You must make an entry in the comment box.',
+            message => 'you must make an entry in the comment box',
         };
         return $c->detach('continue');
     }
@@ -347,7 +347,7 @@ sub new_thingy_take_task_action :Private {
 
         push @{ $c->flash->{messages} }, {
             type    => 'info',
-            message => sprintf('Added a comment to task #%s.', $task->tag),
+            message => sprintf('added a comment to task #%s', $task->tag),
         };
     }
 
@@ -362,7 +362,7 @@ sub new_thingy_take_task_action :Private {
 
         push @{ $c->flash->{messages} }, {
             type    => 'info',
-            message => sprintf('Added a new task #%s.', $task->tag),
+            message => sprintf('added a new task #%s', $task->tag),
         };
     }
 }
@@ -386,7 +386,7 @@ sub new_thingy_take_timer_action :Private {
 
     push @{ $c->flash->{messages} }, {
         type    => 'info',
-        message => 'Added a new comment to the current time.',
+        message => 'added a new comment to the current time',
     };
 }
 
@@ -404,7 +404,7 @@ sub new_thingy_take_entry_action :Private {
     # Restart the existing entry
     if ($entry->in_storage) {
         $timer   = $entry->start_timer;
-        $message = sprintf('Restarted %s and added your comment.', $entry->name);
+        $message = sprintf('restarted %s and added your comment', $entry->name);
     }
 
     # Create and start a new entry
@@ -418,7 +418,7 @@ sub new_thingy_take_entry_action :Private {
         $entry->insert;
 
         $timer = $entry->start_timer;
-        $message = sprintf('Started %s and added your comment.', $entry->name);
+        $message = sprintf('started %s and added your comment', $entry->name);
     }
 
     die "Failed to start a timer." unless $timer;

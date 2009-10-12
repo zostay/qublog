@@ -114,7 +114,7 @@
 div.submit {
     position: absolute;
     top: -3px;
-    width: 100%;
+    right: 0;
 }
 
 input.submit {

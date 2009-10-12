@@ -63,7 +63,7 @@ sub render_menu_item($$) {
     return if $item->show_when eq 'anonymous' and     $c->user_exists;
     return if $item->show_when eq 'logged'    and not $c->user_exists;
 
-    my @classes = ('item', $item->class);
+    my @classes = ('item');
 
     # Dumb way of determining active
     my $active = 1;
@@ -87,6 +87,7 @@ sub render_menu_item($$) {
     li { { class is join ' ', @classes }
         hyperlink
             action => $item->url,
+            class  => $item->class,
             label  => $item->label,
             ;
     };

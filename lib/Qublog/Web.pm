@@ -15,6 +15,7 @@ BEGIN {
             use Qublog::Server::View::Common;
             use Template::Declare::Tags;
             use Qublog::Web::CommentFormat;
+            use Qublog::Web::Format::Comment;
         };
     }
 };
@@ -22,7 +23,6 @@ BEGIN {
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
 use Qublog::Web::Emoticon;
-use Qublog::Web::Format::Comment;
 
 require Exporter;
 our @ISA = qw/ Exporter /;

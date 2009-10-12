@@ -1,0 +1,72 @@
+# CRUD Breakdown
+
+CRUD operations are:
+
+ * Create
+ * Read (Lookup)
+ * Update
+ * Delete
+
+These operations can be broken down into two phases like this:
+
+ * Create: (1) Create Object and (2) Do Nothing
+ * Lookup: (1) Lookup Object and (2) Do Nothing
+ * Update: (1) Lookup Object and (2) Modify
+ * Delete: (1) Lookup Object and (2) Delete
+
+In a way Create is also:
+
+ * Create: (1) Lookup Empty Object and (2) Modify
+
+However, the operation does not translate nicely into those terms in an object oriented system since that would require creating an invalid empty object in many cases when no such object is possible.
+
+Because of this we might actually break CRUD down into a Basis and Process.
+
+## Basis
+
+The **Basis** is responsible for providing an object to the operation.
+
+## Process
+
+The **Process** is responsible for doing something (possibly a no-op) to the object provided to the operation.
+
+## Working in Bulk
+
+Operations on more than one object, such as Search involve a new kind of basis operation that returns multiple objects that can have the process applied to. We can call the basic operation for working in bulk "Search," which is another form of "Read."
+
+ * Search: (1) Find objects by search criteria and (2) Do Nothing.
+
+## Object Fields
+
+In general, an object may have zero or more fields. For the sake of this discussion, we assume that each object has at least one special field called "ID." The **ID** is a special field that uniquely identifies a particular object. Since this discussion is happening in the context of using KiokuDB for storage, this is appropriate, as every object will have a unique ID like this.
+
+The object fields are presented once to perform the basis operation and may be presented a second time to perform the process operation.
+
+ * Create: 
+   * Basis: Fields other than ID.
+   * Process: No fields.
+ * Lookup:
+   * Basis: The ID field.
+   * Process: No fields.
+ * Update:
+   * Basis: The ID field.
+   * Process: Fields other than ID.
+ * Delete:
+   * Basis: The ID field.
+   * Process: No fields.
+ * Search:
+   * Basis: Fields other than ID. Possibly complex lookup operations.
+   * Process: No fields.
+
+## HTML Forms
+
+The goal of this discussion is to apply the formal theory to the practical application of rendering HTML forms to a user agent, which uses those to generate an HTTP request that must be processed. Building individual forms for each model and CRUD operation is relatively easy. However, it's very tedious and repetitive. It is nearly the same work over and over and we need to figure out an abstraction for doing this automatically.
+
+## Special Fields
+
+There are a number of very common field properties that modify how a model's fields work during each operation. These special fields include:
+
+ 1. Automatic On Create: an **Automatic On Create** field is one that is always set automatically during the Create operation. This might be a time stamp.
+ 2. Fully Automatic: a **Fully Automatic** field is always dealt with automatically, regardless of operation
+ 3. Manual: a **Manual** field is always dealt with manually
+

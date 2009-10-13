@@ -117,7 +117,8 @@ sub process {
                     $token->description('#' . $token->new_nickname . ': ' 
                                       . $token->description);
                 }
-                $token->new_nickname($token->nickname);
+                $token->new_nickname($token->nickname)
+                    if $token->has_nickname;
             }
 
             # Figure out who the parent should be

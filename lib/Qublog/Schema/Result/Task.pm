@@ -65,19 +65,32 @@ sub add_tag {
 
 sub tag {
     my $self = shift;
-    return $self->tags({}, { rows => 1 })->single->name;
+    my $tag = $self->tags({}, { 
+        rows     => 1, 
+        order_by => { -desc => 'tag.id' }, 
+    })->single;
+    return $tag->name if $tag;
+    die "no tag found for task";
 }
 
 sub autotag {
     my $self = shift;
-    return $self->tags({ rows => 1, order_by => { -asc => 'id' } })
-        ->single->name;
+    my $tag = $self->tags({}, { 
+        rows     => 1, 
+        order_by => { -asc => 'tag.id' }, 
+    })->single;
+    return $tag->name if $tag;
+    die "no tag found for task";
 }
 
 sub insert {
     my ($self, @args) = @_;
     $self->next::method(@args);
     $self->task_logs->new({})->fill_related_to(insert => $self)->insert;
+    my $autotag = $self->result_source->schema->resultset('Tag')->create({
+        autotag => 1,
+    });
+    $self->create_related(task_tags => { tag => $autotag });
     return $self;
 }
 

@@ -278,13 +278,13 @@ sub new_thingy :Path('thingy/new') {
 
         # Does the title match a running entry?
         {
-            my $entries = $matching_entries->search_by_running->search({}, { 
+            my $entries = $matching_entries->search_by_running(1)->search({}, { 
                 order_by => { -desc => 'start_time' },
                 rows     => 1,
             });
 
             if ($entries->count > 0) {
-                my $timer = $entries->single->journal_timers->search_by_running
+                my $timer = $entries->single->journal_timers->search_by_running(1)
                     ->search({}, {
                         order_by => { -desc => 'start_time' },
                         rows     => 1,
@@ -415,6 +415,7 @@ sub new_thingy_take_entry_action :Private {
         $entry->journal_day($c->model('DB::JournalDay')->for_today);
         $entry->name($c->request->params->{task_entry});
         $entry->project($task);
+        $entry->owner($c->user->get_object);
         $entry->insert;
 
         $timer = $entry->start_timer;

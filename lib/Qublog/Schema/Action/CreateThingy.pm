@@ -130,7 +130,7 @@ sub process {
             $arguments{name}     = $token->description  
                 if $token->has_description;
             $arguments{status}   = $token->status if $token->has_status;
-            $arguments{latest_comment} = $self->comment;
+            $arguments{latest_comment} = $self->comment->id;
 
             if ($task) {
                 $task->update(\%arguments);
@@ -150,8 +150,8 @@ sub process {
                 rows     => 1,
             })->single;
 
-            $new_text .= (' ' x $actual_depth) . ' * #' . $task->tag
-                . '*' . $task_log->id . "\n";
+            $new_text .= "\n" . (' ' x $actual_depth) . ' * #' . $task->tag
+                . '*' . $task_log->id;
         }
 
         elsif ($token->isa(TEXT)) {

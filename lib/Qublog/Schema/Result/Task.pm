@@ -89,8 +89,13 @@ sub insert {
     $self->task_logs->new({})->fill_related_to(insert => $self)->insert;
     my $autotag = $self->result_source->schema->resultset('Tag')->create({
         autotag => 1,
+
     });
-    $self->create_related(task_tags => { tag => $autotag });
+    $self->create_related(task_tags => { 
+        tag      => $autotag,
+        sticky   => 1,
+        nickname => 1,
+    });
     return $self;
 }
 

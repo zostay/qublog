@@ -26,6 +26,14 @@ __PACKAGE__->many_to_many( comments => journal_timer => 'comments' );
 __PACKAGE__->many_to_many( tags => journal_entry_tags => 'tag' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalEntry');
 
+sub new {
+    my ($class, $args) = @_;
+
+    $args->{start_time} ||= Qublog::DateTime->now;
+
+    return $class->next::method($args);
+}
+
 sub as_journal_item {}
 
 sub list_journal_item_resultsets {

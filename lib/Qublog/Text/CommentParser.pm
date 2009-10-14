@@ -26,19 +26,21 @@ sub make { goto &Qublog::Text::CommentParser::_make }
 
 comment:            token(s?)
 
-token:              task_reference 
+token:              <skip: ''> task_reference 
                     { $return = $item{task_reference} }
-                |   <skip: '[\\n\\r]*'> task_log_reference
+                |   <skip: ''> task_log_reference
                     { $return = $item{task_log_reference} }
-                |   <skip: '[\\n\\r]*'> tag_reference 
+                |    <skip: ''> tag_reference 
                     { $return = make( tag => $item{tag_reference} ) }
-                |   <skip: '[\\n\\r]*'> description
+                |   <skip: ''> new_line
+                    { $return = make( text => "\n" ) }
+                |   <skip: ''> description
                     { $return = make( text => $item{description} ) }
 
-task_reference:     <skip: '[\\ \\t]*'> newline
-                    dash(s?) task_status force_create(?) 
-                    nickname(?) colon(?) nickname(?) colon(?) 
-                    description(?)
+new_line:           /\n|\r|\r\n/
+
+task_reference:     new_line <skip: '[ \t]*'> dash(s?) task_status force_create(?) 
+                    nickname(?) colon(?) nickname(?) colon(?) description(?)
                     {
                         $return = make( task =>
                             @{$item[3]||[]} + 1,
@@ -49,8 +51,6 @@ task_reference:     <skip: '[\\ \\t]*'> newline
                             @{$item[10]||[]} ? $item[10][0] : undef,
                         )
                     }
-
-newline:            /^[\\r\\n]+/
 
 colon:              ':'
 
@@ -112,12 +112,21 @@ sub parse {
                 and $last_token->isa(TEXT)
                 and $token->isa(TEXT)) {
 
-            $last_token->text($last_token->text . "\n" . $token->text);
+            $last_token->text($last_token->text . $token->text);
             next;
         }
 
         push @return_tokens, $token;
         $last_token = $token;
+    }
+
+    # Strip the extra new line we stuffed in, if it made through
+    if (@return_tokens and $return_tokens[0]->isa(TEXT)) {
+        my $text = $return_tokens[0]->text;
+        $text =~ s/^\n//;
+
+        if ($text eq '') { shift @return_tokens           }
+        else             { $return_tokens[0]->text($text) }
     }
 
     return \@return_tokens;

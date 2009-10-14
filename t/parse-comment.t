@@ -58,7 +58,7 @@ had.};
     ], 'start tag');
 }
 
-# Single linee ending with a tag reference
+# Single line ending with a tag reference
 {
     my $text = q{This is a #test};
     test_parsing_of($text, [
@@ -124,6 +124,40 @@ had.};
     ], 'more variations');
 }
 
+# Text and tasks
+{
+    my $text = q{Blah blah foo bar bazzle boxey boo.
+
+[ ] #ABC: Foo
+[ ] #XYZ: Bar
+
+Blabbidy bloo bloo.};
+    test_parsing_of($text, [
+        make( text => "Blah blah foo bar bazzle boxey boo.\n" ),
+        make( task => 1, 'open', 0, 'ABC', undef, 'Foo' ),
+        make( task => 1, 'open', 0, 'XYZ', undef, 'Bar' ),
+        make( text => "\n\nBlabbidy bloo bloo." ),
+    ], 'text and tasks');
+}
+
+# Text and spaced tasks
+{
+    my $text = q{Blah blah foo bar bazzle boxey boo.
+
+[ ] #ABC: Foo
+
+[ ] #XYZ: Bar
+
+Blabbidy bloo bloo.};
+    test_parsing_of($text, [
+        make( text => "Blah blah foo bar bazzle boxey boo.\n" ),
+        make( task => 1, 'open', 0, 'ABC', undef, 'Foo' ),
+        make( text => "\n" ),
+        make( task => 1, 'open', 0, 'XYZ', undef, 'Bar' ),
+        make( text => "\n\nBlabbidy bloo bloo." ),
+    ], 'text and spaced tasks');
+}
+
 # Task log reference
 {
     my $text = q{Blah blah foo bar bazzle boxey boo.
@@ -137,4 +171,24 @@ Foobie fabbo.};
         make( task_log => 'XYZ', 789 ),
         make( text => " \nFoobie fabbo."),
     ], 'task log references');
+}
+
+# Text and hierarchical tasks
+{
+    my $text = q{Blah blah foo bar bazzle boxey boo.
+
+[ ] #ABC: Foo
+[ ] #XYZ: Bar
+-[ ] Baz
+--[ ] #FFF: Qux
+
+Blabbidy bloo bloo.};
+    test_parsing_of($text, [
+        make( text => "Blah blah foo bar bazzle boxey boo.\n" ),
+        make( task => 1, 'open', 0, 'ABC', undef, 'Foo' ),
+        make( task => 1, 'open', 0, 'XYZ', undef, 'Bar' ),
+        make( task => 2, 'open', 0, undef, undef, 'Baz' ),
+        make( task => 3, 'open', 0, 'FFF', undef, 'Qux' ),
+        make( text => "\n\nBlabbidy bloo bloo." ),
+    ], 'text and tasks');
 }

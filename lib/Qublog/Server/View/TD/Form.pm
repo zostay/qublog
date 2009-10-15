@@ -168,7 +168,7 @@ template 'form/edit_comment' => sub {
     my ($self, $c) = @_;
     my $comment = $c->stash->{comment};
 
-    my $fields = $c->field_default({
+    my $fields = $c->field_defaults({
         created_on => Qublog::DateTime->format_human_time($comment->created_on),
         name       => $comment->name,
         return_to  => $c->request->uri_with({ form => undef }),

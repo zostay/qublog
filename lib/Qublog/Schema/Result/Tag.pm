@@ -35,7 +35,7 @@ sub new {
     my ($class, $args) = @_;
 
     my $autotag = delete $args->{autotag};
-    $args->{name} = '-';
+    $args->{name} = '-' if $autotag;
 
     my $self = $class->next::method($args);
 

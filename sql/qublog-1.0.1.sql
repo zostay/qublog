@@ -27,5 +27,5 @@ CREATE TABLE sequences(
 );
 
 INSERT INTO sequences(id, last_value)
-    SELECT 1, MAX(id)
+    SELECT 1, COALESCE(MAX(id), 0)
     FROM tags;

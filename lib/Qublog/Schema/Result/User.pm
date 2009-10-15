@@ -2,6 +2,8 @@ package Qublog::Schema::Result::User;
 use Moose;
 extends qw( Qublog::Schema::Result );
 
+use Digest;
+
 __PACKAGE__->load_components(qw( Core ));
 __PACKAGE__->table('users');
 __PACKAGE__->add_columns(

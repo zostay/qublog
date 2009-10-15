@@ -109,7 +109,7 @@ sub update {
 sub latest_task_log {
     my $self = shift;
     return $self->task_logs({}, { 
-        order_by => { -desc => 'created_on' }, 
+        order_by => { -desc => [ 'created_on', 'id' ] }, 
         rows     => 1,
     })->single;
 }

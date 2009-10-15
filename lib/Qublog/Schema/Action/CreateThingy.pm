@@ -85,7 +85,7 @@ sub _decide_parent {
 
     return (
         scalar(@$parent_stack) > 0 ? ($parent_stack->[0]) : (undef),
-        $new_depth
+        $new_depth - 1
     );
 }
 
@@ -145,12 +145,9 @@ sub process {
 
             unshift @parent_stack, $task;
 
-            my $task_log = $task->task_logs({}, {
-                order_by => { -desc => 'created_on' },
-                rows     => 1,
-            })->single;
+            my $task_log = $task->latest_task_log;
 
-            $new_text .= "\n" . (' ' x $actual_depth) . ' * #' . $task->tag
+            $new_text .= "\n" . (' ' x $actual_depth) . '* #' . $task->autotag
                 . '*' . $task_log->id;
         }
 
@@ -176,6 +173,7 @@ sub process {
     }
 
     my $comment = $self->comment;
+    $new_text =~ s/^\n(\s+)\*/$1*/;
     $comment->name( $new_text );
     $comment->update;
 

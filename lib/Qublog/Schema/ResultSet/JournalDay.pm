@@ -3,6 +3,12 @@ use strict;
 use warnings;
 use base qw( Qublog::Schema::ResultSet );
 
+BEGIN {
+    die "DO NOT LOAD UNDER JIFTY" if $Jifty::VERSION;
+}
+
+use Qublog::DateTime2;
+
 sub find_by_date {
     my ($self, $date) = @_;
     my $day = $date->clone->truncate( to => 'day' );

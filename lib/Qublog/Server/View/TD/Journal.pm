@@ -152,6 +152,12 @@ template 'journal/bits/new_comment_entry' => sub {
     # Initial button name
     my $post_label = $day->journal_entries->count == 0 ? 'Start' : 'Post';
 
+    my $journal_entry = $day->journal_entries->search_by_running(1)->search({}, {
+        order_by => { -desc => 'start_time' },
+        rows     => 1,
+    })->single;
+    my $running_name = $journal_entry ? $journal_entry->name : '';
+
     # The create entry form
     div { { class is 'new_comment_entry' }
         form { { action is '/compat/thingy/new', method is 'POST' }
@@ -160,6 +166,7 @@ template 'journal/bits/new_comment_entry' => sub {
                 type  is 'text',
                 class is 'text task_entry',
                 name  is 'task_entry',
+                value is $running_name,
             };
             textarea {
                 class is 'comment',

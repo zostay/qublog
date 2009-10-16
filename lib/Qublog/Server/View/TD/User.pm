@@ -1,5 +1,7 @@
 package Qublog::Server::View::TD::User;
-use Moose;
+
+use strict;
+use warnings;
 
 use Qublog::Server::Link;
 use Qublog::Server::View::Common;

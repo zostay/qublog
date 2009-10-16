@@ -189,6 +189,7 @@ template 'journal/bits/new_comment_entry' => sub {
 
 my @JOURNAL_FORMS = qw(
     edit_comment
+    edit_entry
 );
 
 template 'journal/bits/items' => sub {

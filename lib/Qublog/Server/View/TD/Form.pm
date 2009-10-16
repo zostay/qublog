@@ -88,19 +88,19 @@ template 'form/edit_entry' => sub {
         };
 
         label { attr { for => 'project' }; 'Project' };
-        select {
-            name is 'project',
+        select { { name is 'project' }
 
             my $projects = $c->model('DB::Task')->search({
                 task_type => 'project',
                 status    => 'open',
-            });
+            }, { order_by => { -desc => 'created_on' } });
 
             while (my $project = $projects->next) {
                 option { 
-                    { 
-                        value is $project->id,
-                        selected is $project->id == $fields->{project},
+                    { value is $project->id }
+
+                    if ($project->id == $fields->{project}) {
+                        selected is 'selected';
                     }
 
                     '#' . $project->tag . ': ' . $project->name
@@ -108,16 +108,18 @@ template 'form/edit_entry' => sub {
             }
         };
 
-        input { 
-            type is 'submit',
-            name is 'submit',
-            value is 'Save',
-        };
+        div { { class is 'submit' }
+            input { 
+                type is 'submit',
+                name is 'submit',
+                value is 'Save',
+            };
 
-        input {
-            type is 'submit',
-            name is 'cancel',
-            value is 'Cancel',
+            input {
+                type is 'submit',
+                name is 'cancel',
+                value is 'Cancel',
+            };
         };
     };
 };

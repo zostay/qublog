@@ -206,6 +206,7 @@ sub update_journal_entry :Path('journal_entry/update') :Args(1) {
             type    => 'error',
             message => 'please choose a project',
         };
+        return $c->detach('continue');
     }
 
     $journal_entry->name( $name );

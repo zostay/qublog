@@ -62,7 +62,7 @@ sub as_journal_item {
                     goto    => $c->request->uri_with({
                         form          => 'change_start_stop',
                         form_place    => $id.'start',
-                        journal_entry => $journal_entry->id,
+                        journal_timer => $self->id,
                         which         => 'start',
                     }),
                 },
@@ -94,7 +94,7 @@ sub as_journal_item {
             goto    => $c->request->uri_with({ 
                 form          => 'change_start_stop',
                 form_place    => $id.'stop',
-                journal_entry => $journal_entry->id,
+                journal_timer => $self->id,
                 which         => 'stop',
             }),
         };

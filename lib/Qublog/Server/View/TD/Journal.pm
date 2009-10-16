@@ -188,8 +188,10 @@ template 'journal/bits/new_comment_entry' => sub {
 };
 
 my @JOURNAL_FORMS = qw(
+    change_start_stop
     edit_comment
     edit_entry
+    list_actions
 );
 
 template 'journal/bits/items' => sub {

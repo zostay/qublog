@@ -135,9 +135,9 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
     my $cancel = $req->params->{cancel};
     return $c->detach('return') if $cancel;
 
-    my $get_time        = "${which}_time";
-    my $new_time        = $req->params->{new_time};
-    my $change_date_too = $req->params->{change_date_too};
+    my $get_time = "${which}_time";
+    my $new_time = $req->params->{new_time};
+    my $date_too = $req->params->{date_too};
     if (not $new_time) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
@@ -147,7 +147,7 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
     }
 
     my $new_datetime;
-    if ($change_date_too) {
+    if ($date_too) {
         $new_datetime = Qublog::DateTime->parse_human_datetime($new_time);
     }
     else {

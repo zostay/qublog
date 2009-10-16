@@ -1,20 +1,30 @@
 package Qublog::Server::View::TD::Form;
+
+use strict;
+use warnings;
+
 use Template::Declare::Tags;
 
+use Qublog::Web;
 use Qublog::Server::View::Common;
 
 template 'form/change_start_stop' => sub {
     my ($self, $c) = @_;
     my $timer  = $c->stash->{journal_timer};
 
-    my $time = $fields->{which} eq 'start' ? $timer->start_time : $timer->stop_time;
-
     my $fields = $c->field_defaults({
-        which           => 'start',
-        new_time        => Qublog::DateTime->format_human_time($time),
-        origin          => $c->request->uri,
-        change_date_too => 0,
+        which    => 'start',
+        new_time => '-', 
+        origin   => $c->request->uri,
+        date_too => 0,
     });
+
+    if ($fields->{new_time} eq '-') {
+        $fields->{new_time} = Qublog::DateTime->format_human_time(
+            $fields->{which} eq 'start' ? $timer->start_time 
+          :                               $timer->stop_time
+        );
+    }
 
     form {
         {
@@ -33,26 +43,37 @@ template 'form/change_start_stop' => sub {
         input {
             type is 'text',
             name is 'new_time',
+            class is 'text',
             value is $fields->{new_time},
         };
 
         input {
-            type is 'checkbox',
-            name is 'change_date_too',
-            value is 1,
-            checked is $fields->{change_date_too},
-        };
-        label { attr { for => 'change_date_too' }, 'Change date too?' };
+            {
+                type is 'checkbox',
+                name is 'date_too',
+                class is 'checkbox',
+                value is 1,
+            }
 
-        input {
-            type is 'submit',
-            name is 'submit',
-            value is "Set \u$which Time",
+            if ($fields->{date_too}) {
+                checked is $fields->{date_too};
+            }
+
+            undef;
         };
-        input {
-            type is 'submit',
-            name is 'cancel',
-            value is 'Cancel',
+        label { attr { for => 'date_too', class => 'checkbox' }; 'Change date too?' };
+
+        div { { class is 'submit' }
+            input {
+                type is 'submit',
+                name is 'submit',
+                value is "Set \u$fields->{which} Time",
+            };
+            input {
+                type is 'submit',
+                name is 'cancel',
+                value is 'Cancel',
+            };
         };
     };
 };
@@ -140,7 +161,7 @@ template 'form/list_actions/project_summary' => sub {
                 };
                 outs ' ';
                 span { { class is 'name' }
-                    outs_raw htmlify($task->name);
+                    outs_raw htmlify($task->name, $c);
                 };
 
                 if ($task->task_type ne 'action') {

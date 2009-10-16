@@ -111,13 +111,13 @@
     min-height: 5em;
 }
 
-div.submit {
+.new_comment_entry div.submit {
     position: absolute;
     top: -3px;
     right: 0;
 }
 
-input.submit {
+.new_comment_entry input.submit {
     position: absolute;
     right: 300px;
     top: 0px;

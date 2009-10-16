@@ -25,6 +25,10 @@ has human_formatter => (
             time_zone => 'UTC' 
         ),
     },
+    handles   => { 
+        human_success => 'success',
+        human_error   => 'error',
+    },
 );
 
 has sql_formatter => (
@@ -38,6 +42,13 @@ sub parse_human_datetime {
     my ($self, $date_str) = @_;
     my $df = $self->human_formatter;
     return $df->parse_datetime($date_str);
+}
+
+sub parse_human_time {
+    my ($self, $time_str, $context_date) = @_;
+    $context_date = Qublog::DateTime->today;
+    my $df = $self->human_formatter;
+    return $df->parse_datetime($context_date->ymd . ' ' . $time_str);
 }
 
 sub format_human_date {

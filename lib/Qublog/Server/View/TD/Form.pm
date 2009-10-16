@@ -192,21 +192,31 @@ template 'form/edit_comment' => sub {
         textarea { { name is 'name' } $fields->{name} };
 
         input {
+            type is 'checkbox',
+            class is 'checkbox',
+            name is 'date_too',
+            value is 1,
+        };
+        label { attr { for => 'date_too', class => 'checkbox' }; 'Set the date too?' };
+
+        input {
             type is 'hidden',
             name is 'return_to',
             value is $fields->{return_to},
         };
 
-        input {
-            type is 'submit',
-            name is 'submit',
-            value is 'Save',
-        };
+        div { { class is 'submit' }
+            input {
+                type is 'submit',
+                name is 'submit',
+                value is 'Save',
+            };
 
-        input {
-            type is 'submit',
-            name is 'cancel',
-            value is 'Cancel',
+            input {
+                type is 'submit',
+                name is 'cancel',
+                value is 'Cancel',
+            };
         };
     };
 };

@@ -48,6 +48,17 @@ my $owner = $schema->resultset('User')->create({
 $owner->change_password('test123');
 $owner->update;
 
+sub _test_stuff_after_run($$$) {
+    my ($comment, $out_text, $name) = @_;
+
+    ok($comment, "$name: got a comment");
+    ok($comment->journal_day, "$name: got a journal day");
+    ok($comment->created_on, "$name: got a created date");
+    is($comment->name, $out_text, "$name: got the expected output text back");
+    ok($comment->owner, "$name: we have an owner");
+    is($comment->owner->id, $owner->id, "$name: we have the right owner");
+}
+
 sub test_create_thingy_for($$$) {
     my ($in_text, $out_text, $name) = @_;
 
@@ -57,14 +68,32 @@ sub test_create_thingy_for($$$) {
         comment_text => $in_text,
     );
     $create_thingy->process;
+
+    _test_stuff_after_run(
+        $create_thingy->comment,
+        $out_text,
+        $name,
+    );
+
+    return $create_thingy->comment;
+}
+
+sub test_update_thingy_for($$$$) {
+    my ($comment, $in_text, $out_text, $name) = @_;
+
+    my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
+        schema       => $schema,
+        owner        => $owner,
+        comment      => $comment,
+        comment_text => $in_text,
+    );
+    $create_thingy->process;
     
-    my $comment = $create_thingy->comment;
-    ok($comment, "$name: got a comment");
-    ok($comment->journal_day, "$name: got a journal day");
-    ok($comment->created_on, "$name: got a created date");
-    is($comment->name, $out_text, "$name: got the expected output text back");
-    ok($comment->owner, "$name: we have an owner");
-    is($comment->owner->id, $owner->id, "$name: we have the right owner");
+    _test_stuff_after_run(
+        $create_thingy->comment,
+        $out_text,
+        $name,
+    );
 }
 
 # Basic text
@@ -178,6 +207,7 @@ Blabbidy bloo bloo.};
 }
 
 # Text and hierarchical tasks
+my $comment;
 {
     my $in_text = q{Blah blah foo bar bazzle boxey boo.
 
@@ -195,5 +225,30 @@ Blabbidy bloo bloo.};
    * #G*17
 
 Blabbidy bloo bloo.};
-    test_create_thingy_for($in_text, $out_text, 'text and hier tasks');
+    $comment = test_create_thingy_for($in_text, $out_text, 'text and hier tasks');
+}
+
+# Edit Text and hierarchical tasks
+{
+    my $in_text = q{Blah blah foo bar bazzle boxey boo.
+
+ * #D*14
+ * #E*15
+  * #F*16
+   * #G*17
+
+Blabbidy bloo bloo.
+
+Shlem schluppidy schultz.};
+    my $out_text = q{Blah blah foo bar bazzle boxey boo.
+
+ * #D*14
+ * #E*15
+  * #F*16
+   * #G*17
+
+Blabbidy bloo bloo.
+
+Shlem schluppidy schultz.};
+    test_update_thingy_for($comment, $in_text, $out_text, 'edit text and hier tasks');
 }

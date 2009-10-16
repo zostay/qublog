@@ -126,6 +126,9 @@ Change the start or stop time of a timer.
 
 sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
     my ($self, $c, $which, $journal_timer_id) = @_;
+
+    return $c->detach('return') if $c->request->params->{cancel};
+
     my $journal_timer = $c->model('DB::JournalTimer')->find($journal_timer_id);
     my $req = $c->request;
 
@@ -179,7 +182,10 @@ Update the journal entry.
 
 sub update_journal_entry :Path('journal_entry/update') :Args(1) {
     my ($self, $c, $journal_entry_id) = @_;
-    my $journal_entry = $c->model('DB::JournalEntry')->retrieve($journal_entry_id);
+
+    return $c->detach('return') if $c->request->params->{cancel};
+
+    my $journal_entry = $c->model('DB::JournalEntry')->find($journal_entry_id);
 
     my $name         = $c->request->params->{name};
     $name =~ s/^\s+//; $name =~ s/\s+$//;
@@ -194,7 +200,7 @@ sub update_journal_entry :Path('journal_entry/update') :Args(1) {
     my $primary_link = $c->request->params->{primary_link};
 
     my $project_id   = $c->request->params->{project};
-    my $project      = $c->model('DB::Task')->retrieve($project_id);
+    my $project      = $c->model('DB::Task')->find($project_id);
     if (not $project) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
@@ -218,11 +224,61 @@ Update a comment.
 
 sub update_comment :Path('comment/update') :Args(1) {
     my ($self, $c, $comment_id) = @_;
-    my $comment = $c->model('DB::Comment')->retrieve($comment_id);
 
-    my $created_on = $c->request->params->{created_on};
+    return $c->detach('return') if $c->request->params->{cancel};
 
-    my $name = $c->request->params->{name};
+    eval {
+        $c->model('DB')->txn_do(sub {
+            my $comment = $c->model('DB::Comment')->find($comment_id);
+            die "no such comment\n" unless $comment;
+
+            my $date_too   = $c->request->params->{date_too};
+            my $created_on = $c->request->params->{created_on};
+
+            die "no time value given\n" unless $created_on;
+
+            if ($date_too) {
+                $created_on = Qublog::DateTime->parse_human_datetime($created_on);
+            }
+            else {
+                $created_on = Qublog::DateTime->parse_human_time(
+                    $created_on, $comment->created_on);
+            }
+
+            die Qublog::DateTime->human_error . "\n" 
+                unless Qublog::DateTime->human_success;
+
+            my $name = $c->request->params->{name};
+
+            my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
+                schema       => $c->model('DB')->schema,
+                owner        => $c->user->get_object,
+                comment      => $comment,
+                comment_text => $name,
+            );
+            $create_thingy->process;
+
+            $comment->created_on($created_on);
+            $comment->update;
+        });
+    };
+
+    if ($@) {
+        my $ERROR = $@;
+        $ERROR =~ s/^DBIx::Class::Schema::txn_do\(\):\s+//g;
+        $ERROR =~ s/\n+$//g;
+        push @{ $c->flash->{messages} }, {
+            type    => 'info',
+            message => "unable to change your comment: $ERROR",
+        };
+    }
+
+    else {
+        push @{ $c->flash->{messages} }, {
+            type    => 'info',
+            message => 'changed your comment',
+        };
+    }
 
     $c->detach('return');
 }

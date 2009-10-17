@@ -115,7 +115,7 @@ template 'task/view' => sub {
                     label   => 'Edit',
                     tooltip => 'Edit this task',
                     class   => 'icon only v-edit o-task',
-                    goto    => $c->uri_for('/task/edit/', $task->id),
+                    goto    => $c->uri_for('/task/edit', $task->id),
                     ;
             };
         }
@@ -146,6 +146,63 @@ template 'task/view' => sub {
             show './list', $c, $children, $args->{task_filter};
         }
     };
+};
+
+template 'task/edit' => sub {
+    my ($self, $c) = @_;
+    my $task = $c->stash->{task};
+
+    $c->stash->{title} = $task->name;
+
+    my $fields = $c->field_defaults({
+        tag_name => $task->tag,
+        name     => $task->name,
+    });
+
+    page {
+        p {
+            hyperlink
+                label => 'Back to Tasks',
+                class => 'icon v-return o-task',
+                goto  => '/task',
+                ;
+        };
+
+        div { { class is 'project-view inline' }
+            form {
+                label { attr { for => 'tag_name' }; 'Tag' };
+                input {
+                    type is 'text',
+                    name is 'tag_name',
+                    class is 'text',
+                    value is $fields->{tag_name},
+                };
+
+                label { attr { for => 'name' }; 'Name' };
+                input {
+                    type is 'text',
+                    name is 'name',
+                    class is 'text',
+                    value is $fields->{name},
+                };
+
+                div { { class is 'submit' }
+                    input {
+                        type is 'submit',
+                        name is 'submit',
+                        value is 'Save',
+                    };
+                };
+            };
+
+            my $user        = $c->user->get_object;
+            my $task_filter = $c->model('DB::Task')->search_current($user);
+            my $children    = $task_filter->search({ parent => $task->id });
+
+            show './list', $c, $children, $task_filter;
+            show '/journal/bits/items', $c, $task;
+        };
+    } $c;
 };
 
 1;

@@ -33,6 +33,16 @@ sub index :Path :Args(0) {
     $c->stash->{template} = '/task/index';
 }
 
+sub edit :Local :Args(1) {
+    my ($self, $c, $task_id) = @_;
+
+    my $task = $c->model('DB::Task')->find($task_id);
+
+    $c->dispatch('default') unless $task;
+
+    $c->stash->{task}     = $task;
+    $c->stash->{template} = '/task/edit';
+}
 
 =head1 AUTHOR
 

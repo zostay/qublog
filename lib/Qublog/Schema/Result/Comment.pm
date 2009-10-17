@@ -52,6 +52,8 @@ sub as_journal_item {
         $self->update;
     }
 
+    my $timer = $self->journal_timer;
+
     my $name = 'Comment-'.$self->id;
     $items->{$name} = {
         id             => $self->id,
@@ -59,8 +61,8 @@ sub as_journal_item {
         order_priority => $order_priority,
 
         row => {
-            class => ($self->journal_timer->id ? 'timer-comment'
-                     :                           'free-comment'),
+            class => (($timer && $timer->id) ? 'timer-comment'
+                     :                         'free-comment'),
         },
 
         timestamp => $self->created_on,

@@ -122,7 +122,8 @@ sub as_journal_item {}
 
 sub list_journal_item_resultsets {
     my ($self, $c) = @_;
-    return [ $self->comments ];
+    my $comments = $self->comments;
+    return [ $comments ];
 }
 
 sub historical_values {

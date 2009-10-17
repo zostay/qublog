@@ -12,6 +12,10 @@ enum 'Qublog::Schema::Result::Task::Type' => qw( project group action );
 
 no Moose::Util::TypeConstraints;
 
+# TODO This is duplicated in Qublog::Schema::ResultSet::Task and should be
+# configuration
+use constant NONE_PROJECT_NAME => 'none';
+
 __PACKAGE__->load_components(qw( InflateColumn::DateTime Core ));
 __PACKAGE__->table('tasks');
 __PACKAGE__->add_columns(
@@ -243,6 +247,11 @@ sub historical_values {
 
         return \%args;
     }
+}
+
+sub is_none_project {
+    my $self = shift;
+    return $self->name eq NONE_PROJECT_NAME;
 }
 
 1;

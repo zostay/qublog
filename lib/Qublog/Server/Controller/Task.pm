@@ -23,8 +23,14 @@ Catalyst Controller.
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
+    my $user = $c->user->get_object;
 
-    $c->response->body('Matched Qublog::Server::Controller::Task in Task.');
+    $c->stash->{task_filter} = $c->model('DB::Task')->search_current($user);
+    $c->stash->{projects}    = $c->stash->{task_filter}->search({
+        task_type => 'project',
+    });
+
+    $c->stash->{template} = '/task/index';
 }
 
 

@@ -31,4 +31,22 @@ sub find_by_tag_name {
     }, { join => { task_tags => [ 'tag' ] } });
 }
 
+sub search_current {
+    my ($self, $owner) = @_;
+
+    # TODO This is very SQLite specific at the moment
+    return $self->search({
+        owner => $owner->id,
+        -nest => [
+            -and => [
+                completed_on => { '>=', \"DATETIME('now','-1 hour')" },
+                status       => 'done',
+            ],
+            -and => [
+                status       => 'open',
+            ],
+        ],
+    });
+}
+
 1;

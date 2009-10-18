@@ -43,7 +43,6 @@
 .task .actions {
     float: right;
     width: 70px;
-    display: none;
     font-size: 0.8em;
     padding: 0.1em;
 }

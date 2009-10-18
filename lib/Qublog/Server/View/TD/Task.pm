@@ -11,7 +11,9 @@ template 'task/index' => sub {
     my ($self, $c) = @_;
 
     $c->stash->{title} = 'Projects';
-    
+
+    $c->add_style( file => 'tasks' );
+
     page {
         div { { class is 'top-spacer' }
             show './new', $c;
@@ -154,6 +156,11 @@ template 'task/edit' => sub {
 
     $c->stash->{title} = $task->name;
 
+    $c->add_style( file => 'tasks' );
+    $c->add_style( file => 'journal' );
+
+    $c->add_script( file => 'journal' );
+
     my $fields = $c->field_defaults({
         tag_name => $task->tag,
         name     => $task->name,
@@ -200,7 +207,10 @@ template 'task/edit' => sub {
             my $children    = $task_filter->search({ parent => $task->id });
 
             show './list', $c, $children, $task_filter;
-            show '/journal/bits/items', $c, $task;
+
+            div { { class is 'journal' }
+                show '/journal/bits/items', $c, $task;
+            };
         };
     } $c;
 };

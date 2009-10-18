@@ -100,7 +100,7 @@ template 'task/view' => sub {
                             tooltip => sprintf("%s this task", $label),
                             class   => "icon only v-$status o-task",
                             confirm => $confirm,
-                            action  => $c->uri_for('/compat/task/update_status', $task->id, {
+                            action  => $c->uri_for('/compat/task/set/status', $task->id, $status, {
                                 return_to => $c->request->uri,
                             }),
                             ;

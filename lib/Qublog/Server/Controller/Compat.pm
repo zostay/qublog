@@ -496,6 +496,35 @@ sub new_thingy_take_entry_action :Private {
     };
 }
 
+=head2 set_task_status
+
+Update the status of the task.
+
+=cut
+
+sub set_task_status :Path('task/set/status') :Args(2) {
+    my ($self, $c, $task_id, $status) = @_;
+    my $task = $c->model('DB::Task')->find($task_id);
+
+    unless ($status =~ /^(?:nix|done|open)$/) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => "Please select a status to set.",
+        };
+        return $c->detach('return');
+    }
+
+    $task->status($status);
+    $task->update;
+
+    push @{ $c->flash->{messages} }, {
+        type    => 'info',
+        message => sprintf('Marked task #%s as %s.', $task->tag, $status),
+    };
+
+    $c->detach('return');
+}
+
 =head2 return
 
 Private routine to redirect according to the C<return_to> parameter. Without that parameter, defaults to the main journal page.

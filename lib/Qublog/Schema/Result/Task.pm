@@ -255,4 +255,14 @@ sub is_none_project {
     return $self->name eq NONE_PROJECT_NAME;
 }
 
+sub store_column {
+    my ($self, $name, $value) = @_;
+
+    if ($name eq 'status' and $value eq 'done') {
+        $self->completed_on(Qublog::DateTime->now);
+    }
+
+    return $self->next::method($name, $value);
+}
+
 1;

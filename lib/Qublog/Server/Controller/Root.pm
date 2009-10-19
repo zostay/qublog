@@ -30,7 +30,11 @@ Make sure we're logged.
 
 sub begin :Private {
     my ($self, $c) = @_;
-    $c->response->redirect('/user/login') unless $c->user_exists;
+    
+    unless ($c->user_exists) {
+        $c->response->redirect('/user/login');
+        $c->detach;
+    }
 }
 
 =head2 index

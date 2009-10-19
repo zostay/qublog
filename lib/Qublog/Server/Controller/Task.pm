@@ -14,9 +14,6 @@ Catalyst Controller.
 
 =head1 METHODS
 
-=cut
-
-
 =head2 index
 
 =cut

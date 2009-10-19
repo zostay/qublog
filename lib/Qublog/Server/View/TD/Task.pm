@@ -37,6 +37,12 @@ template 'task/new' => sub {
                 name is 'name',
             };
 
+            input {
+                type is 'hidden',
+                name is 'return_to',
+                value is $c->request->uri,
+            };
+
             div { { class is 'submit' }
                 input {
                     type is 'submit',

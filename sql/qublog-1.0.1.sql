@@ -20,6 +20,28 @@ INSERT INTO journal_entries(id, name, start_time, stop_time, primary_link, proje
 
 DROP TABLE journal_entries2;
 
+ALTER TABLE tasks RENAME TO tasks2;
+
+CREATE TABLE tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  name text NOT NULL,
+  owner integer NOT NULL,
+  task_type text NOT NULL DEFAULT 'action',
+  child_handling text NOT NULL DEFAULT 'serial',
+  status text NOT NULL DEFAULT 'open',
+  created_on datetime NOT NULL,
+  completed_on datetime,
+  order_by int NOT NULL DEFAULT 0,
+  project integer,
+  parent integer NOT NULL  
+);
+
+INSERT INTO tasks(id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent)
+    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent
+    FROM tasks2;
+
+DROP TABLE tasks2;
+
 CREATE TABLE sequences(
     id         int NOT NULL,
     last_value int NOT NULL,

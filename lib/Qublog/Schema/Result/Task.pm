@@ -21,6 +21,7 @@ __PACKAGE__->table('tasks');
 __PACKAGE__->add_columns(
     id             => { data_type => 'int' },
     name           => { data_type => 'text' },
+    owner          => { data_type => 'int' },
     task_type      => { data_type => 'text' },
     child_handling => { data_type => 'text' },
     status         => { data_type => 'text' },
@@ -32,6 +33,7 @@ __PACKAGE__->add_columns(
     latest_comment => { data_type => 'int' },
 );
 __PACKAGE__->set_primary_key('id');
+__PACKAGE__->belongs_to( owner => 'Qublog::Schema::Result::User' );
 __PACKAGE__->belongs_to( project => 'Qublog::Schema::Result::Task' );
 __PACKAGE__->belongs_to( parent => 'Qublog::Schema::Result::Task' );
 __PACKAGE__->has_many( children => 'Qublog::Schema::Result::Task', 'parent' );
@@ -43,12 +45,33 @@ __PACKAGE__->many_to_many( comments => task_logs => 'comment' );
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::Task');
 
 sub new {
-    my ($class, $attrs) = @_;
+    my ($class, $args) = @_;
 
-    $attrs->{order_by} = 0 
-        unless defined $attrs->{order_by};
+    $args->{task_type}      = 'action' unless defined $args->{task_type};
+    $args->{child_handling} = 'serial' unless defined $args->{child_handler};
+    $args->{status}         = 'open'   unless defined $args->{status};
+    $args->{created_on}     = Qublog::DateTime->now
+                                       unless defined $args->{created_on};
+    $args->{order_by}       = 0        unless defined $args->{order_by};
 
-    return $class->next::method($attrs);
+    my $self = $class->next::method($args);
+
+    if (not $self->project and not $self->parent) {
+        my $none = $self->result_source->resultset->project_none;
+
+        $self->project($none);
+        $self->parent($none);
+    }
+
+    elsif (not $self->project) {
+        $self->project( $self->parent->project );
+    }
+
+    elsif (not $self->parent) {
+        $self->parent( $self->project );
+    }
+
+    return $self;
 }
 
 sub add_tag {

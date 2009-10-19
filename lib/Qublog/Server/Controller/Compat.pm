@@ -410,6 +410,7 @@ sub new_thingy_take_task_action :Private {
 
     else {
         $task->name($c->request->params->{comment});
+        $task->owner($c->user->get_object);
         $task->task_type('action');
         $task->status('open');
         $task->parent($c->model('DB::Task')->project_none);
@@ -419,7 +420,8 @@ sub new_thingy_take_task_action :Private {
 
         push @{ $c->flash->{messages} }, {
             type    => 'info',
-            message => sprintf('added a new task #%s', $task->tag),
+            message => sprintf('added a new task #%s to project #%s', 
+                $task->tag, $task->project->tag),
         };
     }
 }
@@ -509,7 +511,7 @@ sub set_task_status :Path('task/set/status') :Args(2) {
     unless ($status =~ /^(?:nix|done|open)$/) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
-            message => "Please select a status to set.",
+            message => "please select a status to set",
         };
         return $c->detach('return');
     }
@@ -519,7 +521,42 @@ sub set_task_status :Path('task/set/status') :Args(2) {
 
     push @{ $c->flash->{messages} }, {
         type    => 'info',
-        message => sprintf('Marked task #%s as %s.', $task->tag, $status),
+        message => sprintf('marked task #%s as %s', $task->tag, $status),
+    };
+
+    $c->detach('return');
+}
+
+=head2 new_task
+
+Create a new task.
+
+=cut
+
+sub new_task :Path('task/new') {
+    my ($self, $c) = @_;
+    my $name = $c->request->params->{name};
+
+    unless ($name) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => 'you must enter the description for the task',
+        };
+        return $c->detach('return');
+    }
+
+    my ($tag_name) =~ s/^\s*#(\w+):\s*//;
+
+    my $task = $c->model('DB::Task')->create({
+        name  => $name,
+        owner => $c->user->get_object,
+    });
+    $task->add_tag($tag_name) if $tag_name;
+
+    push @{ $c->flash->{messages} }, {
+        type    => 'info',
+        message => sprintf('added a new task with tag #%s to project #%s', 
+            $task->tag, $task->project->tag),
     };
 
     $c->detach('return');

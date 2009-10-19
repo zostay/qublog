@@ -90,6 +90,11 @@ sub add_tag {
     return $tag;
 }
 
+sub has_tag {
+    my ($self, $name) = @_;
+    return $self->tags({ name => $name })->count > 0;
+}
+
 sub tag {
     my $self = shift;
     my $tag = $self->tags({}, { 

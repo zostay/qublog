@@ -182,7 +182,12 @@ template 'task/edit' => sub {
         };
 
         div { { class is 'project-view inline' }
-            form {
+            form { 
+                { 
+                    method is 'POST',
+                    action is '/compat/task/update/' . $task->id,
+                }
+
                 label { attr { for => 'tag_name' }; 'Tag' };
                 input {
                     type is 'text',
@@ -197,6 +202,12 @@ template 'task/edit' => sub {
                     name is 'name',
                     class is 'text',
                     value is $fields->{name},
+                };
+
+                input {
+                    type is 'hidden',
+                    name is 'return_to',
+                    value is $c->request->uri,
                 };
 
                 div { { class is 'submit' }

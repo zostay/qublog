@@ -562,6 +562,50 @@ sub new_task :Path('task/new') {
     $c->detach('return');
 }
 
+=head2 update_task
+
+Update a task.
+
+=cut
+
+sub update_task :Path('task/update') :Args(1) {
+    my ($self, $c, $task_id) = @_;
+
+    my $task = $c->model('DB::Task')->find($task_id);
+    unless ($task) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => 'Please select a task to update.',
+        };
+        return $c->detach('continue');
+    }
+
+    my $tag_name = $c->request->params->{tag_name};
+    unless ($tag_name) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => 'Please enter a tag name.',
+        };
+        return $c->detach('continue');
+    }
+
+    my $name = $c->request->params->{name};
+    unless ($name) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => 'Please enter the name of the task.',
+        };
+        return $c->detach('continue');
+    }
+
+    $task->name($name);
+    $task->update;
+
+    $task->add_tag($tag_name) unless $task->has_tag($tag_name);
+
+    $c->detach('return');
+}
+
 =head2 return
 
 Private routine to redirect according to the C<return_to> parameter. Without that parameter, defaults to the main journal page.

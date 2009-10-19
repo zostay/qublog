@@ -19,9 +19,7 @@ template 'task/index' => sub {
             show './new', $c;
         };
 
-        form {
-            show './list', $c, $c->stash->{projects}, $c->stash->{task_filter};
-        };
+        show './list', $c, $c->stash->{projects}, $c->stash->{task_filter};
     } $c;
 };
 

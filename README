@@ -1,1 +1,22 @@
-Run script/qublog_server_server.pl to test the application.
+# PORT IN PROGRESS
+
+There are two applications in here. 
+
+## Jifty-based Qublog
+
+You can start the first by installing all the dependencies needed for Jifty and
+running:
+
+    bin/jifty server
+
+This works better at the moment.
+
+## Catalyst-based Qublog
+
+This is what I'm porting to for various reasons I won't go into here and now. If
+you install the requirements for this (Catalyst, DBIx::Class, etc.) you can run:
+
+    bin/qublog_server_server.pl
+
+This is mostly a pure server-driven application at the moment. The port is
+complete, but lacks much of the client-side scripting it should have.

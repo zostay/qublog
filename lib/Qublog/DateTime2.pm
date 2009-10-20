@@ -94,6 +94,11 @@ sub format_js_datetime {
     return $date->format_cldr(JS_DATETIME_FORMAT);
 }
 
+sub parse_sql_datetime {
+    my ($self, $str) = @_;
+    return $self->sql_formatter->parse_datetime($str);
+}
+
 sub format_sql_date {
     my ($self, $date) = @_;
     return $self->sql_formatter->format_date($date);

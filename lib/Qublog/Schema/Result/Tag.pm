@@ -68,9 +68,9 @@ sub list_journal_item_resultsets {
     my ($self, $c) = @_;
     
     my @result_sets;
-    push @result_sets, $self->comments;
-    push @result_sets, $self->tasks;
-    push @result_sets, $self->journal_entries;
+    push @result_sets, scalar $self->comments;
+    push @result_sets, scalar $self->tasks;
+    push @result_sets, scalar $self->journal_entries;
 
     return [ grep { $_ } @result_sets ];
 }

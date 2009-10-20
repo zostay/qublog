@@ -82,6 +82,22 @@ sub index :Path :Args(0) {
     $c->stash->{template}  = '/tag/index';
 }
 
+=head2 view
+
+Show all the things related to a particular tag.
+
+=cut
+
+sub view :Local :Args(1) {
+    my ($self, $c, $tag_name) = @_;
+
+    my $tag = $c->model('DB::Tag')->find({ name => $tag_name });
+    $c->detach('default') unless $tag;
+
+    $c->stash->{tag}      = $tag;
+    $c->stash->{template} = '/tag/view';
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp,,,

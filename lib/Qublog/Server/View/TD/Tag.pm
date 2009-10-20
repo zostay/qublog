@@ -34,4 +34,30 @@ template '/tag/index' => sub {
     } $c;
 };
 
+template 'tag/view' => sub {
+    my ($self, $c) = @_;
+    my $tag = $c->stash->{tag};
+
+    $c->stash->{title} = '#' . $tag->name;
+
+    $c->add_style( file => 'tag' );
+    $c->add_style( file => 'journal' );
+
+    $c->add_script( file => 'journal' );
+
+    page {
+        p {
+            hyperlink
+                label => 'Back to Tags',
+                class => 'icon v-return o-tag',
+                goto  => '/tag',
+                ;
+        };
+
+        div { { class is 'journal' }
+            show '/journal/bits/items', $c, $tag;
+        };
+    } $c;
+};
+
 1;

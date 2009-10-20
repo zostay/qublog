@@ -32,6 +32,7 @@ our @EXPORT = qw/
     format_time
     format_date
     format_links
+    escape_html
 /;
 
 =head1 NAME
@@ -183,6 +184,23 @@ sub format_links(\@) {
     Template::Declare->end_buffer_frame;
 
     return $content;
+}
+
+=head2 escape_html
+
+Taken from L<Jifty::View::Mason::Handler/escape_utf8>. Escapes various characters into HTML entities to help stop XSS.
+
+=cut
+
+sub escape_html {
+    no warnings 'uninitialized';
+    $_[0] =~ s/&/&#38;/g;
+    $_[0] =~ s/</&lt;/g;
+    $_[0] =~ s/>/&gt;/g;
+    $_[0] =~ s/\(/&#40;/g;
+    $_[0] =~ s/\)/&#41;/g;
+    $_[0] =~ s/"/&#34;/g;
+    $_[0] =~ s/'/&#39;/g;
 }
 
 =head1 AUTHOR

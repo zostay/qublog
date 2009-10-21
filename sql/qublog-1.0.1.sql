@@ -1,6 +1,3 @@
-ALTER TABLE tasks 
-    ADD latest_comment integer REFERENCES comments (id);
-
 ALTER TABLE journal_entries RENAME TO journal_entries2;
 
 CREATE TABLE journal_entries(
@@ -33,11 +30,12 @@ CREATE TABLE tasks (
   completed_on datetime,
   order_by int NOT NULL DEFAULT 0,
   project integer,
-  parent integer NOT NULL  
+  parent integer NOT NULL,
+  latest_comment integer
 );
 
 INSERT INTO tasks(id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent)
-    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent
+    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, COALESCE(parent, 1)
     FROM tasks2;
 
 DROP TABLE tasks2;

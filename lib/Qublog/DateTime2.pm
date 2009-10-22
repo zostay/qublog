@@ -58,7 +58,7 @@ sub parse_human_time {
     $context_date ||= DateTime->now( time_zone => $tz );
     my $df = $self->human_formatter($tz);
     return $df->parse_datetime($context_date->ymd . ' ' . $time_str)
-        ->set_time-zone($tz);
+        ->set_time_zone($tz);
 }
 
 sub format_human_date {

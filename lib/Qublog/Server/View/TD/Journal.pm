@@ -172,12 +172,14 @@ template 'journal/bits/new_comment_entry' => sub {
             };
             textarea {
                 class is 'comment',
+                id is 'new_comment',
                 name is 'comment',
             };
             div { { class is 'submit' }
                 input {
                     type  is 'submit',
                     class is 'submit',
+                    id    is 'new_comment_entry-submit',
                     name  is 'submit',
                     class is 'new_comment_entry_submit icon v-'.(lc $post_label).' o-thingy',
                     value is $post_label,

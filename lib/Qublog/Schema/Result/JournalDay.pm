@@ -39,7 +39,6 @@ sub list_journal_item_resultsets {
         order_by => { -asc => 'start_time' },
     });
 
-    warn "ENTRIES COUNT = ", $entries->count, "\n";
     return [ $entries ];
 }
 

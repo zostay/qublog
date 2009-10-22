@@ -102,7 +102,6 @@ sub day :Local :Args(1) {
 
     my $date = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone) 
             || $c->today;
-    warn "DATE IS ", $date->ymd, " IN TZ ", $date->time_zone->name, " FOR ", $date_str, "\n";
     my $day  = $c->model('DB')->resultset('JournalDay')->find_by_date($date);
 
     $c->stash->{day}      = $day;

@@ -205,7 +205,6 @@ template 'journal/bits/items' => sub {
     my $form_place = $c->stash->{form_place};
 
     if ($form_name and none { $form_name eq $_ } @JOURNAL_FORMS) {
-        warn "INVALID FORM NAME $form_name given.\n";
         undef $form_name;
     }
    

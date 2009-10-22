@@ -131,8 +131,9 @@ This converts a L<DateTime> object to a time using L<Qublog::Web/format_time>.Th
 =cut
 
 sub time {
-    my $datetime = shift;
-    return Qublog::Web::format_time($datetime);
+    my ($datetime, $options) = @_;
+    my $c = $options->{c};
+    return Qublog::Web::format_time($datetime, $c);
 }
 
 =head2 date
@@ -142,8 +143,9 @@ This converts a L<DateTime> object to a date using L<Qublog::Web/format_date>. T
 =cut
 
 sub date {
-    my $datetime = shift;
-    return Qublog::Web::format_date($datetime);
+    my ($datetime, $options) = @_;
+    my $c = $options->{c};
+    return Qublog::Web::format_date($datetime, $c);
 }
 
 =head2 wrap

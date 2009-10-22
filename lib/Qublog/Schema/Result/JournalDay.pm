@@ -20,8 +20,10 @@ __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_d
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalDay');
 
 sub is_today {
-    my $self = shift;
-    return $self->datestamp->ymd eq Qublog::DateTime->today->ymd;
+    my ($self, $today) = @_;
+    
+    my $datestamp = $self->datestamp;
+    return $datestamp->ymd eq $today->ymd;
 }
 
 sub as_journal_item {}
@@ -31,14 +33,13 @@ sub list_journal_item_resultsets {
 
     return [] unless $c->user_exists;
 
-    my $entries = $self->journal_entries;
-    $entries->search({
-        'journal_entry.owner' => $c->user->get_object->id,
+    my $entries = $self->journal_entries({
+        owner => $c->user->get_object->id,
     }, {
-        join     => [ 'journal_entry' ],
         order_by => { -asc => 'start_time' },
     });
 
+    warn "ENTRIES COUNT = ", $entries->count, "\n";
     return [ $entries ];
 }
 

@@ -2,6 +2,7 @@ package Qublog::Schema::Result::User;
 use Moose;
 extends qw( Qublog::Schema::Result );
 
+use DateTime::TimeZone;
 use Digest;
 
 __PACKAGE__->load_components(qw( Core ));
@@ -15,6 +16,11 @@ __PACKAGE__->add_columns(
     time_zone      => { data_type => 'text' },
 );
 __PACKAGE__->set_primary_key('id');
+
+__PACKAGE__->inflate_column(time_zone => {
+    inflate => sub { DateTime::TimeZone->new( name => shift ) },
+    deflate => sub { shift->name },
+});
 
 sub generate_salt {
     my $salt;

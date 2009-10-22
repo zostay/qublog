@@ -108,10 +108,16 @@ Given a L<DateTime> object, it returns a string representing that time in C<h:mm
 
 =cut
 
-sub format_time($) {
-    my $time = shift;
-    return '-:--' unless defined $time;
-    return $time->format_cldr('h:mm a');
+sub format_time($;$) {
+    if ($Jifty::VERSION) {
+        my $time = shift;
+        return '-:--' unless defined $time;
+        return $time->format_cldr('h:mm a');
+    }
+    else {
+        my ($time, $c) = @_;
+        return Qublog::DateTime->format_human_time($time, $c->time_zone);
+    }
 }
 
 =head2 format_date DATETIME
@@ -120,33 +126,39 @@ Returns the date in a pretty format.
 
 =cut
 
-sub format_date($) {
-    my $date = shift;
-    $date = Jifty::DateTime->new( 
-        year      => $date->year,
-        month     => $date->month,
-        day       => $date->day,
-        time_zone => $date->time_zone,
-    ) unless $date->isa('Jifty::DateTime');
+sub format_date($;$) {
+    if ($Jifty::VERSION) {
+        my $date = shift;
+        $date = Jifty::DateTime->new( 
+            year      => $date->year,
+            month     => $date->month,
+            day       => $date->day,
+            time_zone => $date->time_zone,
+        ) unless $date->isa('Jifty::DateTime');
 
-    my $now  = Jifty::DateTime->now( time_zone => $date->time_zone );
+        my $now  = Jifty::DateTime->now( time_zone => $date->time_zone );
 
-    my $date_str = $date->friendly_date;
-    if ($date_str =~ /^\d\d\d\d-\d\d-\d\d$/) {
-        my $seven_days_ago = DateTime::Duration->new( days => -7 );
+        my $date_str = $date->friendly_date;
+        if ($date_str =~ /^\d\d\d\d-\d\d-\d\d$/) {
+            my $seven_days_ago = DateTime::Duration->new( days => -7 );
 
-        if ($date > $now + $seven_days_ago) {
-            $date_str = $date->format_cldr('EEEE');
+            if ($date > $now + $seven_days_ago) {
+                $date_str = $date->format_cldr('EEEE');
+            }
+            elsif ($date->year eq $now->year) {
+                $date_str = $date->format_cldr('EEEE, MMMM dd');
+            }
+            else {
+                $date_str = $date->format_cldr('EEEE, MMMM dd, YYYY');
+            }
         }
-        elsif ($date->year eq $now->year) {
-            $date_str = $date->format_cldr('EEEE, MMMM dd');
-        }
-        else {
-            $date_str = $date->format_cldr('EEEE, MMMM dd, YYYY');
-        }
+
+        return $date_str;
     }
-
-    return $date_str;
+    else {
+        my ($date, $c) = @_;
+        return Qublog::DateTime->format_human_date($date, $c->time_zone);
+    }
 }
 
 =head2 show_links LINKS

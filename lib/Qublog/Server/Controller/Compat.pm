@@ -148,11 +148,11 @@ sub change_start_stop_journal_timer :Path('journal_timer/change') :Args(2) {
 
     my $new_datetime;
     if ($date_too) {
-        $new_datetime = Qublog::DateTime->parse_human_datetime($new_time);
+        $new_datetime = Qublog::DateTime->parse_human_datetime($new_time, $c->time_zone);
     }
     else {
         my $context = $journal_timer->$get_time;
-        $new_datetime = Qublog::DateTime->parse_human_time($new_time, $context);
+        $new_datetime = Qublog::DateTime->parse_human_time($new_time, $c->time_zone, $context);
     }
 
     if (not $new_datetime) {
@@ -239,11 +239,11 @@ sub update_comment :Path('comment/update') :Args(1) {
             die "no time value given\n" unless $created_on;
 
             if ($date_too) {
-                $created_on = Qublog::DateTime->parse_human_datetime($created_on);
+                $created_on = Qublog::DateTime->parse_human_datetime($created_on, $c->time_zone);
             }
             else {
                 $created_on = Qublog::DateTime->parse_human_time(
-                    $created_on, $comment->created_on);
+                    $created_on, $c->time_zone, $comment->created_on);
             }
 
             die Qublog::DateTime->human_error . "\n" 
@@ -253,6 +253,7 @@ sub update_comment :Path('comment/update') :Args(1) {
 
             my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
                 schema       => $c->model('DB')->schema,
+                today        => $c->today,
                 owner        => $c->user->get_object,
                 comment      => $comment,
                 comment_text => $name,
@@ -326,7 +327,7 @@ sub new_thingy :Path('thingy/new') {
     else {
 
         # Get the current day; we'll use it to find timers
-        my $day = $c->model('DB::JournalDay')->for_today;
+        my $day = $c->model('DB::JournalDay')->for_today($c->today);
 
         my $matching_entries = $c->model('DB::JournalEntry')->search({
             journal_day => $day->id,
@@ -392,6 +393,7 @@ sub new_thingy_take_task_action :Private {
     if ($task->in_storage) {
         my $thingy_creator = Qublog::Schema::Action::CreateThingy->new(
             schema        => $c->model('DB')->schema,
+            today         => $c->today,
             owner         => $c->user->get_object,
             comment_text  => $c->request->params->{comment},
         );
@@ -437,6 +439,7 @@ sub new_thingy_take_timer_action :Private {
 
     my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
         schema        => $c->model('DB')->schema,
+        today         => $c->today,
         owner         => $c->user->get_object,
         journal_timer => $timer,
         comment_text  => $c->request->params->{comment},
@@ -471,7 +474,7 @@ sub new_thingy_take_entry_action :Private {
         my $task = $c->model('DB::Task')->find_by_tag_name($nickname);
         $task = $c->model('DB::Task')->project_none unless $task;
 
-        $entry->journal_day($c->model('DB::JournalDay')->for_today);
+        $entry->journal_day($c->model('DB::JournalDay')->for_today($c->today));
         $entry->name($c->request->params->{task_entry});
         $entry->project($task);
         $entry->owner($c->user->get_object);
@@ -485,6 +488,7 @@ sub new_thingy_take_entry_action :Private {
 
     my $create_thingy = Qublog::Schema::Action::CreateThingy->new(
         schema        => $c->model('DB')->schema,
+        today         => $c->today,
         owner         => $c->user->get_object,
         journal_timer => $timer,
         comment_text  => $c->request->params->{comment},

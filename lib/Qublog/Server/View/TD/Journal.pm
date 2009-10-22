@@ -21,9 +21,10 @@ template 'journal/index' => sub {
 
     my $day = $c->stash->{day};
     $c->stash->{title} = 'Journal';
-    if (not $day->is_today) {
+    if (not $day->is_today($c->today)) {
         $c->stash->{title} .= ' for ';
-        $c->stash->{title} .= Qublog::DateTime->format_human_date($day->datestamp);
+        $c->stash->{title} .= Qublog::DateTime->format_human_date(
+            $day->datestamp, $c->time_zone);
     }
 
     page {
@@ -48,16 +49,16 @@ template 'journal/bits/summary' => sub {
     my $hours_left = max(0, 8 - $total_hours);
 
     my $quitting_time;
-    my $is_today = $day->is_today;
+    my $is_today = $day->is_today($c->today);
     if ($is_today and $hours_left > 0) {
         my $planned_duration = DateTime::Duration->new( hours => $hours_left );
 
-        $quitting_time = Qublog::DateTime->now + $planned_duration;
+        $quitting_time = $c->now + $planned_duration;
     }
 
     # Make some handy calculations
     my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
-    my $load_time = Qublog::DateTime->now->format_cldr($js_time_format);
+    my $load_time = $c->now->format_cldr($js_time_format);
 
     show './item', $c, {
         row => {
@@ -71,7 +72,8 @@ template 'journal/bits/summary' => sub {
             content => scalar span {
                 span { { class is 'unit' } 'Quitting time ' };
                 span { { class is 'time' }
-                    Qublog::DateTime->format_human_time($quitting_time);
+                    Qublog::DateTime->format_human_time(
+                        $quitting_time, $c->time_zone);
                 };
             },
             icon    => 'a-quit o-time',

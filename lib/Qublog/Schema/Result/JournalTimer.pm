@@ -72,7 +72,7 @@ sub as_journal_item {
 
     # Make some handy calculation
     my $start_time = Qublog::DateTime->format_js_datetime($self->start_time);
-    my $load_time  = Qublog::DateTime->format_js_datetime(Qublog::DateTime->now);
+    my $load_time  = Qublog::DateTime->format_js_datetime($c->now);
     my $total_duration = $journal_entry->hours;
 
     my @stop_links = ({
@@ -151,7 +151,7 @@ sub as_journal_item {
                 elapsed_duration => $self->hours,
             },
         },
-        timestamp => $self->stop_time || Qublog::DateTime->now,
+        timestamp => $self->stop_time || $c->now,
         content => {
             content => $journal_entry->name,
             icon    => 'a-end o-timer',

@@ -61,7 +61,7 @@ sub begin :Private {
 
 sub index :Path {
     my ( $self, $c ) = @_;
-    $c->forward('/journal/day/today');
+    $c->forward('/journal/day', [ 'today' ]);
 }
 
 =head2 goto
@@ -72,7 +72,7 @@ sub goto :Local {
     my ($self, $c) = @_;
 
     my $date_str = $c->request->params->{date};
-    my $date     = Qublog::DateTime->parse_human_datetime($date_str);
+    my $date     = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone);
 
     if ($date) {
         $c->response->redirect(
@@ -100,8 +100,9 @@ sub goto :Local {
 sub day :Local :Args(1) {
     my ( $self, $c, $date_str ) = @_;
 
-    my $date = Qublog::DateTime->parse_human_datetime($date_str) 
-            || Qublog::DateTime->today;
+    my $date = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone) 
+            || $c->today;
+    warn "DATE IS ", $date->ymd, " IN TZ ", $date->time_zone->name, " FOR ", $date_str, "\n";
     my $day  = $c->model('DB')->resultset('JournalDay')->find_by_date($date);
 
     $c->stash->{day}      = $day;

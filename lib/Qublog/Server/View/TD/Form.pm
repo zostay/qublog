@@ -22,7 +22,8 @@ template 'form/change_start_stop' => sub {
     if ($fields->{new_time} eq '-') {
         $fields->{new_time} = Qublog::DateTime->format_human_time(
             $fields->{which} eq 'start' ? $timer->start_time 
-          :                               $timer->stop_time
+          :                               $timer->stop_time,
+            $c->time_zone,
         );
     }
 
@@ -192,7 +193,8 @@ template 'form/edit_comment' => sub {
     my $comment = $c->stash->{comment};
 
     my $fields = $c->field_defaults({
-        created_on => Qublog::DateTime->format_human_time($comment->created_on),
+        created_on => Qublog::DateTime->format_human_time(
+            $comment->created_on, $c->time_zone),
         name       => $comment->name,
         return_to  => $c->request->uri_with({ form => undef }),
         origin     => $c->request->uri_with({ form => undef }),

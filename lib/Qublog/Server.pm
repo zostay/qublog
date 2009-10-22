@@ -8,6 +8,8 @@ use Catalyst::Runtime 5.80;
 use Data::Dumper;
 $Data::Dumper::Freezer = '_dumper_hook';
 
+use Qublog::DateTime2;
+
 # Set flags and add plugins for the application
 #
 #         -Debug: activates the debug mode for very useful log messages
@@ -41,7 +43,10 @@ our $VERSION = '0.01';
 # with an external configuration file acting as an override for
 # local deployment.
 
-__PACKAGE__->config( name => 'Qublog::Server' );
+__PACKAGE__->config( 
+    name         => 'Qublog::Server',
+    default_view => 'TD',
+);
 
 # Start the application
 __PACKAGE__->setup();
@@ -91,6 +96,27 @@ sub add_script {
         $type => $code,
         type  => 'script',
     );
+}
+
+sub time_zone {
+    my $c = shift;
+
+    if ($c->user_exists) {
+        return $c->user->get_object->time_zone;
+    }
+
+    return DateTime::TimeZone->new( name => $c->config->{'time_zone'} );
+}
+
+
+sub now {
+    my $c = shift;
+    return Qublog::DateTime->now->set_time_zone( $c->time_zone );
+}
+
+sub today {
+    my $c = shift;
+    return $c->now->truncate( to => 'day' );
 }
 
 =head1 SEE ALSO

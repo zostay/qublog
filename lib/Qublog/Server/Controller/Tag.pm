@@ -27,7 +27,7 @@ sub index :Path :Args(0) {
 
     my $user_id = $c->user->get_object->id;
 #    my $six_weeks_ago = Qublog::DateTime->format_sql_datetime(
-#        Qublog::DateTime->now->subtract( weeks => 6 )
+#        $c->now->subtract( weeks => 6 )
 #    );
 
     push @resultsets, $c->model('DB::Tag')->search_rs({
@@ -58,7 +58,7 @@ sub index :Path :Args(0) {
     my %tags;
     my $max_total = 1;
     my $min_total = 4_000_000_000;
-    my $now = Qublog::DateTime->now;
+    my $now = $c->now;
     for my $tag_dates (@resultsets) {
         while (my $tag_date = $tag_dates->next) {
             my $name = $tag_date->name;

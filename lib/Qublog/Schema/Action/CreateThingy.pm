@@ -21,6 +21,12 @@ has schema => (
     handles   => [ qw( resultset ) ],
 );
 
+has today => (
+    is        => 'ro',
+    isa       => 'DateTime',
+    required  => 1,
+);
+
 has owner => (
     is        => 'ro',
     isa       => 'Qublog::Schema::Result::User',
@@ -57,7 +63,7 @@ sub _create_comment_stub {
     my $self = shift;
 
     my $comment = $self->resultset('Comment')->create({
-        journal_day   => $self->resultset('JournalDay')->for_today,
+        journal_day   => $self->resultset('JournalDay')->for_today($self->today),
         journal_timer => $self->journal_timer,
         created_on    => Qublog::DateTime->now,
         name          => '',

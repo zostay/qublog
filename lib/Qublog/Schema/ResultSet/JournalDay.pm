@@ -24,8 +24,8 @@ sub find_by_date {
 }
 
 sub find_today {
-    my $self = shift;
-    return $self->find_by_date( Qublog::DateTime->today );
+    my ($self, $today) = @_;
+    return $self->find_by_date( $today );
 }
 
 *for_date  = *find_date;

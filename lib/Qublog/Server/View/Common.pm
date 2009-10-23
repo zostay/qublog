@@ -186,7 +186,7 @@ create_wrapper page => sub {
                         if ($logged) {
                             hyperlink
                                 label => 'Sign in as someone else.',
-                                goto  => $c->uri_for('/user/login'),
+                                goto  => $c->uri_for('/user/logout'),
                                 ;
                         }
                         else {

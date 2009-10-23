@@ -91,7 +91,13 @@ sub login :Local {
 sub logout :Local {
     my ($self, $c) = @_;
     $c->logout();
-    $c->stash->{template} = '/user/logout';
+
+    push @{ $c->flash->{messages} }, {
+        type    => 'info',
+        message => 'you have signed out',
+    };
+
+    $c->response->redirect('/user/login');
 }
 
 =head2 register

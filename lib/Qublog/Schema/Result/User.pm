@@ -16,6 +16,9 @@ __PACKAGE__->add_columns(
     time_zone      => { data_type => 'text' },
 );
 __PACKAGE__->set_primary_key('id');
+__PACKAGE__->add_unique_constraint(
+    name => [ qw( name ) ],
+);
 
 __PACKAGE__->inflate_column(time_zone => {
     inflate => sub { DateTime::TimeZone->new( name => shift ) },

@@ -4,9 +4,6 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use DateTime::TimeZone;
-use Email::Valid;
-use List::MoreUtils qw( none );
 use Qublog::Schema::Action::CreateThingy;
 
 =head1 NAME
@@ -609,104 +606,6 @@ sub update_task :Path('task/update') :Args(1) {
     $task->update;
 
     $task->add_tag($tag_name) unless $task->has_tag($tag_name);
-
-    $c->detach('return');
-}
-
-=head2 update_user
-
-Save the current user's profile information.
-
-=cut
-
-sub update_user :Path('user/update') {
-    my ($self, $c) = @_;
-    my $user = $c->user->get_object;
-
-    my $email = $c->request->params->{email};
-    unless (Email::Valid->address($email)) {
-        push @{ $c->flash->{messages} }, {
-            type    => 'error',
-            message => 'the email address you typed does not look right',
-        };
-        return $c->detach('continue');
-    }
-
-    my $time_zone = $c->request->params->{time_zone};
-    if (none { $_ eq $time_zone } DateTime::TimeZone->all_names) {
-        push @{ $c->flash->{time_zone} }, {
-            type    => 'error',
-            message => 'please select a time zone',
-        };
-        return $c->detach('continue');
-    }
-
-    $time_zone = DateTime::TimeZone->new( name => $time_zone );
-
-    my $old_password     = $c->request->params->{old_password};
-    my $password         = $c->request->params->{password};
-    my $confirm_password = $c->request->params->{confirm_password};
-
-    if ($old_password or $password or $confirm_password) {
-        unless ($old_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your current password in the Old Password box too',
-            };
-            return $c->detach('continue');
-        }
-
-        unless ($password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your new password in the Password box too',
-            };
-            return $c->detach('continue');
-        }
-
-        unless ($confirm_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your new password again in the Confirm Password box',
-            };
-            return $c->detach('continue');
-        }
-
-        unless (length($password) >= 6) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'your password must be at least 6 characters long',
-            };
-            return $c->detach('continue');
-        }
-
-        unless ($user->check_password($old_password)) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'sorry, the password you gave does not match your current password',
-            };
-            return $c->detach('continue');
-        }
-
-        unless ($password eq $confirm_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'the new passwords you entered do not match, please try again',
-            };
-            return $c->detach('continue');
-        }
-
-        $user->change_password($password);
-    }
-
-    $user->email($email);
-    $user->time_zone($time_zone);
-    $user->update;
-
-    push @{ $c->flash->{messages} }, {
-        type    => 'info',
-        message => 'updated your profile',
-    };
 
     $c->detach('return');
 }

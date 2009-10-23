@@ -124,3 +124,25 @@ div#masthead h1 {
     background-color: #ccc;
     border-bottom: 2px solid #666;
 }
+
+/*
+ * Messages
+ */
+
+div#messages .info {
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: #cfc;
+}
+
+div#messages .warning {
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: #ffa;
+}
+
+div#messages .error {
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: #fcc;
+}

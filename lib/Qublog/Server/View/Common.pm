@@ -168,7 +168,12 @@ create_wrapper page => sub {
                     if ($c->user_exists) {
                         my $user = $c->user->get_object;
 
-                        outs 'Hello, ' . $c->user->name;
+                        outs 'Hello, ';
+                        hyperlink
+                            label => $c->user->name,
+                            goto  => '/user/profile',
+                            ;
+
                         $logged = 1;
                         #$logged = !$user->guest_account;
                     }

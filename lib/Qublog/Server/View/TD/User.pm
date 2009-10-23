@@ -61,4 +61,95 @@ template 'user/logout' => sub {
     } $c;
 };
 
+template 'user/profile' => sub {
+    my ($self, $c) = @_;
+    my $user = $c->stash->{user};
+
+    $c->stash->{title} = 'Your Profile';
+
+    $c->add_style( file => 'user/profile' );
+    
+    page {
+        div { { class is 'profile-form' }
+
+            form { { method is 'POST', action is '/compat/user/update' }
+                label { attr { for => 'name' }; 'Name' };
+                div { { id is 'name' } $user->name };
+
+                label { attr { for => 'email' }; 'Email Address' };
+                input {
+                    type is 'text',
+                    class is 'text',
+                    id is 'email',
+                    name is 'email',
+                    value is $user->email,
+                };
+
+                label { attr { for => 'old_password' }; 'Old Password' };
+                input {
+                    type is 'password',
+                    class is 'password',
+                    id is 'old_password',
+                    name is 'old_password',
+                    value is '',
+                };
+
+                label { attr { for => 'password' }; 'New Password' };
+                input {
+                    type is 'password',
+                    class is 'password',
+                    id is 'password',
+                    name is 'password',
+                    value is '',
+                };
+
+                label { attr { for => 'confirm_password' }; 'Confirm Password' };
+                input {
+                    type is 'password',
+                    class is 'password',
+                    id is 'confirm_password',
+                    name is 'confirm_password',
+                    value is '',
+                };
+
+                label { attr { for => 'time_zone' }; 'Time Zone' };
+                select {
+                    { id is 'time_zone', name is 'time_zone' }
+
+                    for my $time_zone (DateTime::TimeZone->all_names) {
+                        option {
+                            if ($time_zone eq $user->time_zone->name) {
+                                { selected is 'selected' }
+                            }
+
+                            $time_zone;
+                        };
+                    }
+                };
+
+                input {
+                    type is 'hidden',
+                    name is 'origin',
+                    value is $c->request->uri,
+                };
+
+                input {
+                    type is 'hidden',
+                    name is 'return_to',
+                    value is $c->request->uri,
+                };
+
+                div { { class is 'submit' }
+                    input {
+                        type is 'submit',
+                        name is 'submit',
+                        value is 'Save Changes',
+                    };
+                };
+            };
+
+        };
+    } $c;
+};
+
 1;

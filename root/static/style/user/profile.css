@@ -1,0 +1,18 @@
+div.profile-form {
+    width: 30%;
+    margin: 2em auto;
+    padding: 1em;
+    background-color: #ccc;
+    border: 1px dashed #999;
+}
+
+div#name {
+    border: 1px inset;
+    background-color: white;
+    padding: 2px;
+    color: #666;
+}
+
+input#email {
+    width: 100%;
+}

@@ -104,6 +104,17 @@ sub register :Local {
     $c->response->body('TODO Not yet implemented');
 }
 
+=head2 profile
+
+=cut
+
+sub profile :Local {
+    my ($self, $c) = @_;
+
+    $c->stash->{user}     = $c->user->get_object;
+    $c->stash->{template} = '/user/profile';
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp,,,

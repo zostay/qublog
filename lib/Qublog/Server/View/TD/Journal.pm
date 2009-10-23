@@ -167,6 +167,7 @@ template 'journal/bits/new_comment_entry' => sub {
             input {
                 type  is 'text',
                 class is 'text task_entry',
+                id is 'new_task_entry',
                 name  is 'task_entry',
                 value is $running_name,
             };

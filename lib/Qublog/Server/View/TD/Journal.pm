@@ -58,7 +58,7 @@ template 'journal/bits/summary' => sub {
     my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
     my $load_time = $c->now->format_cldr($js_time_format);
 
-    show './item', $c, {
+    show '/journal_item/item', $c, {
         row => {
             class      => 'day-summary',
             attributes => {

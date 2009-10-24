@@ -52,44 +52,13 @@ sub as_journal_item {
         $self->update;
     }
 
-    my $timer = $self->journal_timer;
-
     my $name = 'Comment-'.$self->id;
     $items->{$name} = {
         id             => $self->id,
         name           => $name,
         order_priority => $order_priority,
-
-        row => {
-            class => (($timer && $timer->id) ? 'timer-comment'
-                     :                         'free-comment'),
-        },
-
-        timestamp => $self->created_on,
-        content   => {
-            content => $processed_name_cache,
-            format  => [ 'div' ],
-        },
-
-        links => [
-            {
-                label   => 'Edit',
-                class   => 'icon v-edit o-comment',
-                goto    => $c->request->uri_with({
-                    form       => 'edit_comment',
-                    form_place => 'Comment-'.$self->id,
-                    form_type  => 'replace',
-                    comment    => $self->id,
-                }),
-            },
-            {
-                label   => 'Remove',
-                class   => 'icon v-delete o-comment',
-                action  => $c->uri_for('/compat/comment/delete', $self->id, {
-                    return_to => $c->request->uri,
-                }),
-            },
-        ],
+        timestamp      => $self->created_on,
+        record         => $self,
     };
 }
 

@@ -7,9 +7,7 @@ use Qublog::Server::View::Common qw( page );
 use Qublog::Web;
 use Qublog::Web::Format;
 
-use List::MoreUtils qw( none );
 use List::Util qw( max );
-use Storable qw( dclone );
 
 use Template::Declare::Tags;
 
@@ -144,7 +142,7 @@ template 'journal/bits/list' => sub {
     };
 
     show './new_comment_entry', $c;
-    show './items', $c, $day;
+    show '/journal_item/items', $c, $day;
 };
 
 template 'journal/bits/new_comment_entry' => sub {
@@ -192,158 +190,5 @@ template 'journal/bits/new_comment_entry' => sub {
     show '/help/journal/new_comment_entry', $c;
 };
 
-my @JOURNAL_FORMS = qw(
-    change_start_stop
-    edit_comment
-    edit_entry
-    list_actions
-);
-
-template 'journal/bits/items' => sub {
-    my ($self, $c, $object) = @_;
-
-    my $form;
-    my $form_name  = $c->stash->{form};
-    my $form_type  = $c->stash->{form_type};
-    my $form_place = $c->stash->{form_place};
-
-    if ($form_name and none { $form_name eq $_ } @JOURNAL_FORMS) {
-        undef $form_name;
-    }
-   
-    if ($form_name and $form_type and $form_place) {
-        $form = {
-            content => '/form/'.$form_name,
-            format  => [ 'show' ],
-        };
-    }
-
-    my $items = $object->journal_items($c);
-    
-    for my $item (sort {
-                $b->{timestamp}      <=> $a->{timestamp}      ||
-                $b->{order_priority} <=> $a->{order_priority} ||
-                $b->{id}             <=> $a->{id}
-            } values %$items) {
-
-        if ($form and $item->{name} eq $form_place) {
-            if ($form_type eq 'replace') {
-                $item->{content} = $form;
-            }
-            else {
-                $item->{drawer}  = $form;
-            }
-        }
-
-        show './item', $c, $item;
-    }
-};
-
-template 'journal/bits/item_box' => sub {
-    my ($self, $c, $options) = @_;
-
-    my $class  = $options->{class} || '';
-       $class .= ' icon ' . $options->{icon} if $options->{icon};
-
-    div { { class is $options->{_name} }
-        div {
-            attr {
-                %{ $options->{attributes} || {} },
-                id    => $options->{id},
-                class => $class,
-            };
-
-            outs_raw apply_format(
-                $options->{content}, $options->{format}, $c
-            );
-        };
-    };
-};
-
-my %defaults = (
-    timestamp => {
-        _name  => 'timestamp',
-        format => [ 'time' ],
-        icon   => 'o-time',
-    },
-    content   => {
-        _name  => 'item-content',
-        format => [ 'htmlify' ],
-        icon   => 'o-comment',
-    },
-    info1     => {
-        _name  => 'info1',
-        format => [ 'p' ],
-    },
-    info2     => {
-        _name  => 'info2',
-        format => [ 'p' ],
-    },
-    info3     => {
-        _name  => 'info3',
-        format => [ 'p' ],
-    },
-    links     => {
-        _name  => 'links',
-        format => [ 
-            {
-                format  => 'popup',
-            },
-            'links',
-        ],
-    },
-);
-
-template 'journal/bits/item' => sub {
-    my ($self, $c, $options) = @_;
-
-    div {
-        my $row_id       = $options->{row}{id} 
-                        || 'row_'.'random-number-here';
-        my $popup_region = $row_id . '_actions';
-        my $popup_id     = 'some-qualified-name-' . $popup_region;
-
-        attr {
-            %{ $options->{row}{attributes} || {} },
-            id    => $row_id,
-            class => 'item ' . ($options->{row}{class} || ''),
-        };
-
-        for my $box (qw( links content timestamp info1 info2 info3 )) {
-            my %box_options = (
-                %{ dclone($defaults{$box}) },
-                (ref $options->{$box} eq 'HASH' ? %{ $options->{$box} || {} }
-                :                           ( content => $options->{$box} ) )
-            );
-
-            if ($box_options{content}) {
-                if ($box eq 'content' or $box eq 'links') {
-                    if ($box eq 'links') {
-                        if (ref $box_options{format} eq 'ARRAY'
-                                and ref $box_options{format}[0] eq 'HASH'
-                                and $box_options{format}[0]{format} eq 'popup'
-                                and not defined $box_options{format}[0]{options}{popup_id}) {
-                            $box_options{format}[0]{options}{popup_id} = $popup_id;
-                        }
-                    }
-
-                    div { { class is 'item-wrapper' }
-                        show './item_box', $c, \%box_options;
-                    };
-                }
-                else {
-                    show './item_box', $c, \%box_options;
-                }
-            }
-        }
-
-        # empty region
-        div { attr { id => $options->{name}, class => 'item-drawer' }; 
-
-            show './item_box', $c, $options->{drawer} 
-                if $options->{drawer};
-        };
-    };
-};
 
 1;

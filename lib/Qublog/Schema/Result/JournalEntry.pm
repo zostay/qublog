@@ -37,13 +37,13 @@ sub new {
 sub as_journal_item {}
 
 sub list_journal_item_resultsets {
-    my ($self, $c) = @_;
+    my ($self, $options) = @_;
 
-    return [] unless $c->user_exists;
+    return [] unless $options->{user};
 
     my $timers = $self->journal_timers;
     $timers->search({
-        'journal_entry.owner' => $c->user->get_object->id,
+        'journal_entry.owner' => $options->{user}->get_object->id,
     }, {
         join     => [ 'journal_entry' ],
         order_by => { -asc => 'start_time' },

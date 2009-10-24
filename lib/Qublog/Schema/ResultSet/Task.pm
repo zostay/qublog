@@ -6,7 +6,7 @@ extends qw( Qublog::Schema::ResultSet );
 use constant NONE_PROJECT_NAME => 'none';
 
 sub project_none {
-    my ($self, $c) = @_;
+    my $self = shift;
 
     my $name = NONE_PROJECT_NAME;
 

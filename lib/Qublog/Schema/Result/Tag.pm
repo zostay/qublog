@@ -65,7 +65,7 @@ sub new {
 sub as_journal_item { }
 
 sub list_journal_item_resultsets {
-    my ($self, $c) = @_;
+    my ($self, $options) = @_;
     
     my @result_sets;
     push @result_sets, scalar $self->comments;

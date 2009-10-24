@@ -149,7 +149,7 @@ sub latest_task_log {
 sub as_journal_item {}
 
 sub list_journal_item_resultsets {
-    my ($self, $c) = @_;
+    my ($self, $options) = @_;
     my $comments = $self->comments;
     return [ $comments ];
 }

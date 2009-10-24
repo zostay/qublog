@@ -2,6 +2,7 @@ package Qublog::Server::View::TD::JournalItem;
 use strict;
 use warnings;
 
+use Qublog::Web;
 use Qublog::Web::Format;
 
 use List::MoreUtils qw( none );
@@ -150,7 +151,9 @@ template 'journal_item/item' => sub {
 template 'journal_item/items' => sub {
     my ($self, $c, $object) = @_;
 
-    my $items = $object->journal_items($c);
+    my $items = $object->journal_items({
+        user => $c->user,
+    });
     
     for my $item (sort {
                 $b->{timestamp}      <=> $a->{timestamp}      ||
@@ -168,6 +171,14 @@ template 'journal_item/result/Comment' => sub {
 
     my $self  = $item->{record};
     my $timer = $self->journal_timer;
+
+    # Cache this info because not caching is expensive
+    my $processed_name_cache = $self->processed_name_cache;
+    unless ($processed_name_cache) {
+        $processed_name_cache = Qublog::Web::htmlify($self->name, $c);
+        $self->processed_name_cache($processed_name_cache);
+        $self->update;
+    }
 
     $item = {
         %$item,

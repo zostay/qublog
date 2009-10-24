@@ -35,7 +35,7 @@ sub store_column {
 }
 
 sub as_journal_item {
-    my ($self, $c, $items) = @_;
+    my ($self, $options, $items) = @_;
 
     my $order_priority = eval {
           $self->journal_timer->id ? $self->journal_timer->start_time->epoch
@@ -43,14 +43,6 @@ sub as_journal_item {
     } || 0;
     $order_priority *= 10;
     $order_priority +=  5;
-
-    # Cache this info because not caching is expensive
-    my $processed_name_cache = $self->processed_name_cache;
-    unless ($processed_name_cache) {
-        $processed_name_cache = Qublog::Web::htmlify($self->name, $c);
-        $self->processed_name_cache($processed_name_cache);
-        $self->update;
-    }
 
     my $name = 'Comment-'.$self->id;
     $items->{$name} = {

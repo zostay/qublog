@@ -18,7 +18,7 @@ __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_t
 __PACKAGE__->resultset_class('Qublog::Schema::ResultSet::JournalTimer');
 
 sub as_journal_item {
-    my ($self, $c, $items) = @_;
+    my ($self, $options, $items) = @_;
     my $journal_entry = $self->journal_entry;
 
     my $collapse_start;
@@ -57,13 +57,13 @@ sub as_journal_item {
 }
 
 sub list_journal_item_resultsets {
-    my ($self, $c) = @_;
+    my ($self, $options) = @_;
 
-    return [] unless $c->user_exists;
+    return [] unless $options->{user};
 
     my $comments = $self->comments;
     $comments->search({
-        'owner' => $c->user->get_object->id,
+        'owner' => $options->{user}->get_object->id,
     }, {
         order_by => { -asc => 'created_on' },
     });

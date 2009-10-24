@@ -29,12 +29,12 @@ sub is_today {
 sub as_journal_item {}
 
 sub list_journal_item_resultsets {
-    my ($self, $c) = @_;
+    my ($self, $options) = @_;
 
-    return [] unless $c->user_exists;
+    return [] unless $options->{user};
 
     my $entries = $self->journal_entries({
-        owner => $c->user->get_object->id,
+        owner => $options->{user}->get_object->id,
     }, {
         order_by => { -asc => 'start_time' },
     });

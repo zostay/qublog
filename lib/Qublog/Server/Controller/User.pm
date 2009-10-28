@@ -18,17 +18,6 @@ Catalyst Controller.
 
 =head1 METHODS
 
-=cut
-
-=head2 begin
-
-Cancel the actions of the root begin, which redirects without a user.
-
-=cut
-
-sub begin :Private { }
-
-
 =head2 index
 
 =cut
@@ -36,7 +25,29 @@ sub begin :Private { }
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->response->body('Matched Qublog::Server::Controller::User in User.');
+    if ($c->user_exists) {
+        $c->forward('profile');
+    }
+    else {
+        $c->forward('login');
+    }
+}
+
+=head2 check
+
+Private method for checking to make sure the user is logged and agrees to the latest terms.
+
+=cut
+
+sub check :Private {
+    my ($self, $c) = @_;
+
+    unless ($c->user_exists) {
+        $c->response->redirect('/user/login');
+        return $c->detach;
+    }
+
+
 }
 
 =head2 login
@@ -120,6 +131,8 @@ sub register :Local {
 
 sub profile :Local {
     my ($self, $c) = @_;
+
+    $c->forward('check');
 
     $c->stash->{user}     = $c->user->get_object;
     $c->stash->{template} = '/user/profile';

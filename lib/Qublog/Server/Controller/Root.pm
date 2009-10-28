@@ -22,21 +22,6 @@ Qublog::Server::Controller::Root - Root Controller for Qublog::Server
 
 =cut
 
-=head2 begin
-
-Make sure we're logged.
-
-=cut
-
-sub begin :Private {
-    my ($self, $c) = @_;
-    
-    unless ($c->user_exists) {
-        $c->response->redirect('/user/login');
-        $c->detach;
-    }
-}
-
 =head2 index
 
 =cut

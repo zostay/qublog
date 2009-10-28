@@ -14,6 +14,17 @@ Catalyst Controller.
 
 =head1 METHODS
 
+=head2 begin
+
+Check for login.
+
+=cut
+
+sub begin :Private {
+    my ($self, $c) = @_;
+    $c->forward('/user/check');
+}
+
 =head2 index
 
 =cut

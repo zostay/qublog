@@ -27,7 +27,7 @@ Checks for "form" arguments and stashes that information for later rendering.
 sub begin :Private {
     my ($self, $c) = @_;
 
-    $c->forward('/begin');
+    $c->forward('/user/check');
 
     my $form = $c->request->params->{form};
     if ($form) {

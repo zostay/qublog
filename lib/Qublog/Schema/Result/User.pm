@@ -14,6 +14,7 @@ __PACKAGE__->add_columns(
     email_verified => { data_type => 'boolean' },
     password       => { data_type => 'text' },
     time_zone      => { data_type => 'text' },
+    agreed_to_terms_md5 => { data_type => 'text' },
 );
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(

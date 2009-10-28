@@ -21,7 +21,7 @@ template 'content/show' => sub {
     $c->add_style( file => 'content' );
 
     page { { class is 'content' }
-        outs_raw typography(markdown($content, $c));
+        outs_raw typography(markdown($content));
     } $c;
 };
 

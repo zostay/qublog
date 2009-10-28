@@ -38,7 +38,7 @@ pre {
  * General Forms
  */
 
-label, input.text, input.password, textarea {
+label, input.text, input.password, textarea, select {
     display: block;
 }
 

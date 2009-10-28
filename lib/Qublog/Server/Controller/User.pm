@@ -6,6 +6,7 @@ use parent 'Catalyst::Controller';
 
 use DateTime::TimeZone;
 use Email::Valid;
+use File::Slurp qw( read_file );
 use List::MoreUtils qw( none );
 
 =head1 NAME
@@ -47,7 +48,26 @@ sub check :Private {
         return $c->detach;
     }
 
+    my $current_terms = $c->current_terms_md5;
+    unless ($current_terms) {
+        warn "LICENSE FILE IS MISSING!!!";
+        return;
+    }
 
+    my $user = $c->user->get_object;
+    my $agreed_to = $user->agreed_to_terms_md5;
+    if (not $agreed_to or $agreed_to ne $current_terms) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'warning',
+            message => sprintf(
+                'The %s has changed. Please read the following and select an action below to continue.',
+                $c->config->{'Qublog::Terms'}{title},
+            ),
+        };
+
+        $c->response->redirect('/user/agreement');
+        return $c->detach;
+    }
 }
 
 =head2 login
@@ -97,6 +117,55 @@ sub login :Local {
     }
 
     $c->stash->{template} = '/user/login';
+}
+
+=head2 agreement
+
+Ask the user to agree to the terms of the license.
+
+=cut
+
+sub agreement :Local {
+    my ($self, $c) = @_;
+
+    $c->detach('default') unless $c->user_exists;
+
+    my $license_file = $c->config->{'Qublog::Terms'}{'file'};
+    my $license_path = $c->path_to('root', 'content', $license_file);
+
+    $c->stash->{license}  = read_file("$license_path");
+    $c->stash->{user}     = $c->user->get_object;
+    $c->stash->{template} = '/user/agreement';
+}
+
+=head2 check_agreement
+
+If the user agrees, mark that, if not boot them.
+
+=cut
+
+sub check_agreement :Local {
+    my ($self, $c) = @_;
+
+    $c->detach('default') unless $c->user_exists;
+
+    my $title = $c->config->{'Qublog::Terms'}{title};
+
+    my $agreement = $c->request->params->{submit};
+    my $expected  = sprintf('I Agree to the %s.', ucfirst $title);
+    if (not $agreement or $agreement ne $expected) {
+        push @{ $c->flash->{messages} }, {
+            type    => 'error',
+            message => sprintf('logging you out. You may not use Qublog unless you agree to the %s', $title),
+        };
+        $c->detach('logout');
+    }
+
+    my $user = $c->user->get_object;
+    $user->agreed_to_terms_md5( $c->current_terms_md5 );
+    $user->update;
+
+    $c->response->redirect('/journal');
 }
 
 =head2 logout

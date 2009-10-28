@@ -8,6 +8,9 @@ use Catalyst::Runtime 5.80;
 use Data::Dumper;
 $Data::Dumper::Freezer = '_dumper_hook';
 
+use Digest::MD5 qw( md5_hex );
+use File::Slurp qw( read_file );
+
 use Qublog::DateTime2;
 
 # Set flags and add plugins for the application
@@ -117,6 +120,18 @@ sub now {
 sub today {
     my $c = shift;
     return $c->now->truncate( to => 'day' );
+}
+
+sub current_terms_md5 {
+    my $c = shift;
+
+    my $config = $c->config->{'Qublog::Terms'};
+    my $license = $config->{file};
+
+    my $license_path = $c->path_to('root', 'content', $license);
+    return unless -f $license_path;
+
+    return md5_hex(read_file("$license_path"));
 }
 
 =head1 SEE ALSO

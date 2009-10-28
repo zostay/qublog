@@ -5,7 +5,10 @@ use warnings;
 
 use Qublog::Server::Link;
 use Qublog::Server::View::Common;
+
 use Template::Declare::Tags;
+use Text::Markdown 'markdown';
+use Text::Typography 'typography';
 
 template 'user/login' => sub {
     my ($self, $c) = @_;
@@ -45,6 +48,38 @@ template 'user/login' => sub {
                         name is 'submit',
                         value is 'Login',
                     };
+                };
+            };
+        };
+    } $c;
+};
+
+template 'user/agreement' => sub {
+    my ($self, $c) = @_;
+    my $license = $c->stash->{license};
+
+    $c->stash->{title} = $c->config->{'Qublog::Terms'}{agreement_title};
+
+    $c->add_style( file => 'content' );
+    $c->add_style( file => 'user/agreement' );
+
+    page { { class is 'content' }
+        outs_raw typography(markdown($license));
+
+        div { { class is 'agreement' }
+            form { { method is 'POST', action is '/user/check_agreement' }
+                input {
+                    type is 'submit',
+                    name is 'submit',
+                    class is 'submit',
+                    value is sprintf('I Agree to the %s.', ucfirst $c->config->{'Qublog::Terms'}{'title'}),
+                };
+
+                input {
+                    type is 'submit',
+                    name is 'cancel',
+                    class is 'cancel',
+                    value is 'I Do Not Agree.',
                 };
             };
         };
@@ -204,6 +239,25 @@ template 'user/register' => sub {
                             $time_zone;
                         };
                     }
+                };
+
+                input {
+                    type is 'checkbox',
+                    class is 'checkbox',
+                    id is 'agreed_to_terms_md5',
+                    name is 'agreed_to_terms_md5',
+                    value is ,
+                };
+                label { attr { for => 'agree_to_terms', class => 'checkbox' };
+                    my $terms = $c->config->{'Qublog::Terms'};
+                    outs sprintf('Do you agree to the %s?', $terms->{title});
+                    outs ' (';
+                    hyperlink
+                        label  => $terms->{label},
+                        goto   => $terms->{link},
+                        target => '_blank',
+                        ;
+                    outs ')';
                 };
 
                 div { { class is 'submit' }

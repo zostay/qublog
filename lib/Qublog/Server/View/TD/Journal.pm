@@ -11,6 +11,22 @@ use List::Util qw( max );
 
 use Template::Declare::Tags;
 
+=head1 NAME
+
+Qublog::Server::View::TD::Journal - templates for the journal
+
+=head1 DESCRIPTION
+
+Qubloggers do most of their stuff here...
+
+=head1 TEMPLATES
+
+=head2 journal/index
+
+Show the journal page.
+
+=cut
+
 template 'journal/index' => sub {
     my ($self, $c) = @_;
 
@@ -32,6 +48,13 @@ template 'journal/index' => sub {
         };
     } $c;
 };
+
+=head2 journal/bits/summary
+
+Show a timer summary at the top. This is pretty specific to my own needs at the
+moment. This needs to be more configurable.
+
+=cut
 
 template 'journal/bits/summary' => sub {
     my ($self, $c) = @_;
@@ -115,6 +138,13 @@ template 'journal/bits/summary' => sub {
     };
 };
 
+=head2 journal/bits/list
+
+Show the Goto Form, the new comment entry form, and the list of journal items
+for today.
+
+=cut
+
 template 'journal/bits/list' => sub {
     my ($self, $c) = @_;
     my $day = $c->stash->{day};
@@ -144,6 +174,12 @@ template 'journal/bits/list' => sub {
     show './new_comment_entry', $c;
     show '/journal_item/items', $c, $day;
 };
+
+=head2 journal/bits/new_comment_entry
+
+Show the the form for adding new items to the journal.
+
+=cut
 
 template 'journal/bits/new_comment_entry' => sub {
     my ($self, $c) = @_;
@@ -190,5 +226,28 @@ template 'journal/bits/new_comment_entry' => sub {
     show '/help/journal/new_comment_entry', $c;
 };
 
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
+
+=head1 LICENSE
+
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
 
 1;

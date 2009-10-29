@@ -11,15 +11,20 @@ use List::MoreUtils qw( none );
 
 =head1 NAME
 
-Qublog::Server::Controller::User - Catalyst Controller
+Qublog::Server::Controller::User - User management for Qublog
 
 =head1 DESCRIPTION
 
-Catalyst Controller.
+You must have a user account to do anything interesting in Qublog. This helps
+you do that.
 
 =head1 METHODS
 
 =head2 index
+
+Isn't really meant to be used. However, if you go here, you will either be sent
+to the login screen (if you are not logged yet) or you will be sent to the
+profile screen.
 
 =cut
 
@@ -36,7 +41,8 @@ sub index :Path :Args(0) {
 
 =head2 check
 
-Private method for checking to make sure the user is logged and agrees to the latest terms.
+Private method for checking to make sure the user is logged and agrees to the
+latest terms.
 
 =cut
 
@@ -71,6 +77,8 @@ sub check :Private {
 }
 
 =head2 login
+
+Present a login form to the user and/or process such a login.
 
 =cut
 
@@ -170,6 +178,8 @@ sub check_agreement :Local {
 
 =head2 logout
 
+Log the user out of the site.
+
 =cut
 
 sub logout :Local {
@@ -186,6 +196,8 @@ sub logout :Local {
 
 =head2 register
 
+Show a registration form to the user.
+
 =cut
 
 sub register :Local {
@@ -195,6 +207,8 @@ sub register :Local {
 }
 
 =head2 profile
+
+Show a profile editor for the user.
 
 =cut
 
@@ -423,14 +437,28 @@ sub create :Local {
 
     return $c->response->redirect('/user/login');
 }
+
 =head1 AUTHOR
 
-Andrew Sterling Hanenkamp,,,
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
 
 =head1 LICENSE
 
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
 

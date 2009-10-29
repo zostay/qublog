@@ -8,19 +8,18 @@ use Qublog::DateTime2;
 
 =head1 NAME
 
-Qublog::Server::Controller::Journal - Catalyst Controller
+Qublog::Server::Controller::Journal - Main journal controller
 
 =head1 DESCRIPTION
 
-Catalyst Controller.
+This is the main controller of Qublog.
 
 =head1 METHODS
 
-=cut
-
 =head2 begin
 
-Checks for "form" arguments and stashes that information for later rendering.
+Checks to make sure the user is logged. Checks for "form" arguments and stashes
+that information for later rendering.
 
 =cut
 
@@ -57,6 +56,8 @@ sub begin :Private {
 
 =head2 index
 
+Shows the journal for today.
+
 =cut
 
 sub index :Path {
@@ -65,6 +66,9 @@ sub index :Path {
 }
 
 =head2 goto
+
+Loads a journal for the given date. This is used by the Go box in the upper
+right corner of the journal.
 
 =cut
 
@@ -95,6 +99,8 @@ sub goto :Local {
 
 =head2 day
 
+This loads a journal for the named day or today if none is given.
+
 =cut
 
 sub day :Local :Args(1) {
@@ -111,12 +117,25 @@ sub day :Local :Args(1) {
 
 =head1 AUTHOR
 
-Andrew Sterling Hanenkamp,,,
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
 
 =head1 LICENSE
 
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
 

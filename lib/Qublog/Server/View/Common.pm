@@ -27,6 +27,69 @@ use Sub::Exporter -setup => {
 
 use Scalar::Util qw( reftype );
 
+=head1 NAME
+
+Qublog::Server::View::Common - commonly used view subroutines
+
+=head1 SYNOPSIS
+
+  template foo => sub {
+      my ($self, $c) = @_;
+
+      page {
+          hyperlink
+              label => 'Do Something',
+              goto  => '/somewhere',
+              ;
+      } $c;
+  };
+
+=head1 DESCRIPTION
+
+There's just a lot of common stuff that needs to happen in most views. That
+common stuff goes here.
+
+=head1 METHODS
+
+=head2 hyperlink
+
+Render an A-tag in a regular fashion. It comes in two forms at this point: gotos
+and actions. Neither of these is very special at the moment.
+
+To do a C<goto>, you send the C<goto> option:
+
+  hyperlink goto => '/blah', label => 'Blah';
+
+A goto is meant to send you to another page.
+
+To do an C<action>, you send the C<action> option:
+
+  hyperlink action => '/blah', label => 'Blah';
+
+As of this writing, they are exactly the same. However, in the future, a goto
+will be responsible for taking you to another page while an action will be
+implemented to submit an Ajax request to handle some action like stopping a
+timer.
+
+Other options include:
+
+=over
+
+=item label
+
+This is the label to give the link.
+
+=item title
+
+This is the tooltip to display when the user hovers the mouse cursor over the
+link.
+
+=back
+
+Any other options will be passed as attributes on the link itself.
+
+=cut
+
 sub hyperlink(@) {
     my (%params) = @_;
     my $label = delete $params{label};
@@ -56,6 +119,15 @@ sub hyperlink(@) {
         };
     }
 }
+
+=head2 render_menu_item
+
+B<Note:> This method is not exported.
+
+This displays a single menu item and is typically only called from
+L</render_menu_items>.
+
+=cut
 
 sub render_menu_item($$) {
     my ($c, $item) = @_;
@@ -93,6 +165,14 @@ sub render_menu_item($$) {
     };
 }
 
+=head2 render_menu_items
+
+B<Note:> This method is not exported.
+
+This displays a submenu and is typically only called from L</render_navigation>.
+
+=cut
+
 sub render_menu_items($$) {
     my ($c, $items) = @_;
 
@@ -104,6 +184,14 @@ sub render_menu_items($$) {
     };
 }
 
+=head2 render_navigation
+
+B<Note:> This method is not exported.
+
+This displays a menu and is typically only called from C</page>.
+
+=cut
+
 sub render_navigation($$) {
     my ($c, $menu) = @_;
 
@@ -112,6 +200,21 @@ sub render_navigation($$) {
         render_menu_items($c, $menu->items);
     };
 }
+
+=head2 page
+
+  page {
+      # page contents here...
+  } $c;
+
+This is a helper for rendering all the standard page template matter. This
+automatically renders all the common HTML top matter and bottom matter,
+including the page title, script ans style links, a standard masthead, a
+standard footer, etc.
+
+This way the main templates only have to worry about the guts.
+
+=cut
 
 create_wrapper page => sub {
     my ($content, $c) = @_;
@@ -244,6 +347,12 @@ create_wrapper page => sub {
     };
 };
 
+=head2 standard
+
+Not a clue.
+
+=cut
+
 sub standard(%) {
     my (%params) = @_;
 
@@ -256,6 +365,12 @@ sub standard(%) {
         };
     }
 }
+
+=head2 form_input
+
+Unknown.
+
+=cut
 
 sub form_input(@) {
     my (%params) = @_;
@@ -273,6 +388,13 @@ sub form_input(@) {
         value is $params{value},
     };
 }
+
+=head2 form_popup
+
+Unused code ported from the Jifty version of Qublog. Not sure what will happen
+with this.
+
+=cut
 
 sub form_popup(@) {
     my (%params) = @_;
@@ -310,6 +432,12 @@ sub form_popup(@) {
     };
 }
 
+=head2 form_textarea
+
+Not sure.
+
+=cut
+
 sub form_textarea(@) {
     my (%params) = @_;
 
@@ -326,6 +454,12 @@ sub form_textarea(@) {
     };
 }
 
+=head2 form_submit
+
+Say what?
+
+=cut
+
 sub form_submit(@) {
     my (%params) = @_;
 
@@ -337,6 +471,22 @@ sub form_submit(@) {
         value is $params{value},
     };
 }
+
+=head2 render_message
+
+This subroutine is currently neutered, but is a really nifty message renderer
+when I get it re-implemented properly.
+
+In the meantime, it's a simple but usable message renderer. To use, don't call it directly (since it's put in the standard page template). Instead, do this:
+
+  push @{ $c->flash->{messages} }, {
+      type    => 'error',
+      message => 'Very bad things are happeneing.',
+  };
+
+The type is one of C<error>, C<warning>, or C<info>.
+
+=cut
 
 sub render_message($) {
     my ($message, $not_top) = @_;
@@ -372,5 +522,29 @@ sub render_message($) {
 #        p { { class is $class } ucfirst $message . '.' };
 #    }
 }
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
+
+=head1 LICENSE
+
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
 
 1;

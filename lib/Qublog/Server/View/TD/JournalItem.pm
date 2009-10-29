@@ -9,6 +9,36 @@ use List::MoreUtils qw( none );
 use Storable qw( dclone );
 use Template::Declare::Tags;
 
+=head1 NAME
+
+Qublog::Server::View::TD::JournalItem - format journal items
+
+=head1 DESCRIPTION
+
+Journal items is the standard way to format information on the form. Each
+journal item is comprised of 6 boxes of information arranged in 3 rows and 4
+columns.
+
+  +-------------------------------------+
+  | links                               |
+  +-----------+---------+-------+-------+
+  | timestamp | content | info1 | info2 | 
+  |           |         +-------+-------+
+  |           |         | info3         |
+  +-----------+---------+---------------+
+  | drawer                              |
+  +-------------------------------------+
+
+The fourth row here is for forms that may be added to the journal item.
+
+=head1 TEMPLATES
+
+=head2 journal_item/item_box
+
+Not used directly, but is used to display one of the boxes.
+
+=cut
+
 template 'journal_item/item_box' => sub {
     my ($self, $c, $options) = @_;
 
@@ -63,6 +93,12 @@ my %defaults = (
         ],
     },
 );
+
+=head2 journal/item
+
+Display an individual journal item.
+
+=cut
 
 my @JOURNAL_FORMS = qw(
     change_start_stop
@@ -148,6 +184,12 @@ template 'journal_item/item' => sub {
     };
 };
 
+=head2 journal_item/items
+
+Display a list of items associated with a schema object.
+
+=cut
+
 template 'journal_item/items' => sub {
     my ($self, $c, $object) = @_;
 
@@ -165,6 +207,12 @@ template 'journal_item/items' => sub {
             $c, $item;
     }
 };
+
+=head2 journal_item/result/Comment
+
+Displays the journal item for L<Qublog::Schema::Result::Comment>.
+
+=cut
 
 template 'journal_item/result/Comment' => sub {
     my ($td, $c, $item) = @_;
@@ -217,6 +265,12 @@ template 'journal_item/result/Comment' => sub {
     show '../item', $c, $item;
 };
 
+=head2 journal_item/result/JournalTimer
+
+Displays the journal items for L<Qublog::Schema::Result::JournalTimer>.
+
+=cut
+
 template 'journal_item/result/JournalTimer' => sub {
     my ($td, $c, $item) = @_;
 
@@ -228,6 +282,12 @@ template 'journal_item/result/JournalTimer' => sub {
         show './JournalTimer/stop', $c, $item;
     }
 };
+
+=head2 journal_item/result/JournalTimer/start
+
+Displays the start item for L<Qublog::Schema::Result::JournalTimer>.
+
+=cut
 
 template 'journal_item/result/JournalTimer/start' => sub {
     my ($td, $c, $item) = @_;
@@ -264,6 +324,12 @@ template 'journal_item/result/JournalTimer/start' => sub {
 
     show '../../item', $c, $item;
 };
+
+=head2 journal_item/result/JournalTimer/stop
+
+Displays the stop item for L<Qublog::Schema::Result::JournalTimer>.
+
+=cut
 
 template 'journal_item/result/JournalTimer/stop' => sub {
     my ($td, $c, $item) = @_;
@@ -398,5 +464,29 @@ template 'journal_item/result/JournalTimer/stop' => sub {
 
     show '../../item', $c, $item;
 };
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
+
+=head1 LICENSE
+
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
 
 1;

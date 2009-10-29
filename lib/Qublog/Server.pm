@@ -65,9 +65,24 @@ Qublog::Server - Catalyst based application
 
 =head1 DESCRIPTION
 
-[enter your description here]
+Qublog is a personal/professional logging application that runs in a web
+browser. It allows you to keep your notes, organize your tasks, and track you
+time on projects in the same place.
 
 =head1 METHODS
+
+=head2 field_defaults
+
+  my $fields = $c->field_defaults({
+      name    => 'frobincate',
+      scuffer => undef,
+  });
+
+Returns a hash reference of fields to use in populating an HTML form. Only the
+keys named in the input hash will be returned (and will always be returned, even
+if the value is C<undef>). Each field will be loaded from the current form
+submitted with the request, the last value stored in flash, or the default value
+passed, in that order. The return hash reference is stored in the flash.
 
 =cut
 
@@ -85,6 +100,20 @@ sub field_defaults {
     return $c->flash->{fields} = $fields;
 }
 
+=head2 add_style
+
+  $c->add_style( file => 'journal');
+  $c->add_style( code => 'body { background-color: blue }' );
+
+Add a stylesheet to the header of the current page. The first form adds:
+
+  /static/style/journal.css
+
+into the head tag while the second adds the literal code in a style-tag inside
+of the head.
+
+=cut
+
 sub add_style {
     my ($c, $type, $code) = @_;
     push @{ $c->stash->{style} }, Qublog::Server::Link->new(
@@ -93,6 +122,20 @@ sub add_style {
     );
 }
 
+=head2 add_script
+
+  $c->add_script( file => 'journal' );
+  $c->add_script( code => '$("body").css("background-color", "blue")' );
+
+Add a script to the header of the current page. The first form adds:
+
+  /static/script/journal.js
+
+into the head tag while the second adds the literal code in a script-tag inside
+of the head.
+
+=cut
+
 sub add_script {
     my ($c, $type, $code) = @_;
     push @{ $c->stash->{script} }, Qublog::Server::Link->new(
@@ -100,6 +143,16 @@ sub add_script {
         type  => 'script',
     );
 }
+
+=head2 time_zone
+
+  my $time_zone = $c->time_zone;
+
+Returns the best L<DateTime::TimeZone> to use on the current request. If a user
+is currently logged, the users's preferred time zone will be chosen. If no user
+is logged, then the site default will be used instead.
+
+=cut
 
 sub time_zone {
     my $c = shift;
@@ -111,16 +164,46 @@ sub time_zone {
     return DateTime::TimeZone->new( name => $c->config->{'time_zone'} );
 }
 
+=head2 now
+
+  my $now = $c->now;
+
+Returns the current time with the time zone set to the time zone returned by
+L</time_zone>.
+
+=cut
 
 sub now {
     my $c = shift;
     return Qublog::DateTime->now->set_time_zone( $c->time_zone );
 }
 
+=head2 today
+
+  my $today = $c->today;
+
+Returns the current time from L</now>, but with the time set to 0.
+
+=cut
+
 sub today {
     my $c = shift;
     return $c->now->truncate( to => 'day' );
 }
+
+=head2 current_terms_md5
+
+  my $md5_sum = $c->current_terms_md5;
+
+Loads the license file stored in the
+
+  Qublog::Terms -> file
+
+configuration setting and performs an MD5 checksum on it. It returns the
+hexidecimal version of that sum to be used in determining whether or not the
+user has agreed to the latest terms or not.
+
+=cut
 
 sub current_terms_md5 {
     my $c = shift;
@@ -140,12 +223,25 @@ L<Qublog::Server::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 
-Andrew Sterling Hanenkamp,,,
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
 
 =head1 LICENSE
 
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
 

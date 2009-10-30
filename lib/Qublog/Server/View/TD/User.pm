@@ -10,6 +10,22 @@ use Template::Declare::Tags;
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
 
+=head1 NAME
+
+Qublog::Server::View::TD::User - User-related templates
+
+=head1 DESCRIPTION
+
+The user-related templates for Qublog.
+
+=head1 TEMPLATES
+
+=head2 user/login
+
+Show the login form.
+
+=cut
+
 template 'user/login' => sub {
     my ($self, $c) = @_;
 
@@ -54,6 +70,12 @@ template 'user/login' => sub {
     } $c;
 };
 
+=head2 user/agreement
+
+Show the license agreement for the user to agree to it.
+
+=cut
+
 template 'user/agreement' => sub {
     my ($self, $c) = @_;
     my $license = $c->stash->{license};
@@ -86,6 +108,12 @@ template 'user/agreement' => sub {
     } $c;
 };
 
+=head2 user/logout
+
+Show the user a logout message. (I don't think this is used at the moment.)
+
+=cut
+
 template 'user/logout' => sub {
     my ($self, $c) = @_;
 
@@ -95,6 +123,12 @@ template 'user/logout' => sub {
         p { 'You are now signed out.' };
     } $c;
 };
+
+=head2 user/profile
+
+Show the form for editing the user's profile.
+
+=cut
 
 template 'user/profile' => sub {
     my ($self, $c) = @_;
@@ -175,6 +209,12 @@ template 'user/profile' => sub {
     } $c;
 };
 
+=head2 user/register
+
+Provides the user registration form.
+
+=cut
+
 template 'user/register' => sub {
     my ($self, $c) = @_;
 
@@ -187,7 +227,6 @@ template 'user/register' => sub {
         email     => '',
         time_zone => $c->config->{time_zone},
     });
-    warn Data::Dumper::Dumper($fields);
 
     page {
         div { { class is 'registration-form' }
@@ -272,5 +311,29 @@ template 'user/register' => sub {
         };
     } $c;
 };
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
+
+=head1 LICENSE
+
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
 
 1;

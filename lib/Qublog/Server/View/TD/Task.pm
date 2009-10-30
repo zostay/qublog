@@ -7,6 +7,22 @@ use Qublog::Web;
 
 use Template::Declare::Tags;
 
+=head1 NAME
+
+Qublog::Server::View::TD::Task - Task-related templates
+
+=head1 DESCRIPTION
+
+This class defines the templates for task views.
+
+=head1 TEMPLATES
+
+=head2 task/index
+
+This lists all the projects, groups, and actions for a user.
+
+=cut
+
 template 'task/index' => sub {
     my ($self, $c) = @_;
 
@@ -22,6 +38,12 @@ template 'task/index' => sub {
         show './list', $c, $c->stash->{projects}, $c->stash->{task_filter};
     } $c;
 };
+
+=head2 task/new
+
+Present a small form for creating new tasks.
+
+=cut
 
 template 'task/new' => sub {
     my ($self, $c) = @_;
@@ -52,6 +74,12 @@ template 'task/new' => sub {
     };
 };
 
+=head2 task/list
+
+List all the children of a task.
+
+=cut
+
 template 'task/list' => sub {
     my ($self, $c, $tasks, $task_filter) = @_;
 
@@ -71,6 +99,12 @@ template 'task/list' => sub {
         p { { class is 'empty' } 'No tasks found.' };
     }
 };
+
+=head2 task/view
+
+View a single task.
+
+=cut
 
 template 'task/view' => sub {
     my ($self, $c, $args) = @_;
@@ -154,6 +188,12 @@ template 'task/view' => sub {
     };
 };
 
+=head2 task/edit
+
+View the edit page for a task.
+
+=cut
+
 template 'task/edit' => sub {
     my ($self, $c) = @_;
     my $task = $c->stash->{task};
@@ -229,5 +269,29 @@ template 'task/edit' => sub {
         };
     } $c;
 };
+
+=head1 AUTHOR
+
+Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>
+
+=head1 LICENSE
+
+Qublog Personal/Professional Journaling
+Copyright (C) 2009  Andrew Sterling Hanenkamp
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
 
 1;

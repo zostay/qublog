@@ -101,6 +101,10 @@ sub list_journal_item_resultsets {
     return [ $entries ];
 }
 
+=head1 SEE ALSO
+
+L<Qublog::Schema::ResultSet::JournalDay>
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>

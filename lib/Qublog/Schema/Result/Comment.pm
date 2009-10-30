@@ -96,7 +96,7 @@ sub store_column {
 
 =head2 as_journal_item
 
-See L<Qublog::Schema::Role::Itemized>.
+Returns a single item for the comment. See L<Qublog::Schema::Role::Itemized>.
 
 =cut
 
@@ -122,7 +122,7 @@ sub as_journal_item {
 
 =head2 list_journal_item_resultsets
 
-See L<Qublog::Schema::Role::Itemized>.
+No op. See L<Qublog::Schema::Role::Itemized>.
 
 =cut
 

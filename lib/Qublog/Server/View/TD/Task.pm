@@ -35,7 +35,10 @@ template 'task/index' => sub {
             show './new', $c;
         };
 
-        show './list', $c, $c->stash->{projects}, $c->stash->{task_filter};
+        show './list', $c, {
+            children    => $c->stash->{projects}, 
+            task_filter => $c->stash->{task_filter},
+        };
     } $c;
 };
 
@@ -81,15 +84,22 @@ List all the children of a task.
 =cut
 
 template 'task/list' => sub {
-    my ($self, $c, $tasks, $task_filter) = @_;
+    my ($self, $c, $args) = @_;
+    my $tasks       = $args->{children};
+    my $task_filter = $args->{task_filter};
+    my $seen        = $args->{seen} || {};
 
     # Show tasks if there are any
     if ($tasks->count > 0) {
         while (my $task = $tasks->next) {
+            next if $seen->{ $task->id }; # avoid infinite recursion
+            $seen->{ $task->id }++;
+
             show './view', $c, { 
                 task        => $task,
                 recursive   => 1,
                 task_filter => $task_filter,
+                seen        => $seen,
             };
         }
     }
@@ -183,7 +193,11 @@ template 'task/view' => sub {
                 parent => $task->id,
             });
             
-            show './list', $c, $children, $args->{task_filter};
+            show './list', $c, {
+                children    => $children, 
+                task_filter => $args->{task_filter},
+                seen        => $args->{seen},
+            };
         }
     };
 };
@@ -261,7 +275,10 @@ template 'task/edit' => sub {
             my $task_filter = $c->model('DB::Task')->search_current($user);
             my $children    = $task_filter->search({ parent => $task->id });
 
-            show './list', $c, $children, $task_filter;
+            show './list', $c, {
+                children    => $children, 
+                task_filter => $task_filter,
+            };
 
             div { { class is 'journal' }
                 show '/journal/bits/items', $c, $task;

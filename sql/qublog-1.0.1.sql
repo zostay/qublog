@@ -29,14 +29,20 @@ CREATE TABLE tasks (
   created_on datetime NOT NULL,
   completed_on datetime,
   order_by int NOT NULL DEFAULT 0,
-  project integer,
-  parent integer NOT NULL,
+  project integer NOT NULL,
+  parent integer,
   latest_comment integer
 );
 
 INSERT INTO tasks(id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent)
-    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, COALESCE(parent, 1)
-    FROM tasks2;
+    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, id, NULL
+    FROM tasks2
+    WHERE task_type = 'project';
+
+INSERT INTO tasks(id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, project, parent)
+    SELECT id, name, owner, task_type, child_handling, status, created_on, completed_on, order_by, COALESCE(project, 1), COALESCE(parent, 1)
+    FROM tasks2
+    WHERE task_type != 'project';
 
 DROP TABLE tasks2;
 

@@ -137,6 +137,7 @@ sub process {
                 if $token->has_description;
             $arguments{status}   = $token->status if $token->has_status;
             $arguments{latest_comment} = $self->comment->id;
+            $arguments{owner}    = $self->owner;
 
             if ($task) {
                 $task->update(\%arguments);

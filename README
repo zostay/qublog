@@ -1,22 +1,14 @@
-# PORT IN PROGRESS
+# BASIC INSTALLATION INSTRUCTIONS
 
-There are two applications in here. 
+I'm aiming for this to work:
 
-## Jifty-based Qublog
+    perl Makefile.PL
+    make
+    make install
 
-You can start the first by installing all the dependencies needed for Jifty and
-running:
-
-    bin/jifty server
-
-This works better at the moment.
-
-## Catalyst-based Qublog
-
-This is what I'm porting to for various reasons I won't go into here and now. If
-you install the requirements for this (Catalyst, DBIx::Class, etc.) you can run:
+If you do that, it should install the requirements for this (Catalyst,
+DBIx::Class, etc.) you can run:
 
     bin/qublog_server_server.pl
 
-This is mostly a pure server-driven application at the moment. The port is
-complete, but lacks much of the client-side scripting it should have.
+This is not well-tested though. Help wanted.

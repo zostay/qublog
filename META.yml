@@ -1,38 +1,55 @@
 ---
-abstract: 'An application to help you journal your work'
+abstract: 'Catalyst based application'
 author:
-  - 'Andrew Sterling Hanenkamp C<< <hanenkamp@cpan.org> >>'
+  - 'Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
 generated_by: 'Module::Install version 0.91'
-license: artistic
+license: agpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Qublog
+name: Qublog-Server
 no_index:
   directory:
     - inc
     - share
     - t
 requires:
+  Catalyst::Action::RenderView: 0
+  Catalyst::Model::DBIC::Schema: 0
+  Catalyst::Plugin::ConfigLoader: 0
+  Catalyst::Plugin::Static::Simple: 0
+  Catalyst::Runtime: 5.80011
+  Catalyst::View::Template::Declare: 0
+  Config::General: 0
+  Crypt::Rijndael: 0
+  DBIx::Class: 0
   DateTime: 0
-  DateTime::Set: 0
+  DateTime::Format::Natural: 0
+  DateTime::Format::SQLite: 0
+  DateTime::Span: 0
+  DateTime::TimeZone: 0
+  Digest: 0
+  Digest::MD5: 0
+  Email::Valid: 0
+  File::Slurp: 0
+  HTML::Element: 0
   Hash::Merge: 0
-  Jifty: 0.80408
   Lingua::EN::Inflect: 0
-  Math::BaseCalc: 0
+  List::MoreUtils: 0
   Moose: 0
+  MooseX::ClassAttribute: 0
+  MooseX::Singleton: 0
   Number::RecordLocator: 0
-  Test::Class: 0
-  Test::MockModule: 0
+  Parse::RecDescent: 0
+  Storable: 0
+  Template::Declare: 0
   Text::Emoticon: 0
   Text::Markdown: 0
   Text::Typography: 0
-  perl: 5.8.0
-resources:
-  license: http://opensource.org/licenses/artistic-license.php
+  parent: 0
 version: 0.01

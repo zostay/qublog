@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use Qublog::DateTime2;
+use Qublog::DateTime;
 
 =head1 NAME
 

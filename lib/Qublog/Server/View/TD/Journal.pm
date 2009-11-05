@@ -2,7 +2,7 @@ package Qublog::Server::View::TD::Journal;
 use strict;
 use warnings;
 
-use Qublog::DateTime2;
+use Qublog::DateTime;
 use Qublog::Server::View::Common qw( page );
 use Qublog::Web;
 use Qublog::Web::Format;

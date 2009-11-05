@@ -25,8 +25,6 @@ Qublog::DateTime - all sorts of date/time related utilities
 
 Dates and times are fairly important to Qublog, so I've built this little utility library to make sure that Qublog's notions of what a date or time are, are consistent.
 
-B<Note:> At this time, the actual file is named C<Qublog::DateTime2>, but the package is C<Qublog::DateTime>. This has been done to avoid clashing with the old Jifty implementation, which treats the contents of a file named C<Qublog::DateTime> specially.
-
 =head1 ATTRIBUTES
 
 =head2 sql_formatter

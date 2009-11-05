@@ -11,7 +11,7 @@ $Data::Dumper::Freezer = '_dumper_hook';
 use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );
 
-use Qublog::DateTime2;
+use Qublog::DateTime;
 
 # Set flags and add plugins for the application
 #

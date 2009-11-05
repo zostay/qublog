@@ -7,7 +7,7 @@ BEGIN {
     die "DO NOT LOAD UNDER JIFTY" if $Jifty::VERSION;
 }
 
-use Qublog::DateTime2;
+use Qublog::DateTime;
 
 =head1 NAME
 

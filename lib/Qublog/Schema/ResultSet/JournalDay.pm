@@ -3,10 +3,6 @@ use strict;
 use warnings;
 use base qw( Qublog::Schema::ResultSet );
 
-BEGIN {
-    die "DO NOT LOAD UNDER JIFTY" if $Jifty::VERSION;
-}
-
 use Qublog::DateTime;
 
 =head1 NAME

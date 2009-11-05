@@ -73,20 +73,11 @@ while (my ($icon, $smileys) = each %icons) {
 __PACKAGE__->register_subclass(\%smileys);
 
 sub default_config {
-    if ($Jifty::VERSION) {
-        return {
-            imgbase => '/images/icons',
-            xhtml   => 1,
-            class   => 'smiley',
-        };
-    }
-    else {
-        return {
-            imgbase => '/static/images/icons',
-            xhtml   => 1,
-            class   => 'smiley',
-        };
-    }
+    return {
+        imgbase => '/static/images/icons',
+        xhtml   => 1,
+        class   => 'smiley',
+    };
 }
 
 sub filter {

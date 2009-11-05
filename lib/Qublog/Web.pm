@@ -3,22 +3,9 @@ use warnings;
 
 package Qublog::Web;
 
-BEGIN {
-    if (defined $Jifty::VERSION) {
-        eval q{
-            use Jifty::View::Declare -base;
-            use Qublog::Util::CommentParser;
-        };
-    }
-    else {
-        eval q{
-            use Qublog::Server::View::Common;
-            use Template::Declare::Tags;
-            use Qublog::Web::Format::Comment;
-        };
-    }
-    die $@ if $@;
-};
+use Qublog::Server::View::Common;
+use Template::Declare::Tags;
+use Qublog::Web::Format::Comment;
 
 use Text::Markdown 'markdown';
 use Text::Typography 'typography';
@@ -84,20 +71,10 @@ sub htmlify($;$) {
     my ($scalar, $c) = @_;
     $scalar = smileyize($scalar);
 
-    if (defined $Jifty::VERSION) {
-        my $parser = Qublog::Util::CommentParser->new( 
-            text      => $scalar,
-        );
-        $parser->htmlify;
-        $scalar = $parser->text;
-    }
-
-    else {
-        my $formatter = Qublog::Web::Format::Comment->new(
-            schema => $c->model('DB')->schema,
-        );
-        $scalar = $formatter->format($scalar);
-    }
+    my $formatter = Qublog::Web::Format::Comment->new(
+        schema => $c->model('DB')->schema,
+    );
+    $scalar = $formatter->format($scalar);
 
     return typography(markdown($scalar));
 }
@@ -109,15 +86,8 @@ Given a L<DateTime> object, it returns a string representing that time in C<h:mm
 =cut
 
 sub format_time($;$) {
-    if ($Jifty::VERSION) {
-        my $time = shift;
-        return '-:--' unless defined $time;
-        return $time->format_cldr('h:mm a');
-    }
-    else {
-        my ($time, $c) = @_;
-        return Qublog::DateTime->format_human_time($time, $c->time_zone);
-    }
+    my ($time, $c) = @_;
+    return Qublog::DateTime->format_human_time($time, $c->time_zone);
 }
 
 =head2 format_date DATETIME
@@ -127,38 +97,8 @@ Returns the date in a pretty format.
 =cut
 
 sub format_date($;$) {
-    if ($Jifty::VERSION) {
-        my $date = shift;
-        $date = Jifty::DateTime->new( 
-            year      => $date->year,
-            month     => $date->month,
-            day       => $date->day,
-            time_zone => $date->time_zone,
-        ) unless $date->isa('Jifty::DateTime');
-
-        my $now  = Jifty::DateTime->now( time_zone => $date->time_zone );
-
-        my $date_str = $date->friendly_date;
-        if ($date_str =~ /^\d\d\d\d-\d\d-\d\d$/) {
-            my $seven_days_ago = DateTime::Duration->new( days => -7 );
-
-            if ($date > $now + $seven_days_ago) {
-                $date_str = $date->format_cldr('EEEE');
-            }
-            elsif ($date->year eq $now->year) {
-                $date_str = $date->format_cldr('EEEE, MMMM dd');
-            }
-            else {
-                $date_str = $date->format_cldr('EEEE, MMMM dd, YYYY');
-            }
-        }
-
-        return $date_str;
-    }
-    else {
-        my ($date, $c) = @_;
-        return Qublog::DateTime->format_human_date($date, $c->time_zone);
-    }
+    my ($date, $c) = @_;
+    return Qublog::DateTime->format_human_date($date, $c->time_zone);
 }
 
 =head2 show_links LINKS

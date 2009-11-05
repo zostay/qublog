@@ -127,6 +127,7 @@
 
 .journal .item {
     overflow: auto;
+    padding: 4px 0;
 }
 
 .journal .item .item-wrapper {
@@ -176,6 +177,14 @@
 
 .journal textarea {
     width: 100%;
+}
+
+/*** Journal Item Drawers ***/
+
+.journal .item .item-drawer {
+    float: left;
+    padding: 0;
+    margin: 0 300px 0 90px;
 }
 
 /*** Journal Timer Style ***/

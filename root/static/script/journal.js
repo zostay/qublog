@@ -13,8 +13,8 @@ function formatHours(duration) {
 function updateActiveTimers() {
     var day_summary_total = 0;
 
-    jQuery('.entry-running').each(function() {
-        var summary_el   = jQuery(this);
+    $('.entry-running').each(function() {
+        var summary_el   = $(this);
 		var timestamp_el = summary_el.find('.timestamp .o-time');
         var elapsed_el   = summary_el.find('.elapsed .number');
         var total_el     = summary_el.find('.total .number');
@@ -43,14 +43,14 @@ function updateActiveTimers() {
 
     });
 
-    jQuery('.entry-stopped').each(function() {
-        var summary_el = jQuery(this);
+    $('.entry-stopped').each(function() {
+        var summary_el = $(this);
         var total = parseFloat(summary_el.attr('elapsed_duration'));
         day_summary_total += total;
     });
 
-    jQuery('.day-summary').each(function() {
-        var summary_el  = jQuery(this);
+    $('.day-summary').each(function() {
+        var summary_el  = $(this);
         var quitting_el = summary_el.find('.quit .time');
         var total_el    = summary_el.find('.total .number');
         var to_go_el    = summary_el.find('.remaining .number');
@@ -103,8 +103,15 @@ $(document).ready(function() {
                 $('#new_comment_entry-submit').click();
                 return false;
             }
-        })
-        .focus();
+        });
+
+    if ($('input#new_task_entry').val()) {
+        $('textarea#new_comment').focus();
+    }
+
+    else {
+        $('input#new_task_entry').focus();
+    }
 
     setInterval(updateActiveTimers, 5000); 
 });

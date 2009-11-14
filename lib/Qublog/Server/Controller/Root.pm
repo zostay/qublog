@@ -30,7 +30,7 @@ Forwards the user to L<Qublog::Server::Controller::Journal/index>.
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
-    $c->forward('/journal/index');
+    $c->response->redirect('/journal/index');
 }
 
 =head2 default

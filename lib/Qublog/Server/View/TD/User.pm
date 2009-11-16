@@ -230,82 +230,19 @@ template 'user/register' => sub {
 
     page {
         div { { class is 'registration-form' }
-            form { { method is 'POST', action is '/user/create' }
-                label { attr { for => 'name' }; 'Name' };
-                input {
-                    type is 'text',
-                    name is 'name',
-                    class is 'text',
-                    id is 'name',
-                    value is $fields->{name},
-                };
+            form { { method is 'POST', action is '/api/model/user/create' }
                 
-                label { attr { for => 'email' }; 'Email Address' };
-                input {
-                    type is 'text',
-                    class is 'text',
-                    id is 'email',
-                    name is 'email',
-                    value is $fields->{email},
-                };
-
-                label { attr { for => 'password' }; 'Password' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    id is 'password',
-                    name is 'password',
-                };
-
-                label { attr { for => 'confirm_password' }; 'Confirm Password' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    id is 'confirm_password',
-                    name is 'confirm_password',
-                };
-
-                label { attr { for => 'time_zone' }; 'Time Zone' };
-                select {
-                    { id is 'time_zone', name is 'time_zone' }
-
-                    for my $time_zone (DateTime::TimeZone->all_names) {
-                        option {
-                            if ($time_zone eq $fields->{time_zone}) {
-                                { selected is 'selected' }
-                            }
-
-                            $time_zone;
-                        };
-                    }
-                };
-
-                input {
-                    type is 'checkbox',
-                    class is 'checkbox',
-                    id is 'agreed_to_terms_md5',
-                    name is 'agreed_to_terms_md5',
-                    value is ,
-                };
-                label { attr { for => 'agree_to_terms', class => 'checkbox' };
-                    my $terms = $c->config->{'Qublog::Terms'};
-                    outs sprintf('Do you agree to the %s?', $terms->{title});
-                    outs ' (';
-                    hyperlink
-                        label  => $terms->{label},
-                        goto   => $terms->{link},
-                        target => '_blank',
-                        ;
-                    outs ')';
-                };
+                my $action = $c->action_form(schema => 'User::Create');
+                $action->globals->{origin}    = $c->request->uri;
+                $action->globals->{return_to} = $c->uri_for('/user/login');
+                $action->stash('register');
+                $action->render;
 
                 div { { class is 'submit' }
-                    input {
-                        type is 'submit',
-                        class is 'submit',
-                        name is 'submit',
-                        value is 'Register',
-                    };
+                    $action->render_control(button => {
+                        name  => 'submit',
+                        label => 'Register',
+                    });
                 };
             };
         };

@@ -1,4 +1,4 @@
-package Qublog::Form::ControlFactory;
+package Qublog::Form::Factory;
 use Moose::Role;
 
 use Qublog::Util qw( class_name_from_name );
@@ -7,13 +7,11 @@ requires qw( new_widget_for_control );
 
 =head1 NAME
 
-Qublog::Form::ControlFactory - interface for control factories
+Qublog::Form::Factory - interface for control factories
 
 =head1 DESCRIPTION
 
-Defines the abstract interface for a control factory. This object will be used
-to instantiate the controls and widgets needed to render or process the form or
-inputs to a form.
+Defines the abstract interface for a form factory. 
 
 =head1 METHODS
 

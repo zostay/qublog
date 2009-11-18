@@ -26,6 +26,10 @@ has available_choices => (
     default   => sub { [] },
 );
 
+has '+stashable_keys' => (
+    default   => [ qw( value ) ],
+);
+
 sub current_value {
     my $self = shift;
 

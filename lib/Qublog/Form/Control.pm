@@ -35,6 +35,21 @@ has widgets => (
     required  => 1,
 );
 
+=head2 stashable_keys
+
+This is the list of control keys that may be stashed.
+
+=cut
+
+# TODO This really ought to be a meta-attribute.
+has stashable_keys => (
+    is        => 'ro',
+    isa       => 'ArrayRef',
+    required  => 1,
+    lazy      => 1,
+    default   => sub { [] },
+);
+
 =head2 features
 
 These are the features that have been assigned to this instance of the control.

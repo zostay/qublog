@@ -19,6 +19,10 @@ has default_value => (
     predicate => 'has_default_value',
 );
 
+has '+stashable_keys' => (
+    default   => sub { [ qw( value ) ] },
+);
+
 sub current_value {
     my $self = shift;
 

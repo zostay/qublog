@@ -20,6 +20,10 @@ has value => (
     required  => 1,
 );
 
+has '+stashable_keys' => (
+    default   => [ qw( value ) ],
+);
+
 sub current_value { shift->value };
 
 1;

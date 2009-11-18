@@ -28,6 +28,10 @@ has is_checked => (
     default   => 0,
 );
 
+has '+stashable_keys' => (
+    default   => sub { [ qw( is_checked ) ] },
+);
+
 sub current_value {
     my $self = shift;
     return $self->is_checked ? $self->checked_value : $self->unchecked_value;

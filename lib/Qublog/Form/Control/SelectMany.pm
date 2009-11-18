@@ -27,6 +27,10 @@ has default_selected_choices => (
     predicate => 'has_default_selected_choices',
 );
 
+has '+stashable_keys' => (
+    default   => [ qw( selected_choices ) ],
+);
+
 sub current_selected_choices {
     my $self = shift;
 

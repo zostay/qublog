@@ -3,7 +3,7 @@ use Moose;
 
 with qw( 
     Qublog::Form::Control 
-    Qublog::Form::Control::Labeled
+    Qublog::Form::Control::Role::Labeled
 );
 
 has value => (

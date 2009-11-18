@@ -1,7 +1,5 @@
-package Qublog::Form::Control::Labeled;
+package Qublog::Form::Control::Role::Labeled;
 use Moose::Role;
-
-use Qublog::Form::Widget::Label;
 
 has label => (
     is        => 'ro',

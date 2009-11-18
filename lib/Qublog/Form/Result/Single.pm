@@ -1,0 +1,79 @@
+package Qublog::Form::Result::Single;
+use Moose;
+
+with qw( Qublog::Form::Result );
+
+has is_valid => (
+    is       => 'rw',
+    isa      => 'Bool',
+    predicate => 'is_validated',
+);
+
+has is_success => (
+    is       => 'rw',
+    isa      => 'Bool',
+    predicate => 'is_outcome_known',
+);
+
+has messages => (
+    is       => 'ro',
+    isa      => 'ArrayRef[Qublog::Form::Message]',
+    required => 1,
+    default  => sub { [] },
+);
+
+has content => (
+    is       => 'ro',
+    isa      => 'HashRef',
+    required => 1,
+    default  => sub { {} },
+);
+
+sub add_message {
+    my ($self, %params) = @_;
+    push @{ $self->messages }, Qublog::Form::Message->new( %params );
+}
+
+sub info {
+    my ($self, $message) = @_;
+    $self->add_message( message => $message );
+}
+
+sub field_info {
+    my ($self, $field, $message) = @_;
+    $self->add_message( field => $field, message => $message );
+}
+
+sub warning {
+    my ($self, $message) = @_;
+    $self->add_message( type => 'warning', message => $message );
+}
+
+sub field_warning {
+    my ($self, $field, $message) = @_;
+    $self->add_message( type => 'warning', field => $field, message => $message );
+}
+
+sub error {
+    my ($self, $message) = @_;
+    $self->add_message( type => 'error', message => $message );
+}
+
+sub field_error {
+    my ($self, $field, $message) = @_;
+    $self->add_message( type => 'error', field => $field, message => $message );
+}
+
+sub success {
+    my ($self, $message) = @_;
+    $self->is_success(1);
+    $self->add_message( type => 'info', message => $message);
+}
+
+sub failure {
+    my ($self, $message) = @_;
+    $self->is_success(0);
+    $self->add_message( type => 'error', message => $message);
+}
+
+1;

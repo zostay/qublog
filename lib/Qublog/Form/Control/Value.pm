@@ -4,6 +4,7 @@ use Moose;
 with qw(
     Qublog::Form::Control
     Qublog::Form::Control::Role::Labeled
+    Qublog::Form::Control::Role::ScalarValue
 );
 
 has is_visible => (
@@ -18,5 +19,7 @@ has value => (
     isa       => 'Str',
     required  => 1,
 );
+
+sub current_value { shift->value };
 
 1;

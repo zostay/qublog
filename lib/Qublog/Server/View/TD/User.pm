@@ -222,24 +222,19 @@ template 'user/register' => sub {
 
     $c->add_style( file => 'user/register' );
 
-    my $fields = $c->field_defaults({
-        name      => '',
-        email     => '',
-        time_zone => $c->config->{time_zone},
-    });
-
     page {
         div { { class is 'registration-form' }
-            form { { method is 'POST', action is '/api/model/user/create' }
+            form { { method is 'POST', action is '/api/model/user/create/register' }
                 
                 my $action = $c->action_form(schema => 'User::Create');
+                $action->unstash('register');
                 $action->globals->{origin}    = $c->request->uri;
                 $action->globals->{return_to} = $c->uri_for('/user/login');
                 $action->stash('register');
-                $action->render;
+                outs_raw $action->render;
 
                 div { { class is 'submit' }
-                    $action->render_control(button => {
+                    outs_raw $action->render_control(button => {
                         name  => 'submit',
                         label => 'Register',
                     });

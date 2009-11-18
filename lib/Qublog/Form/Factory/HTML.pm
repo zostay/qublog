@@ -1,22 +1,14 @@
-package Qublog::Form::ControlFactory::Standard;
+package Qublog::Form::Factory::HTML;
 use Moose;
 
-with qw( Qublog::Form::ControlFactory );
+with qw( Qublog::Form::Factory );
 
-use Qublog::Form::Control::Checkbox;
-use Qublog::Form::Control::FullText;
-use Qublog::Form::Control::Password;
-use Qublog::Form::Control::SelectMany;
-use Qublog::Form::Control::SelectOne;
-use Qublog::Form::Control::Text;
-use Qublog::Form::Control::Value;
-
-use Qublog::Form::Widget::Div;
-use Qublog::Form::Widget::Input;
-use Qublog::Form::Widget::Label;
-use Qublog::Form::Widget::Select;
-use Qublog::Form::Widget::Span;
-use Qublog::Form::Widget::Textarea;
+use Qublog::Form::Factory::HTML::Widget::Div;
+use Qublog::Form::Factory::HTML::Widget::Input;
+use Qublog::Form::Factory::HTML::Widget::Label;
+use Qublog::Form::Factory::HTML::Widget::Select;
+use Qublog::Form::Factory::HTML::Widget::Span;
+use Qublog::Form::Factory::HTML::Widget::Textarea;
 
 sub new_widget_for_control {
     my $self = shift;
@@ -32,7 +24,7 @@ sub new_widget_for_control {
 sub _wrapper($$@) {
     my ($name, $type, @widgets) = @_;
 
-    return Qublog::Form::Widget::Div->new(
+    return Qublog::Form::Factory::HTML::Widget::Div->new(
         id      => $name . '-wrapper',
         classes => [ qw( widget wrapper ), $type ) ],
         widgets => \@widgets,
@@ -42,7 +34,7 @@ sub _wrapper($$@) {
 sub _label($$$) {
     my ($name, $type, $label) = @_;
 
-    return Qublog::Form::Widget::Label->new(
+    return Qublog::Form::Factory::HTML::Widget::Label->new(
         id      => $name . '-label',
         classes => [ qw( widget label ), $type ],
         for     => $name,
@@ -53,7 +45,7 @@ sub _label($$$) {
 sub _input($$$$%) {
     my ($name, $type, $input_type, $value, %args) = @_;
 
-    return Qublog::Form::Widget::Input->new(
+    return Qublog::Form::Factory::HTML::Widget::Input->new(
         id      => $name,
         name    => $name,
         type    => $input_type,
@@ -66,7 +58,7 @@ sub _input($$$$%) {
 sub _alerts($$) {
     my ($name, $type) = @_;
 
-    return Qublog::Form::Widget::Span->new(
+    return Qublog::Form::Factory::HTML::Widget::Span->new(
         id      => $name . '-alerts',
         classes => [ qw( widget alerts ), $type ],
         content => '',
@@ -95,7 +87,7 @@ sub new_widget_for_full_text {
 
     return _wrapper($control->name, 'full-text',
         _label($control->name, 'full-text', $control->label),
-        Qublog::Form::Widget::Textarea->new(
+        Qublog::Form::Factory::HTML::Widget::Textarea->new(
             id      => $control->name,
             name    => $control->name,
             classes => [ qw( widget field full-text ) ],
@@ -128,7 +120,7 @@ sub new_widget_for_select_many {
 
     return _wrapper($control->name, 'select-many',
         _label($control->name, 'select-many', $control->label),
-        Qublog::Form::Widget::Div->new(
+        Qublog::Form::Factory::HTML::Widget::Div->new(
             id      => $control->name . '-list',
             classes => [ qw( widget list select-many ) ],
             widgets => \@checkboxes,
@@ -142,7 +134,7 @@ sub new_widget_for_select_one {
 
     return _wrapper($control->name, 'select-one',
         _label($control->name, 'select-one', $control->label),
-        Qublog::Form::Widget::Select->new(
+        Qublog::Form::Factory::HTML::Widget::Select->new(
             id       => $control->name,
             name     => $control->name,
             classes  => [ qw( widget field select-one ) ],
@@ -170,7 +162,7 @@ sub new_widget_for_value {
     if ($control->is_visible) {
         return _wrapper($control->name, 'value',
             _label($control->name, 'value', $control->label),
-            Qublog::Form::Widget::Span->new(
+            Qublog::Form::Factory::HTML::Widget::Span->new(
                 id      => $control->name,
                 content => $control->value,
                 classes => [ qw( widget field value ) ],

@@ -3,7 +3,7 @@ use Moose;
 use Moose::Exporter;
 
 Moose::Exporter->setup_import_methods(
-    with_meta => [ 'has_widget', 'clean', 'check', ],
+    with_meta => [ 'has_control', 'clean', 'check', ],
     also      => 'Moose',
 );
 

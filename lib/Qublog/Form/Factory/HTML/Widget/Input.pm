@@ -1,9 +1,9 @@
-package Qublog::Form::Widget::Input;
+package Qublog::Form::Factory::HTML::Widget::Input;
 use Moose;
 
-with qw( Qublog::Form::Widget );
+with qw( Qublog::Form::Factory::HTML::Widget );
 
-extends qw( Qublog::Form::Widget::Element );
+extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 =head1 NAME
 
@@ -146,13 +146,13 @@ has checked => (
 
 =head1 METHODS
 
-=head2 process_control
+=head2 consume_control
 
 Harvest the input from the HTML INPUT.
 
 =cut
 
-sub process_control {
+sub consume_control {
     my ($self, %options) = @_;
     my $params = $options{params};
     my $name   = $self->name;

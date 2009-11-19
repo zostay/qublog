@@ -1,7 +1,9 @@
-package Qublog::Form::Widget::Span;
+package Qublog::Form::Factory::HTML::Widget::Span;
 use Moose;
 
-with qw( Qublog::Form::Widget Qublog::Form::Widget::Element );
+with qw( Qublog::Form::Factory::HTML::Widget );
+
+extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 has for => (
     is        => 'ro',
@@ -13,6 +15,6 @@ has '+content' => (
     required  => 1,
 );
 
-sub process_control { }
+sub consume_control { }
 
 1;

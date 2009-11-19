@@ -1,9 +1,9 @@
-package Qublog::Form::Widget::Select;
+package Qublog::Form::Factory::HTML::Widget::Select;
 use Moose;
 
-with qw( Qublog::Form::Widget );
+with qw( Qublog::Form::Factory::HTML::Widget );
 
-extends qw( Qublog::Form::Widget::Element );
+extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 has '+tag_name' => (
     default => 'select',
@@ -83,7 +83,7 @@ override render_content => sub {
     return $content;
 };
 
-sub process_control {
+sub consume_control {
     my ($self, %options) = @_;
     my $params = $options{params};
     my $name   = $self->name;

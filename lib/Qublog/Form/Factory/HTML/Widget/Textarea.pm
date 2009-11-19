@@ -1,9 +1,9 @@
-package Qublog::Form::Widget::Textarea;
+package Qublog::Form::Factory::HTML::Widget::Textarea;
 use Moose;
 
-with qw( Qublog::Form::Widget );
+with qw( Qublog::Form::Factory::HTML::Widget );
 
-extends qw( Qublog::Form::Widget::Element );
+extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 has name => (
     is        => 'ro',
@@ -36,7 +36,7 @@ override more_attributes => (
     return \%attributes;
 }
 
-sub process_control {
+sub consume_control {
     my ($self, %options) = @_;
     my $params = $options{params};
     my $name   = $self->name;

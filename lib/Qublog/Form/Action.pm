@@ -180,18 +180,34 @@ sub clear {
 
 sub render {
     my $self = shift;
-    my @names = @_ > 0 ? @_ : map { $_->name } @{ $self->meta->get_controls };
+    my %params = @_;
+    my @names  = defined $params{controls} ?    @{ delete $params{controls} } 
+               :                             map { $_->name } 
+                                                @{ $self->meta->get_controls }
+               ;
 
-    my $content  = '';
     my $controls = $self->controls;
-    $content    .= $controls->{$_}->render for @names;
-
-    return $content;
+    $self->form_factory->render_control($controls->{$_}, %params) for @names;
 }
 
 sub render_control {
-    my ($self, $name, $options) = @_;
-    return $self->form_factory->new_control($name => $options)->render;
+    my ($self, $name, $options, %params) = @_;
+
+    return $self->form_factory->render_control(
+        $self->form_factory->new_control($name => $options), %params
+    );
+}
+
+sub consume {
+    my $self   = shift;
+    my %params = @_;
+    my @names  = defined $params{controls} ?    @{ delete $params{controls} } 
+               :                             map { $_->name } 
+                                                @{ $self->meta->get_controls }
+               ;
+
+    my $controls = $self->controls;
+    $self->form_factory->consume_control($controls->{$_}, %params) for @names;
 }
 
 sub clean {

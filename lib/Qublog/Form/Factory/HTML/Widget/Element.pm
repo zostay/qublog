@@ -1,4 +1,4 @@
-package Qublog::Form::Widget::Element;
+package Qublog::Form::Factory::HTML::Widget::Element;
 use Moose;
 
 has tag_name => (

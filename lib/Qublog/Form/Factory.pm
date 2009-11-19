@@ -3,7 +3,7 @@ use Moose::Role;
 
 use Qublog::Util qw( class_name_from_name );
 
-requires qw( new_widget_for_control );
+requires qw( render_control consume_control );
 
 =head1 NAME
 
@@ -53,11 +53,7 @@ sub new_control {
     my $class_name = $self->control_class($name);
     return unless $class_name;
 
-    my $control = $class_name->new($args);
-    my $widget = $self->new_widget_for_control($name => $control);
-    $control->widget($widget) if $widget;
-
-    return $control;
+    return $class_name->new($args);
 }
 
 =head1 ROLE METHODS

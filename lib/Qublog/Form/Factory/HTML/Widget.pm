@@ -1,11 +1,11 @@
-package Qublog::Form::Widget;
+package Qublog::Form::Factory::HTML::Widget;
 use Moose::Role;
 
-requires qw( render_control process_control );
+requires qw( render_control consume_control );
 
 =head1 NAME
 
-Qublog::Form::Widget - rendering/processing HTML controls
+Qublog::Form::Factory::HTML::Widget - rendering/processing HTML controls
 
 =head1 DESCRIPTION
 
@@ -25,16 +25,16 @@ has alternate_renderer => (
     predicate => 'has_alternate_renderer',
 );
 
-=head2 alternate_processor
+=head2 alternate_consumer
 
-If the control needes to be processed in a custom way, you can add that here. This is a code reference that is passed the control and options like the usual processor method.
+If the control needes to be consumed in a custom way, you can add that here. This is a code reference that is passed the control and options like the usual consumer method.
 
 =cut
 
-has alternate_processor => (
+has alternate_consumer => (
     is        => 'rw',
     isa       => 'CodeRef',
-    predicate => 'has_alternate_processor',
+    predicate => 'has_alternate_consumer',
 );
 
 =head1 METHODS
@@ -46,30 +46,32 @@ Renders the HTML required to use this method.
 =cut
 
 sub render {
-    my $self = shift;
+    my $self     = shift;
+    my %params   = @_;
+    my $renderer = $params{renderer};
 
     if ($self->has_alternate_renderer) {
-        $self->alternate_renderer->($self, @_);
+        $renderer->($self->alternate_renderer->($self, @_));
     }
     else {
-        $self->render_control(@_);
+        $renderer->($self->render_control(@_));
     }
 }
 
-=head2 process
+=head2 consume
 
-Processes the request.
+Consumes the value from the request.
 
 =cut
 
-sub process {
+sub consume {
     my $self = shift;
 
-    if ($self->has_alternate_processor) {
-        $self->alternate_processor->($self, @_);
+    if ($self->has_alternate_consumer) {
+        $self->alternate_consumer->($self, @_);
     }
     else {
-        $self->process_control(@_);
+        $self->consume_control(@_);
     }
 }
 
@@ -81,9 +83,9 @@ These methods must be implemented by role implementers.
 
 Return HTML to render the control.
 
-=head2 process_control
+=head2 consume_control
 
-Given processor options, process the input.
+Given consumer options, process the input.
 
 =head1 AUTHOR
 

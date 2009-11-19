@@ -10,6 +10,20 @@ use Qublog::Form::Factory::HTML::Widget::Select;
 use Qublog::Form::Factory::HTML::Widget::Span;
 use Qublog::Form::Factory::HTML::Widget::Textarea;
 
+has renderer => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    required  => 1,
+    default   => sub { print @_ };
+);
+
+has consumer => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    required  => 1,
+    default   => sub { my %params = @_; $params{request} }
+);
+
 sub new_widget_for_control {
     my $self = shift;
     my $name = shift;
@@ -172,6 +186,21 @@ sub new_widget_for_value {
     }
 
     return;
+}
+
+sub render_control {
+    my ($self, $control, %optiosn) = @_;
+
+    my $widget = $self->new_widget_for_control($control);
+    $widget->render( renderer => $self->renderer );
+}
+
+sub consume_control {
+    my ($self, $control, %options) = @_;
+    die "no request option passed" unless defined $options{request};
+
+    my $widget = $self->new_widget_for_control($control);
+    $widget->consume( params => $self->consumer->($options{request}) );
 }
 
 1;

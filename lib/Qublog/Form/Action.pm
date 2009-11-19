@@ -19,26 +19,63 @@ has globals => (
     default   => sub { {} },
 );
 
-has result => (
+has results => (
     is        => 'ro',
-    isa       => 'Qublog::Form::Result::Single',
+    isa       => 'Qublog::Form::Result',
     required  => 1,
     lazy      => 1,
-    default   => sub { Qublog::Form::Result::Single->new },
+    default   => sub { Qublog::Form::Result::Gathered->new },
     handles   => [ qw(
         is_valid is_success is_failure
 
         messages field_messages
         info_messages warning_messages error_messages
         field_info_messages field_warning_messages field_error_messages
-
-        add_message
-        info warning error
-        field_info field_warning field_error
-
-        success failure
     ) ],
 );
+
+has result => (
+    is        => 'rw',
+    isa       => 'Qublog::Form::Result',
+    required  => 1,
+    lazy      => 1,
+    default   => sub { Qublog::Form::Result::Single->new },
+);
+
+has features => (
+    is          => 'ro',
+    isa         => 'ArrayRef',
+    required    => 1,
+    lazy        => 1,
+    initializer => '_init_features',
+    builder     => '_build_features',
+);
+
+sub _meta_features {
+    my $self = shift;
+
+    my @features;
+    for my $feature_config (@{ $self->meta->features }) {
+        my $feature = Qublog::Form::Feature::Functional->new(
+            %$feature_config,
+            action => $self,
+        );
+        push @features, $feature;
+    }
+
+    return \@features;
+}
+
+sub _init_features {
+    my ($self, $features, $set, $attr) = @_;
+    push @$features, $self->_meta_features;
+    $set->($value);
+}
+
+sub _build_features {
+    my $self = shift;
+    return $self->_meta_features;
+}
 
 has controls => (
     is        => 'ro',
@@ -48,17 +85,10 @@ has controls => (
     builder   => '_build_controls',
 );
 
-has features => (
-    is          => 'ro',
-    isa         => 'ArrayRef',
-    required    => 1,
-    initializer => '_init_features',
-    builder     => '_build_features',
-);
-
 sub _build_controls {
     my $self = shift;
-    my $factory = $self->form_factory;
+    my $factory  = $self->form_factory;
+    my $features = $self->features;
 
     my %controls;
     my $meta_controls = $self->meta->get_controls;
@@ -75,36 +105,13 @@ sub _build_controls {
             Class::MOP::load_class($feature_class);
 
             my $feature = $feature_class->new($meta_features->{$feature_name});
-            $control->add_feature($feature);
+            push @$features, $feature;
         }
 
         $controls->{ $meta_control->name } = $control;
     }
 
     return \%controls;
-}
-
-sub _meta_features {
-    my $self = shift;
-
-    my @features;
-    for my $feature_config (@{ $self->meta->features }) {
-        my $feature = Qublog::Form::Feature::Functional->new($feature_config);
-        push @features, $feature;
-    }
-
-    return \@features;
-}
-
-sub _init_features {
-    my ($self, $features, $set, $attr) = @_;
-    push @$features, $self->_meta_features;
-    $set->($value);
-}
-
-sub _build_features {
-    my $self = shift;
-    return $self->_meta_features;
 }
 
 sub stash {
@@ -167,6 +174,8 @@ sub clear {
             delete $control->{$key}; # ugly
         }
     }
+
+    $self->result->clear_results;
 }
 
 sub render {
@@ -186,36 +195,26 @@ sub render_control {
 }
 
 sub clean {
-    my ($self, $control_names, $cleaner_names) = @_;
+    my $self = shift;
 
-    $control_names ||= [ map { $_->name } @{ $self->meta->get_controls } ];
-    my $controls = $self->controls;
-    for my $control_name (@$control_names) {
-        $controls->{$control_name}->clean($self->result);
-    }
-
-    my $features = $self->meta->features;
+    my $features = $self->features;
     for my $feature (@$features) {
-        $features->clean;
-        $cleaner->{code}->($self);
+        $feature->clean;
     }
+
+    $self->gather_results;
 }
 
 sub check {
-    my ($self, $control_names, $checker_names)  = shift;
-
-    $control_names ||= [ map { $_->name } @{ $self->meta->get_controls } ];
+    my $self     = shift;
     my $controls = $self->controls;
-    for my $control_name (@$control_names) {
-        $controls->{$control_name}->clean($self->result);
+
+    my $features = $self->meta->features;
+    for my $feature (@$features) {
+        $features->check;
     }
 
-    my $checkers = $self->meta->checkers;
-    $checker_names ||= [ map { $_->{name} } @$checkers ];
-    $checker_names = map { { $_ => 1 } } @$checker_names;
-    for my $checker (@$checkers) {
-        $checker->{code}->($self);
-    }
+    $self->gather_results;
 
     my @errors = $self->error_messages;
     $self->is_valid(@errors == 0);
@@ -225,7 +224,21 @@ sub process {
     my $self = shift;
     return unless $self->is_valid;
 
+    my $features = $self->meta->features;
+    for my $feature (@$features) {
+        $features->pre_process;
+    }
+
+    $self->gather_results;
+    return unless $self->is_success;
+
     $self->run;
+
+    for my $feature (@$features) {
+        $features->post_process;
+    }
+
+    $self->gather_results;
 
     my @errors = $self->error_messages;
     $self->is_success(@errors == 0);
@@ -236,6 +249,15 @@ sub clean_and_check_and_process {
     $self->clean;
     $self->check;
     $self->process;
+}
+
+sub gather_results {
+    my $self = shift;
+    my $controls = $self->controls;
+    $self->results->gather_results( 
+        $self->result, 
+        map { $_->result } @{ $self->features } 
+    );
 }
 
 1;

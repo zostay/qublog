@@ -1,14 +1,7 @@
 package Qublog::Form::Action::Meta::Class;
 use Moose::Role;
 
-has cleaners => (
-    is       => 'ro',
-    isa      => 'ArrayRef[HashRef]',
-    required => 1,
-    default  => sub { [] },
-);
-
-has checkers => (
+has features => (
     is       => 'ro',
     isa      => 'ArrayRef[HashRef]',
     required => 1,

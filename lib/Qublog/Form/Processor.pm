@@ -3,7 +3,7 @@ use Moose;
 use Moose::Exporter;
 
 Moose::Exporter->setup_import_methods(
-    with_meta => [ 'has_control', 'clean', 'check', ],
+    with_meta => [ 'has_control', 'clean', 'check', 'pre_process', 'post_process' ],
     also      => 'Moose',
 );
 
@@ -43,22 +43,17 @@ sub has_control {
     $meta->add_attribute( $name => $args );
 }
 
-sub clean {
-    my ($meta, $name, $code) = @_;
-
-    push @{ $meta->cleaners }, {
-        name => $name,
-        code => $code,
-    );
-}
-
-sub check {
-    my ($meta, $name, $code) = @_;
-
-    push @{ $meta->checkers }, {
-        name => $name,
-        code => $code,
+sub _add_feature {
+    my ($type, $meta, $name, $code) = @_;
+    push @{ $meta->features }, {
+        name            => $name,
+        $type . '_code' => $code,
     };
 }
+
+sub clean        { _add_feature('cleaner', @_) }
+sub check        { _add_feature('checker', @_) }
+sub pre_process  { _add_feature('pre_processor', @_) }
+sub post_process { _add_feature('post_processor', @_) }
 
 1;

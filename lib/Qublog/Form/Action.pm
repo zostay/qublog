@@ -1,6 +1,7 @@
 package Qublog::Form::Action;
 use Moose::Role;
 
+use Qublog::Form::Feature::Functional;
 use Qublog::Util qw( class_name_from_name );
 
 requires qw( run );
@@ -48,10 +49,11 @@ has controls => (
 );
 
 has features => (
-    is        => 'ro',
-    isa       => 'ArrayRef',
-    required  => 1,
-    default   => sub { [] },
+    is          => 'ro',
+    isa         => 'ArrayRef',
+    required    => 1,
+    initializer => '_init_features',
+    builder     => '_build_features',
 );
 
 sub _build_controls {
@@ -80,6 +82,29 @@ sub _build_controls {
     }
 
     return \%controls;
+}
+
+sub _meta_features {
+    my $self = shift;
+
+    my @features;
+    for my $feature_config (@{ $self->meta->features }) {
+        my $feature = Qublog::Form::Feature::Functional->new($feature_config);
+        push @features, $feature;
+    }
+
+    return \@features;
+}
+
+sub _init_features {
+    my ($self, $features, $set, $attr) = @_;
+    push @$features, $self->_meta_features;
+    $set->($value);
+}
+
+sub _build_features {
+    my $self = shift;
+    return $self->_meta_features;
 }
 
 sub stash {
@@ -169,10 +194,9 @@ sub clean {
         $controls->{$control_name}->clean($self->result);
     }
 
-    my $cleaners = $self->meta->cleaners;
-    $cleaner_names ||= [ map { $_->{name} } @$cleaners ];
-    $cleaner_names = map { { $_ => 1 } } @$cleaner_names;
-    for my $cleaner (@$cleaners) {
+    my $features = $self->meta->features;
+    for my $feature (@$features) {
+        $features->clean;
         $cleaner->{code}->($self);
     }
 }

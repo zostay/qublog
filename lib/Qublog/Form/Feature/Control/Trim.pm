@@ -15,9 +15,10 @@ sub check_control {
 }
 
 sub clean_value {
-    my $self  = shift;
-    my $value = $self->control->current_value;
-    return trim($value);
+    my $self    = shift;
+    my $control = $self->control;
+    my $value   = $control->current_value;
+    $control->current_value(trim($value));
 }
 
 1;

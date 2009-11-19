@@ -1,7 +1,7 @@
 package Qublog::Form::Feature;
 use Moose::Role;
 
-requires qw( check_control clean check pre_process post_process );
+requires qw( clean check pre_process post_process );
 
 has action => (
     is        => 'ro',

@@ -17,6 +17,26 @@ has control => (
     },
 );
 
+sub clean {
+    my $self = shift;
+    $self->clean_value(@_) if $self->can('clean_value');
+}
+
+sub check {
+    my $self = shift;;
+    $self->check_value(@_) if $self->can('check_value');
+}
+
+sub pre_process {
+    my $self = shift;
+    $self->pre_process_value(@_) if $self->can('pre_process_value');
+}
+
+sub post_process {
+    my $self = shift;
+    $self->post_process_value(@_) if $self->can('post_process_value');
+}
+
 sub format_message {
     my $self    = shift;
     my $message = $self->message || shift;

@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::Trim;
+package Qublog::Form::Feature::Control::Trim;
 use Moose;
 
 with qw( 

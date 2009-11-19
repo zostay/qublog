@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::MatchCode;
+package Qublog::Form::Feature::Control::MatchCode;
 use Moose;
 
 with qw( 

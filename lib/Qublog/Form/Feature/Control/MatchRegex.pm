@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::MatchRegex;
+package Qublog::Form::Feature::Control::MatchRegex;
 use Moose;
 
 with qw( 

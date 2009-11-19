@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::Length;
+package Qublog::Form::Feature::Control::Length;
 use Moose;
 
 with qw( 

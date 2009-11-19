@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::Required;
+package Qublog::Form::Feature::Control::Required;
 use Moose::Role;
 
 with qw( 

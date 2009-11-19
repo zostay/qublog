@@ -1,4 +1,4 @@
-package Qublog::Form::Feature::MatchAvailableChoices;
+package Qublog::Form::Feature::Control::MatchAvailableChoices;
 use Moose;
 
 with qw( 

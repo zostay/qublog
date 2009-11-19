@@ -3,6 +3,7 @@ use Moose;
 
 with qw(
     Qublog::Form::Control
+    Qublog::Form::Control::Role::AvailableChoices
     Qublog::Form::Control::Role::Labeled
     Qublog::Form::Control::Role::ScalarValue
 );
@@ -17,13 +18,6 @@ has default_value => (
     is        => 'ro',
     isa       => 'Str',
     predicate => 'has_default_value',
-);
-
-has available_choices => (
-    is        => 'ro',
-    isa       => 'ArrayRef[Qublog::Form::Control::Choice]',
-    required  => 1,
-    default   => sub { [] },
 );
 
 has '+stashable_keys' => (

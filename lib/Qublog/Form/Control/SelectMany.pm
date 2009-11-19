@@ -3,16 +3,12 @@ use Moose;
 
 with qw(
     Qublog::Form::Control
+    Qublog::Form::Control::Role::AvailableChoices
     Qublog::Form::Control::Role::Labeled
+    Qublog::Form::Control::Role::ListValue
 );
 
 use List::MoreUtils qw( any );
-
-has available_choices => (
-    is        => 'ro',
-    isa       => 'ArrayRef[Qublog::Form::Control::Choice]',
-    required  => 1,
-);
 
 has selected_choices => (
     is        => 'ro',
@@ -31,7 +27,7 @@ has '+stashable_keys' => (
     default   => [ qw( selected_choices ) ],
 );
 
-sub current_selected_choices {
+sub current_values {
     my $self = shift;
 
     return $self->has_selected_choices         ? $self->selected_choices
@@ -43,7 +39,7 @@ sub current_selected_choices {
 sub is_choice_selected {
     my ($self, $choice) = @_;
 
-    return any { $_ eq $choice->value } @{ $self->current_selected_choices };
+    return any { $_ eq $choice->value } @{ $self->current_values };
 }
 
 1;

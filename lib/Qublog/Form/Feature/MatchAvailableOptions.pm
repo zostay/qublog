@@ -1,24 +1,47 @@
 package Qublog::Form::Feature::MatchAvailableChoices;
 use Moose;
 
-with qw( Qublog::Form::Feature );
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
 
 sub check_control {
-    my ($self, $control) = @_;
+    my $self    = shift;
+    my $control = $self->control;
 
-    return unless $control->does('Qublog::Form::Control::Role::ListValue');
-    return unless $control->does('Qublog::Form::Control::Role::AvailableChoices');
-    return 1;
+    die "the match_available_options feature only works for controls that have available choices, not $control"
+        unless $control->does('Qublog::Form::Control::Role::AvailableChoices');
+
+    return if $control->does('Qublog::Form::Control::Role::ListValue');
+    return if $control->does('Qublog::Form::Control::Role::ScalarValue');
+
+    die "the match_available_feature does not know hwo to check the value of $control";
 }
 
-sub validate_value {
-    my ($self, $values) = @_;
+sub check_value {
+    my $self    = shift;
+    my $control = $self->control;
 
     my %available_values = map { $_->value => 1 } 
         @{ $self->control->available_choices };
-    for my $value (@$values) {
-        $self->error('found an unexpected selection for %s')
+
+    # Deal with scalar valued controls
+    if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
+        my $value = $control->current_value;
+        $self->error('the given value for %s is not one of the available choices')
             unless $available_values{ $value };
+    }
+
+    # Deal with list valued controls
+    else {
+        my $values = $control->current_values;
+        VALUE: for my $value (@$values) {
+            unless ($available_values{ $value }) {
+                $self->error('one of the values given for %s is not in the list of available choices');
+                last VALUE;
+            }
+        }
     }
 }
 

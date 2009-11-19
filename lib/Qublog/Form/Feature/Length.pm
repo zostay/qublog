@@ -1,7 +1,10 @@
 package Qublog::Form::Feature::Length;
 use Moose;
 
-with qw( Qublog::Form::Feature );
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
 
 has minimum => (
     is        => 'ro',
@@ -30,12 +33,14 @@ sub BUILDARGS {
 sub check_control {
     my ($self, $control) = @_;
 
-    return 1 if $control->does('Qublog::Form::Control::Role::ScalarValue');
-    return;
+    return if $control->does('Qublog::Form::Control::Role::ScalarValue');
+
+    die "the length feature only works with scalar values\n";
 }
 
-sub validate_value {
-    my ($self, $control, $value) = @_;
+sub check_value {
+    my $self  = shift;
+    my $value = $self->control->current_value;
 
     if ($self->has_minimum and length($value) < $self->minimum) {
         $self->error("the %s must be at least @{[$self->minimum]} characters long");

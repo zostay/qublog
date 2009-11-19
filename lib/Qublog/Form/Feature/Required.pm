@@ -1,24 +1,36 @@
 package Qublog::Form::Feature::Required;
 use Moose::Role;
 
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
+
 sub check_control {
     my ($self, $control) = @_;
 
-    return 1 if $control->does('Qublog::Form::Control::Role::ScalarValue');
-    return 1 if $control->does('Qublog::Form::Control::Role::ListValue');
-    return;
+    return if $control->does('Qublog::Form::Control::Role::ScalarValue');
+    return if $control->does('Qublog::Form::Control::Role::ListValue');
+
+    die "the required feature does not know how to check the value of $control";
 }
 
-sub validate_value {
-    my ($self, $value) = @_;
+sub check_value {
+    my $self    = shift;
+    my $control = $self->control;
 
+    # Handle scalar value controls
     if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
+        my $value = $control->current_value;
         unless (length($value) > 0) {
             $self->error('the %s is required');
         }
     }
-    else { # ($control->does('Qublog::Form::Control::Role::ListValue'))
-        unless (@$value > 0) {
+
+    # Handle list value controls
+    else { 
+        my $values = $control->current_values;
+        unless (@$values > 0) {
             $self->error('at least one value for %s is required');
         }
     }

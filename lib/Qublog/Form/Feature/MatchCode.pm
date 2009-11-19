@@ -1,7 +1,10 @@
 package Qublog::Form::Feature::MatchCode;
 use Moose;
 
-with qw( Qublog::Form::Feature );
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
 
 has code => (
     is        => 'ro',
@@ -9,10 +12,11 @@ has code => (
     required  => 1,
 );
 
-sub check_control { 1 }
+sub check_control { }
 
-sub validate_value {
-    my ($self, $value) = @_;
+sub check_value {
+    my $self  = shift;
+    my $value = $self->control->current_value;
 
     unless ($self->code->($value)) {
         $self->error('the %s is not correct');

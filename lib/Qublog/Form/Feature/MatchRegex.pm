@@ -1,7 +1,10 @@
 package Qublog::Form::Feature::MatchRegex;
 use Moose;
 
-with qw( Qublog::Form::Feature );
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
 
 has regex => (
     is        => 'ro',
@@ -12,12 +15,14 @@ has regex => (
 sub check_control {
     my ($self, $control) = @_;
 
-    return 1 if $control->does('Qublog::Form::Control::Role::ScalarValue');
-    return;
+    return if $control->does('Qublog::Form::Control::Role::ScalarValue');
+
+    die "the match_regex feature only works with scalar value controls, not $control";
 }
 
-sub validate_value {
-    my ($self, $value) = @_;
+sub check_value {
+    my $self  = shift;
+    my $value = $self->control->current_value;
 
     my $regex = $self->regex;
     unless ($value =~ /$regex/) {

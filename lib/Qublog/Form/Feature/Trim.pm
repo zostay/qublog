@@ -1,17 +1,22 @@
 package Qublog::Form::Feature::Trim;
 use Moose;
 
-with qw( Qublog::Form::Feature );
+with qw( 
+    Qublog::Form::Feature 
+    Qublog::Form::Feature::Role::Control
+);
 
 sub check_control {
     my ($self, $control) = @_;
 
-    return 1 if $self->does('Qublog::Form::Control::Role::ScalarValue');
-    return;
+    return if $self->does('Qublog::Form::Control::Role::ScalarValue');
+
+    die "the trim feature only works on scalar values, not $control";
 }
 
 sub clean_value {
-    my ($self, $value) = @_;
+    my $self  = shift;
+    my $value = $self->control->current_value;
     return trim($value);
 }
 

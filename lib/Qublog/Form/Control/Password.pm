@@ -8,14 +8,14 @@ with qw(
 );
 
 has value => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Str',
     predicate => 'has_value',
 );
 
 sub current_value {
     my $self = shift;
-
+    $self->value(shift) if @_;
     return $self->has_value         ? $self->value
          :                            '';
 }

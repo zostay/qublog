@@ -1,7 +1,7 @@
 package Qublog::Form::Feature;
 use Moose::Role;
 
-requires qw( check_control );
+requires qw( check_control clean check pre_process post_process );
 
 has action => (
     is        => 'ro',
@@ -22,18 +22,6 @@ has result => (
     required  => 1,
     default   => sub { Qublog::Form::Result::Single->new },
 );
-
-sub clean {
-    my ($self, $value, %options) = @_;
-
-    return $self->clean_value($value, %options) if $self->can('clean_value');
-    return $value;
-}
-
-sub check {
-    my ($self, $value, %options) = @_;
-    $self->check_value($value, %options) if $self->can('check_value');
-}
 
 sub feature_info {
     my $self    = shift;

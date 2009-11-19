@@ -11,7 +11,7 @@ with qw(
 use List::MoreUtils qw( any );
 
 has selected_choices => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'ArrayRef[Str]',
     required  => 1,
     predicate => 'has_selected_choices',
@@ -29,7 +29,7 @@ has '+stashable_keys' => (
 
 sub current_values {
     my $self = shift;
-
+    $self->selected_choices(shift) if @_;
     return $self->has_selected_choices         ? $self->selected_choices
          : $self->has_default_selected_choices ? $self->default_selected_choices
          :                                       []

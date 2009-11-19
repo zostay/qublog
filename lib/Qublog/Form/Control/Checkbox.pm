@@ -22,7 +22,7 @@ has unchecked_value => (
 );
 
 has is_checked => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Bool',
     required  => 1,
     default   => 0,
@@ -34,6 +34,7 @@ has '+stashable_keys' => (
 
 sub current_value {
     my $self = shift;
+    $self->is_checked($self->checked_value eq shift) if @_;
     return $self->is_checked ? $self->checked_value : $self->unchecked_value;
 }
 

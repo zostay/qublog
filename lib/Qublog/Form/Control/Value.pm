@@ -15,7 +15,7 @@ has is_visible => (
 );
 
 has value => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Str',
     required  => 1,
 );
@@ -24,6 +24,10 @@ has '+stashable_keys' => (
     default   => [ qw( value ) ],
 );
 
-sub current_value { shift->value };
+sub current_value { 
+    my $self = shift;
+    $self->value(shift) if @_;
+    return $self->value;
+};
 
 1;

@@ -29,7 +29,7 @@ sub check_value {
     # Deal with scalar valued controls
     if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
         my $value = $control->current_value;
-        $self->error('the given value for %s is not one of the available choices')
+        $self->control_error('the given value for %s is not one of the available choices')
             unless $available_values{ $value };
     }
 
@@ -38,7 +38,7 @@ sub check_value {
         my $values = $control->current_values;
         VALUE: for my $value (@$values) {
             unless ($available_values{ $value }) {
-                $self->error('one of the values given for %s is not in the list of available choices');
+                $self->control_error('one of the values given for %s is not in the list of available choices');
                 last VALUE;
             }
         }

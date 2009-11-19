@@ -43,11 +43,15 @@ sub check_value {
     my $value = $self->control->current_value;
 
     if ($self->has_minimum and length($value) < $self->minimum) {
-        $self->error("the %s must be at least @{[$self->minimum]} characters long");
+        $self->control_error(
+            "the %s must be at least @{[$self->minimum]} characters long"
+        );
     }
 
     if ($self->has_maximum and length($value) > $self->maximum) {
-        $self->error("the %s must be no longer than @{[$self->maximum]} characters");
+        $self->control_error(
+            "the %s must be no longer than @{[$self->maximum]} characters"
+        );
     }
 }
 

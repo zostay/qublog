@@ -3,9 +3,9 @@ use Moose::Role;
 
 requires qw( check_control );
 
-has control => (
+has action => (
     is        => 'ro',
-    isa       => 'Qublog::Form::Control',
+    isa       => 'Qublog::Form::Action',
     required  => 1,
     weak_ref  => 1,
 );
@@ -16,6 +16,13 @@ has message => (
     predicate => 'has_message',
 );
 
+has result => (
+    is        => 'ro',
+    isa       => 'Qublog::Form::Result::Single',
+    required  => 1,
+    default   => sub { Qublog::Form::Result::Single->new },
+);
+
 sub clean {
     my ($self, $value, %options) = @_;
 
@@ -23,14 +30,27 @@ sub clean {
     return $value;
 }
 
-sub validate {
+sub check {
     my ($self, $value, %options) = @_;
-    $self->validate_value($value, %options) if $self->can('validate_value');
+    $self->check_value($value, %options) if $self->can('check_value');
 }
 
-# TODO Implement...
-# sub error {}
-# sub warning {}
-# sub info {}
+sub feature_info {
+    my $self    = shift;
+    my $message = $self->message || shift;
+    $self->result->info($message);
+}
+
+sub feature_warning {
+    my $self    = shift;
+    my $message = $self->message || shift;
+    $self->result->warning($message);
+}
+
+sub feature_error {
+    my $self    = shift;
+    my $message = $self->message || shift;
+    $self->result->error($message);
+}
 
 1;

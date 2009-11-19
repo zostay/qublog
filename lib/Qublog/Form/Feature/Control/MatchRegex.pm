@@ -26,7 +26,7 @@ sub check_value {
 
     my $regex = $self->regex;
     unless ($value =~ /$regex/) {
-        $self->error("the %s does not match $regex");
+        $self->cotnrol_error("the %s does not match $regex");
     }
 }
 

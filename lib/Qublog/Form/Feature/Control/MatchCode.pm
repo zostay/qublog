@@ -19,7 +19,7 @@ sub check_value {
     my $value = $self->control->current_value;
 
     unless ($self->code->($value)) {
-        $self->error('the %s is not correct');
+        $self->control_error('the %s is not correct');
     }
 }
 

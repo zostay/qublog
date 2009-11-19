@@ -29,7 +29,7 @@ has result => (
 
         messages field_messages
         info_messages warning_messages error_messages
-        field_info_messages field_warning_messagesw field_error_messages
+        field_info_messages field_warning_messages field_error_messages
 
         add_message
         info warning error
@@ -47,6 +47,13 @@ has controls => (
     builder   => '_build_controls',
 );
 
+has features => (
+    is        => 'ro',
+    isa       => 'ArrayRef',
+    required  => 1,
+    default   => sub { [] },
+);
+
 sub _build_controls {
     my $self = shift;
     my $factory = $self->form_factory;
@@ -61,7 +68,7 @@ sub _build_controls {
 
         my $meta_features = $meta_control->features;
         for my $feature_name (keys %$meta_features) {
-            my $feature_class = 'Qublog::Form::Feature::' 
+            my $feature_class = 'Qublog::Form::Feature::Control::' 
                               . class_name_from_name($feature_name);
             Class::MOP::load_class($feature_class);
 

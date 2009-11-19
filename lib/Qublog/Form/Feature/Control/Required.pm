@@ -23,7 +23,7 @@ sub check_value {
     if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
         my $value = $control->current_value;
         unless (length($value) > 0) {
-            $self->error('the %s is required');
+            $self->control_error('the %s is required');
         }
     }
 
@@ -31,7 +31,7 @@ sub check_value {
     else { 
         my $values = $control->current_values;
         unless (@$values > 0) {
-            $self->error('at least one value for %s is required');
+            $self->control_error('at least one value for %s is required');
         }
     }
 }

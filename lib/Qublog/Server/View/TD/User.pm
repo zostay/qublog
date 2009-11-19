@@ -231,10 +231,10 @@ template 'user/register' => sub {
                 $action->globals->{origin}    = $c->request->uri;
                 $action->globals->{return_to} = $c->uri_for('/user/login');
                 $action->stash('register');
-                outs_raw $action->render;
+                $action->render;
 
                 div { { class is 'submit' }
-                    outs_raw $action->render_control(button => {
+                    $action->render_control(button => {
                         name  => 'submit',
                         label => 'Register',
                     });

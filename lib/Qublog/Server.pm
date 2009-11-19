@@ -69,7 +69,51 @@ Qublog is a personal/professional logging application that runs in a web
 browser. It allows you to keep your notes, organize your tasks, and track you
 time on projects in the same place.
 
+=head1 ATTRIBUTES
+
+=head2 form_factory
+
+This is the object used to render and process forms.
+
+=cut
+
+has form_factory => (
+    is        => 'ro',
+    isa       => 'Qublog::Form::Factory::HTML',
+    required  => 1,
+    lazy      => 1,
+    default   => sub { 
+        Qublog::Form::Factory::HTML->new(
+            renderer => sub { Template::Declare::Tags::outs_raw(@_) },
+            consumer => sub { $_[0]->params },
+        );
+    }
+);
+
 =head1 METHODS
+
+=head2 action_form
+
+Helper to get form objects to rendering and processing actions.
+
+=cut
+
+{
+    my %action_form_type_prefixes = (
+        schema => 'Qublog::Schema::Action::';
+    );
+
+    sub action_form {
+        my ($self, $type, $name) = @_;
+        die "invalid action name $name" if $name =~ /[^\w:]/;
+
+        my $class_name = $action_form_type_prefixes{$type};
+        die "invalid action type $type" unless $class_name;
+        $class_name .= $name;
+
+        $self->form_factory->new_action($class_name);
+    }
+}
 
 =head2 field_defaults
 

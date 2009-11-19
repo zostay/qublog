@@ -15,6 +15,23 @@ Defines the abstract interface for a form factory.
 
 =head1 METHODS
 
+=head2 new_action
+
+  my $action = $factory->new_action('Some::Action::Class');
+
+Given the name of an action class, it initializes the class for use with this factory.
+
+=cut
+
+sub new_action {
+    my ($self, $class_name) = @_;
+
+    Class::MOP::load_class($class_name)
+        or die "cannot load $class_name: $@";
+
+    return $class_name->new( form_factory => $self );
+}
+
 =head2 control_class
 
   my $class_name = $factory->control_class('full_text');

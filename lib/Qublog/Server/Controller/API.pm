@@ -29,7 +29,7 @@ sub model :Local :Args(3) {
     my $name = join('::', map { class_name_from_name($_) } ($model, $do));
     my $action = $c->action_form(schema => $name);
     $action->unstash($moniker) if $moniker;
-    $action->clean_and_check_and_process;
+    $action->consume_and_clean_and_check_and_process( request => $c->request );
 
     if ($action->is_valid and $action->is_success) {
         if ($action->globals->{return_to}) {

@@ -47,14 +47,12 @@ Renders the HTML required to use this method.
 
 sub render {
     my $self     = shift;
-    my %params   = @_;
-    my $renderer = $params{renderer};
 
     if ($self->has_alternate_renderer) {
-        $renderer->($self->alternate_renderer->($self, @_));
+        return $self->alternate_renderer->($self, @_);
     }
     else {
-        $renderer->($self->render_control(@_));
+        return $self->render_control(@_);
     }
 }
 

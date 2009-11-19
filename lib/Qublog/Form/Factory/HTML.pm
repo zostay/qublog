@@ -192,15 +192,27 @@ sub render_control {
     my ($self, $control, %optiosn) = @_;
 
     my $widget = $self->new_widget_for_control($control);
-    $widget->render( renderer => $self->renderer );
+    $self->renderer->($widget->render);
 }
 
 sub consume_control {
     my ($self, $control, %options) = @_;
+
     die "no request option passed" unless defined $options{request};
 
+    die "HTML factory does not know how to consume values for $control"
+        unless $control->does('Qublog::Form::Control::Role::ScalarValue')
+            or $control->does('Qublog::Form::Control::Role::ListValue');
+
     my $widget = $self->new_widget_for_control($control);
-    $widget->consume( params => $self->consumer->($options{request}) );
+    my $params = $widget->consume( params => $self->consumer->($options{request}) );
+
+    if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
+        $control->current_value( $params->{ $control->name } );
+    }
+    else {
+        $control->current_values( $params->{ $control->name } );
+    }
 }
 
 1;

@@ -210,25 +210,40 @@ sub consume {
     $self->form_factory->consume_control($controls->{$_}, %params) for @names;
 }
 
-sub clean {
-    my $self = shift;
-
+sub _run_features {
+    my $self     = shift;
+    my $method   = shift;
+    my %params   = @_;
     my $features = $self->features;
-    for my $feature (@$features) {
-        $feature->clean;
+
+    # Only run the requested control-specific features
+    if (defined $params{controls}) {
+        my %names = map { $_ => 1 } @{ $params{controls} };
+
+        for my $feature (@$features) {
+            next unless $feature->does('Qublog::Form::Feature::Role::Control');
+            next unless $names{ $feature->control->name };
+
+            $feature->$method;
+        }
     }
 
-    $self->gather_results;
+    # Run all features now
+    else {
+        for my $feature (@$features) {
+            $feature->$method;
+        }
+    }
+}
+
+sub clean {
+    my $self = shift;
+    $self->_run_features(clean => @_);
 }
 
 sub check {
-    my $self     = shift;
-    my $controls = $self->controls;
-
-    my $features = $self->meta->features;
-    for my $feature (@$features) {
-        $features->check;
-    }
+    my $self = shift;
+    $self->_run_features(check => @_);
 
     $self->gather_results;
 
@@ -240,19 +255,14 @@ sub process {
     my $self = shift;
     return unless $self->is_valid;
 
-    my $features = $self->meta->features;
-    for my $feature (@$features) {
-        $features->pre_process;
-    }
+    $self->_run_features('pre_process');
 
     $self->gather_results;
     return unless $self->is_success;
 
     $self->run;
 
-    for my $feature (@$features) {
-        $features->post_process;
-    }
+    $self->_run_features('post_process');
 
     $self->gather_results;
 
@@ -260,8 +270,9 @@ sub process {
     $self->is_success(@errors == 0);
 }
 
-sub clean_and_check_and_process {
+sub consume_and_clean_and_check_and_process {
     my $self = shift;
+    $self->consume(@_);
     $self->clean;
     $self->check;
     $self->process;

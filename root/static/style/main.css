@@ -146,3 +146,30 @@ div#messages .error {
     padding: 0.5em;
     background-color: #fcc;
 }
+
+ul.alerts {
+    font-size: 0.8em;
+}
+
+ul.alerts li {
+    margin-left: 0;
+    padding-left: 18px;
+    list-style: none;
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+}
+
+ul.alerts li.error {
+    background-color: #fcc;
+    background-image: url(/static/images/icons/exclamation-red.png);
+}
+
+ul.alerts li.warning {
+    background-color: #ffa;
+    background-image: url(/static/images/icons/exclamation.png);
+}
+
+ul.alerts li.info {
+    background-color: #cfc;
+    background-image: url(/static/images/icons/information.png);
+}

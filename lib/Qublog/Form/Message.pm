@@ -24,4 +24,11 @@ has type => (
     default  => 'info',
 );
 
+sub english_message {
+    my $self = shift;
+    my $message = ucfirst $self->message;
+    $message .= '.' if $message =~ /(?:[\w\s])$/;
+    return $message;
+}
+
 1;

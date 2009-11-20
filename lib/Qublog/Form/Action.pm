@@ -22,7 +22,7 @@ has globals => (
 );
 
 has results => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Qublog::Form::Result',
     required  => 1,
     lazy      => 1,
@@ -142,6 +142,8 @@ sub stash {
     my %stash = (
         globals  => $self->globals,
         controls => \%controls,
+        results  => $self->results,
+        result   => $self->result,
     );
 
     $self->form_factory->stash($moniker => \%stash);
@@ -170,6 +172,9 @@ sub unstash {
             #warn "unstash partially failed: $@" if $@;
         }
     }
+
+    $self->results($stash->{results} || Qublog::Form::Result::Gathered->new);
+    $self->result($stash->{result} || Qublog::Form::Result::Single->new);
 }
 
 sub clear {
@@ -186,6 +191,7 @@ sub clear {
         }
     }
 
+    $self->results->clear_messages;
     $self->results->clear_results;
     $self->result(Qublog::Form::Result::Single->new);
 }
@@ -198,14 +204,19 @@ sub render {
                                                    $self->meta->get_controls
                ;
 
+    $params{results} = $self->results;
+
     my $controls = $self->controls;
     $self->form_factory->render_control($controls->{$_}, %params) for @names;
+    return;
 }
 
 sub render_control {
     my ($self, $name, $options, %params) = @_;
 
-    return $self->form_factory->render_control(
+    $params{results} = $self->results;
+
+    $self->form_factory->render_control(
         $self->form_factory->new_control($name => $options), %params
     );
 }

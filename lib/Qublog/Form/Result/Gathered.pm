@@ -1,7 +1,7 @@
 package Qublog::Form::Result::Gathered;
 use Moose;
 
-use Scalar::Util qw( refaddr );
+use Scalar::Util qw( blessed refaddr );
 use List::MoreUtils qw( all );
 
 with qw( Qublog::Form::Result );
@@ -33,6 +33,18 @@ sub clear_results {
     %{ $self->_results } = ();
 }
 
+sub clear_messages {
+    my $self = shift;
+    $_->clear_messages for $self->results;
+}
+
+sub clear_messages_for_field {
+    my $self  = shift;
+    my $field = shift;
+
+    $_->clear_messages_for_field($field) for $self->results;
+}
+
 sub is_valid {
     my $self = shift;
     return all { $_->is_valid } $self->results;
@@ -48,7 +60,7 @@ sub is_success {
     return all { $_->is_success } $self->results;
 }
 
-sub is_otucome_known {
+sub is_outcome_known {
     my $self = shift;
     return all { $_->is_outcome_known } $self->results;
 }

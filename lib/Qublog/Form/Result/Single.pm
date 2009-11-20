@@ -34,6 +34,20 @@ sub add_message {
     push @{ $self->messages }, Qublog::Form::Message->new( %params );
 }
 
+sub clear_messages {
+    my $self = shift;
+    @{ $self->messages } = ();
+}
+
+sub clear_messages_for_field {
+    my ($self, $field) = @_;
+
+    my @messages = grep { $_->is_tied_to_field and $_->field eq $field } 
+                       @{ $self->messages };
+
+    @{ $self->messages } = @messages;
+}
+
 sub info {
     my ($self, $message) = @_;
     $self->add_message( message => $message );

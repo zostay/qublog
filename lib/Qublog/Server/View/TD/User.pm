@@ -233,6 +233,7 @@ template 'user/register' => sub {
                 $action->globals->{return_to} = $c->uri_for('/user/login');
                 $action->stash('register');
                 $action->render;
+                $action->results->clear_messages;
 
                 div { { class is 'submit' }
                     $action->render_control(button => {

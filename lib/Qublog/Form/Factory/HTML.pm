@@ -8,6 +8,8 @@ use Scalar::Util qw( blessed );
 use Qublog::Form::Factory::HTML::Widget::Div;
 use Qublog::Form::Factory::HTML::Widget::Input;
 use Qublog::Form::Factory::HTML::Widget::Label;
+use Qublog::Form::Factory::HTML::Widget::List;
+use Qublog::Form::Factory::HTML::Widget::ListItem;
 use Qublog::Form::Factory::HTML::Widget::Select;
 use Qublog::Form::Factory::HTML::Widget::Span;
 use Qublog::Form::Factory::HTML::Widget::Textarea;
@@ -29,14 +31,19 @@ has consumer => (
 sub new_widget_for_control {
     my $self    = shift;
     my $control = shift;
+    my $results = shift;
 
     my $control_type = blessed $control;
     my ($name) = $control_type =~ /^Qublog::Form::Control::(\w+)$/;
     return unless $name;
     $name = lc $name;
 
+    my @alerts;
+    @alerts = _alerts_for_control($control->name, $control_type, $results)
+        if $results;
+
     my $method = 'new_widget_for_' . $name;
-    return $self->$method($control) if $self->can($method);
+    return $self->$method($control, @alerts) if $self->can($method);
     return;
 }
 
@@ -74,14 +81,31 @@ sub _input($$$;$%) {
     );
 }
 
-sub _alerts($$) {
-    my ($name, $type) = @_;
+sub _alerts($$@) {
+    my ($name, $type, @items) = @_;
 
-    return Qublog::Form::Factory::HTML::Widget::Span->new(
+    return Qublog::Form::Factory::HTML::Widget::List->new(
         id      => $name . '-alerts',
         classes => [ qw( widget alerts ), $type ],
-        content => '',
+        items   => \@items,
     );
+}
+
+sub _alerts_for_control {
+    my ($name, $type, $results) = @_;
+    my @items;
+
+    my $count = 0;
+    my @messages = $results->field_messages($name);
+    for my $message (@messages) {
+        push @items, Qublog::Form::Factory::HTML::Widget::ListItem->new(
+            id      => $name . '-message-' . ++$count,
+            classes => [ qw( widget message ), $type, $message->type ],
+            content => $message->english_message,
+        );
+    }
+
+    return @items;
 }
 
 sub new_widget_for_button {
@@ -91,18 +115,18 @@ sub new_widget_for_button {
 }
 
 sub new_widget_for_checkbox {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'checkbox', 
         _input($control->name, 'checkbox', 'checkbox', $control->value, 
             checked => $control->is_checked),
         _label($control->name, 'checkbox', $control->label),
-        _alerts($control->name, 'checkbox'),
+        _alerts($control->name, 'checkbox', @alerts),
     );
 }
 
 sub new_widget_for_fulltext {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'full-text',
         _label($control->name, 'full-text', $control->label),
@@ -112,22 +136,22 @@ sub new_widget_for_fulltext {
             classes => [ qw( widget field full-text ) ],
             content => $control->current_value,
         ),
-        _alerts($control->name, 'full-text'),
+        _alerts($control->name, 'full-text', @alerts),
     );
 }
 
 sub new_widget_for_password {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'password',
         _label($control->name, 'password', $control->label),
         _input($control->name, 'password', $control->current_value),
-        _alerts($control->name, 'password'),
+        _alerts($control->name, 'password', @alerts),
     );
 }
 
 sub new_widget_for_selectmany {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     my @checkboxes;
     for my $choice (@{ $control->available_choices }) {
@@ -144,12 +168,12 @@ sub new_widget_for_selectmany {
             classes => [ qw( widget list select-many ) ],
             widgets => \@checkboxes,
         ),
-        _alerts($control->name, 'select-many'),
+        _alerts($control->name, 'select-many', @alerts),
     );
 }
 
 sub new_widget_for_selectone {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'select-one',
         _label($control->name, 'select-one', $control->label),
@@ -161,22 +185,22 @@ sub new_widget_for_selectone {
             available_choices => $control->available_choices,
             selected_choices  => [ $control->current_value ],
         ),
-        _alerts($control->name, 'select-one'),
+        _alerts($control->name, 'select-one', @alerts),
     );
 }
 
 sub new_widget_for_text {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'text',
         _label($control->name, 'text', $control->label),
         _input($control->name, 'text', $control->current_value),
-        _alerts($control->name, 'text'),
+        _alerts($control->name, 'text', @alerts),
     );
 }
 
 sub new_widget_for_value {
-    my ($self, $control) = @_;
+    my ($self, $control, @alerts) = @_;
 
     if ($control->is_visible) {
         return _wrapper($control->name, 'value',
@@ -186,7 +210,7 @@ sub new_widget_for_value {
                 content => $control->value,
                 classes => [ qw( widget field value ) ],
             ),
-            _alerts($control->name, 'text'),
+            _alerts($control->name, 'text', @alerts),
         );
     }
 
@@ -194,9 +218,9 @@ sub new_widget_for_value {
 }
 
 sub render_control {
-    my ($self, $control, %optiosn) = @_;
+    my ($self, $control, %options) = @_;
 
-    my $widget = $self->new_widget_for_control($control);
+    my $widget = $self->new_widget_for_control($control, $options{results});
     die "no widget found for $control" unless $widget;
     $self->renderer->($widget->render);
 }

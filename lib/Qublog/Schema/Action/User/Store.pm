@@ -86,8 +86,8 @@ has_control confirm_password => (
     },
 );
 
-check password_and_confirmation => sub {
-    my ($self, $options) = @_;
+has_checker password_and_confirmation => sub {
+    my ($self) = @_;
 
     unless ($self->password eq $self->confirm_password) {
         $self->result->error({

@@ -11,7 +11,7 @@ Moose::Exporter->setup_import_methods(
     as_is     => [ qw( deferred_value ) ],
     with_meta => [ qw(
         has_control
-        clean check pre_process post_process
+        has_cleaner has_checker has_pre_processor has_post_processor
     ) ],
     also      => 'Moose',
 );
@@ -66,15 +66,16 @@ sub deferred_value(&) {
 
 sub _add_feature {
     my ($type, $meta, $name, $code) = @_;
+    die "bad code given for $type $name" unless defined $code;
     push @{ $meta->features }, {
         name            => $name,
         $type . '_code' => $code,
     };
 }
 
-sub clean        { _add_feature('cleaner', @_) }
-sub check        { _add_feature('checker', @_) }
-sub pre_process  { _add_feature('pre_processor', @_) }
-sub post_process { _add_feature('post_processor', @_) }
+sub has_cleaner        { _add_feature('cleaner', @_) }
+sub has_checker        { _add_feature('checker', @_) }
+sub has_pre_processor  { _add_feature('pre_processor', @_) }
+sub has_post_processor { _add_feature('post_processor', @_) }
 
 1;

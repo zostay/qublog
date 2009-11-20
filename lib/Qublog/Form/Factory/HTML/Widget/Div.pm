@@ -34,7 +34,8 @@ sub consume_control {
     my $self = shift;
     my %args_accumulator;
 
-    %args_accumulator = (%args_accumulator, $_->consume(@_)) for @{ $self->widgets };
+    %args_accumulator = (%args_accumulator, %{ $_->consume(@_) || {} }) 
+        for @{ $self->widgets };
 
     return \%args_accumulator;
 }

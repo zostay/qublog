@@ -4,7 +4,7 @@ use Moose::Role;
 with qw( Qublog::Schema::Action::Role::Lookup );
 
 sub find {
-    my ($self, $options) = @_;
+    my $self = shift;
     $self->record($self->resultset->new_result);
 }
 

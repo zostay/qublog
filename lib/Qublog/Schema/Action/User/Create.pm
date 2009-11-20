@@ -26,11 +26,10 @@ has_control name => (
     },
 );
 
-check user => sub {
-    my ($self, $options) = @_;
-    my $schema = $options->{schema};
+has_checker user => sub {
+    my ($self) = @_;
 
-    my $user = $schema->resultset('User')->find({ name => $self->name });
+    my $user = $self->schema->resultset('User')->find({ name => $self->name });
     if ($user) {
         $self->result->field_error({
             field   => 'name',
@@ -39,8 +38,10 @@ check user => sub {
     }
 };
 
-post_process set_password => sub {
-    my ($self, $options) = @_;
+after do => sub {
+    my $self = shift;
+
+    return unless $self->is_success;
 
     $self->record->change_password($self->new_password);
     $self->update;

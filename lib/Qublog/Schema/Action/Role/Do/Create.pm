@@ -4,7 +4,7 @@ use Moose::Role;
 requires qw( find result_source );
 
 sub do {
-    my ($self, $options) = @_;
+    my $self = shift;
 
     my $object = $self->record;
     for my $column_name ($self->result_source->columns) {

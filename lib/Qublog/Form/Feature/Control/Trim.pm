@@ -17,8 +17,12 @@ sub check_control {
 sub clean_value {
     my $self    = shift;
     my $control = $self->control;
+
     my $value   = $control->current_value;
-    $control->current_value(trim($value));
+    $value =~ s/^\s*//;
+    $value =~ s/\s*$//;
+
+    $control->current_value($value);
 }
 
 1;

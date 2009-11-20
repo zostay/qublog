@@ -34,22 +34,22 @@ has post_processor_code => (
 
 sub clean {
     my $self = shift;
-    $self->cleaner_code->($self, @_) if $self->has_cleaner;
+    $self->cleaner_code->($self->action, @_) if $self->has_cleaner;
 }
 
 sub check {
     my $self = shift;
-    $self->checker_code->($self, @_) if $self->has_checker;
+    $self->checker_code->($self->action, @_) if $self->has_checker;
 }
 
 sub pre_process {
     my $self = shift;
-    $self->pre_processor_code->($self, @_) if $self->has_pre_processor;
+    $self->pre_processor_code->($self->action, @_) if $self->has_pre_processor;
 }
 
 sub post_process {
     my $self = shift;
-    $self->post_processor_code->($self, @_) if $self->has_post_processor;
+    $self->post_processor_code->($self->action, @_) if $self->has_post_processor;
 }
 
 1;

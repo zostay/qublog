@@ -213,6 +213,8 @@ sub consume_control {
     my $widget = $self->new_widget_for_control($control);
     my $params = $widget->consume( params => $self->consumer->($options{request}) );
 
+    return unless defined $params->{ $control->name };
+
     if ($control->does('Qublog::Form::Control::Role::ScalarValue')) {
         $control->current_value( $params->{ $control->name } );
     }

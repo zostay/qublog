@@ -50,7 +50,7 @@ has features => (
     required    => 1,
     lazy        => 1,
     initializer => '_init_features',
-    builder     => '_build_features',
+    default     => sub { [] },
 );
 
 sub _meta_features {
@@ -70,13 +70,8 @@ sub _meta_features {
 
 sub _init_features {
     my ($self, $features, $set, $attr) = @_;
-    push @$features, $self->_meta_features;
+    push @$features, @{ $self->_meta_features };
     $set->($features);
-}
-
-sub _build_features {
-    my $self = shift;
-    return $self->_meta_features;
 }
 
 has controls => (

@@ -2,7 +2,7 @@ package Qublog::Schema::Action::Role::Lookup::Find;
 use Moose;
 
 sub find {
-    my ($self, $options) = @_;
+    my $self = shift;
 
     my %lookup_values;
     for my $column_name ($self->result_source->primary_columns) {

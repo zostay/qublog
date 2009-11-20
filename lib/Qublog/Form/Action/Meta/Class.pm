@@ -10,8 +10,8 @@ has features => (
 
 sub get_controls {
     my ($meta, @control_names) = @_;
-
     my @controls;
+
     if (@control_names) {
         @controls = grep { $_ } map { $meta->get_attribute($_) } @control_names;
     }
@@ -20,8 +20,9 @@ sub get_controls {
         @controls = $meta->get_all_attributes;
     }
 
-    @controls = grep { $_->does('Qublog::Form::Action::Meta::Attribute::Control') } 
-                     @controls;
+    @controls = sort { $a->placement <=> $b->placement }
+                grep { $_->does('Qublog::Form::Action::Meta::Attribute::Control') } 
+                       @controls;
 }
 
 1;

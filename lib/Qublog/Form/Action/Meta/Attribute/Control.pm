@@ -4,6 +4,13 @@ sub register_implementation { 'Qublog::Form::Action::Meta::Attribute::Control' }
 package Qublog::Form::Action::Meta::Attribute::Control;
 use Moose::Role;
 
+has placement => (
+    is        => 'ro',
+    isa       => 'Num',
+    required  => 1,
+    default   => 0,
+);
+
 has control => (
     is        => 'ro',
     isa       => 'Str',

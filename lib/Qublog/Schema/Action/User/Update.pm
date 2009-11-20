@@ -7,18 +7,20 @@ extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::Find);
 
 has_control name => (
-    control  => 'view',
-    options  => {
+    placement => 10,
+    control   => 'view',
+    options   => {
         label => 'Login name',
     },
 );
 
 has_control old_password => (
-    control  => 'password',
-    options  => {
+    placement => 40,
+    control   => 'password',
+    options   => {
         label => 'Old Password',
     },
-    features => {
+    features  => {
         required => 1,
     },
 );

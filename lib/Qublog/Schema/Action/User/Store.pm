@@ -22,11 +22,12 @@ coerce 'Qublog::DateTime::TimeZone'
 no Moose::Util::TypeConstraints;
 
 has_control email => (
-    control  => 'text',
-    options  => {
+    placement => 20,
+    control   => 'text',
+    options   => {
         label => 'Email address',
     },
-    features => {
+    features  => {
         trim       => 1,
         required   => 1,
         match_code => {
@@ -40,11 +41,12 @@ has_control email => (
 );
 
 has_control time_zone => (
-    isa      => 'Qublog::DateTime::TimeZone',
-    coerce   => 1,
+    isa       => 'Qublog::DateTime::TimeZone',
+    coerce    => 1,
 
-    control  => 'select_one',
-    options  => {
+    placement => 100,
+    control   => 'select_one',
+    options   => {
         label             => 'Time zone',
         available_choices => deferred_value {
             [ 
@@ -53,15 +55,16 @@ has_control time_zone => (
             ]
         },
     },
-    features => {
+    features  => {
         required                => 1,
         match_available_choices => 1,
     },
 );
 
 has_control new_password => (
-    control  => 'password',
-    options  => {
+    placement => 50,
+    control   => 'password',
+    options   => {
         label => 'New Password',
     },
     features => {
@@ -73,8 +76,9 @@ has_control new_password => (
 );
 
 has_control confirm_password => (
-    control  => 'password',
-    options  => {
+    placement => 60,
+    control   => 'password',
+    options   => {
         label => 'Confirm password',
     },
     features => {

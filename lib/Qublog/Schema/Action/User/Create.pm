@@ -8,11 +8,12 @@ extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::New );
 
 has_control name => (
-    control  => 'text',
-    options  => {
+    placement => 10,
+    control   => 'text',
+    options   => {
         label => 'Login name',
     },
-    features => {
+    features  => {
         trim        => 1,
         required    => 1,
         length      => {

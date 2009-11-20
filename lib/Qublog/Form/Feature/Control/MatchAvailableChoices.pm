@@ -7,8 +7,7 @@ with qw(
 );
 
 sub check_control {
-    my $self    = shift;
-    my $control = $self->control;
+    my ($self, $control) = @_;
 
     die "the match_available_options feature only works for controls that have available choices, not $control"
         unless $control->does('Qublog::Form::Control::Role::AvailableChoices');

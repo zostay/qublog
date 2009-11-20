@@ -25,7 +25,7 @@ sub render_items {
     return $content;
 }
 
-override render => sub {
+override render_content => sub {
     my $self = shift;
     return super() . $self->render_items;
 };

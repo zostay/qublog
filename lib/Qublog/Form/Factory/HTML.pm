@@ -39,7 +39,7 @@ sub new_widget_for_control {
     $name = lc $name;
 
     my @alerts;
-    @alerts = _alerts_for_control($control->name, $control_type, $results)
+    @alerts = _alerts_for_control($control->name, $name, $results)
         if $results;
 
     my $method = 'new_widget_for_' . $name;

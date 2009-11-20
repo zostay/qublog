@@ -125,6 +125,25 @@ Helper to get form objects to rendering and processing actions.
     }
 }
 
+=head2 result_to_messages
+
+Convert form results into messages.
+
+=cut
+
+sub result_to_messages {
+    my ($c, $result) = @_;
+
+    for my $message (@{ $result->messages }) {
+        next if $message->is_tied_to_field;
+
+        push @{ $c->flash->{messages} }, {
+            type    => $message->type,
+            message => $message->message,
+        };
+    }
+}
+
 =head2 field_defaults
 
   my $fields = $c->field_defaults({

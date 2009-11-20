@@ -31,6 +31,8 @@ sub model :Local :Args(3) {
     $action->unstash($moniker) if $moniker;
     $action->consume_and_clean_and_check_and_process( request => $c->request );
 
+    $c->result_to_messages($action->results);
+
     if ($action->is_valid and $action->is_success) {
         if ($action->globals->{return_to}) {
             $c->response->redirect($action->globals->{return_to});

@@ -47,8 +47,6 @@ after do => sub {
     $self->update;
 };
 
-override success_message => sub {
-    return 'created your profile, you may now sign in',
-};
+override success_message => sub { 'created your profile, you may now sign in' };
 
 1;

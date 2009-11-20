@@ -31,10 +31,7 @@ has_control email => (
         trim       => 1,
         required   => 1,
         match_code => {
-            code    => sub {
-                my ($self, $options, $name, $value) = @_;
-                return Email::Valid->address($value);
-            },
+            code    => sub { Email::Valid->address(shift) },
             message => 'the %s you typed does not look right',
         },
     },

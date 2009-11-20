@@ -14,7 +14,7 @@ has value => (
 );
 
 has default_value => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Str',
     predicate => 'has_default_value',
 );

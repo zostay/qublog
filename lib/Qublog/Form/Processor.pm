@@ -2,8 +2,17 @@ package Qublog::Form::Processor;
 use Moose;
 use Moose::Exporter;
 
+use Qublog::Form::Action;
+use Qublog::Form::Action::Meta::Class;
+use Qublog::Form::Action::Meta::Attribute::Control;
+use Qublog::Form::Processor::DeferredValue;
+
 Moose::Exporter->setup_import_methods(
-    with_meta => [ 'has_control', 'clean', 'check', 'pre_process', 'post_process' ],
+    as_is     => [ qw( deferred_value ) ],
+    with_meta => [ qw(
+        has_control
+        clean check pre_process post_process
+    ) ],
     also      => 'Moose',
 );
 
@@ -13,7 +22,7 @@ sub init_meta {
 
     Moose->init_meta(%options);
 
-    my $meta = Moose::util::MetaRole::apply_metaclass_roles(
+    my $meta = Moose::Util::MetaRole::apply_metaclass_roles(
         for_class       => $options{for_class},
         metaclass_roles => [ 'Qublog::Form::Action::Meta::Class' ],
     );
@@ -28,7 +37,7 @@ sub init_meta {
 sub has_control {
     my $meta = shift;
     my $name = shift;
-    my $args = @_ == 1 ? $args : { @_ };
+    my $args = @_ == 1 ? shift : { @_ };
 
     $args->{is}       ||= 'ro';
     $args->{isa}      ||= 'Str';
@@ -36,11 +45,23 @@ sub has_control {
     $args->{control}  ||= 'text';
     $args->{options}  ||= {};
     $args->{features} ||= {};
-    $args->{traits}   ||= []
+    $args->{traits}   ||= [];
+
+    for my $value (values %{ $args->{features} }) {
+        $value = {} unless ref $value;
+    }
 
     unshift @{ $args->{traits} }, 'Form::Control';
 
     $meta->add_attribute( $name => $args );
+}
+
+sub deferred_value(&) {
+    my $code = shift;
+
+    return Qublog::Form::Processor::DeferredValue->new(
+        code => $code,
+    );
 }
 
 sub _add_feature {

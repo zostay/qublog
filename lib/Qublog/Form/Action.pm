@@ -2,9 +2,11 @@ package Qublog::Form::Action;
 use Moose::Role;
 
 use Qublog::Form::Feature::Functional;
+use Qublog::Form::Result::Gathered;
+use Qublog::Form::Result::Single;
 use Qublog::Util qw( class_name_from_name );
 
-requires qw( run );
+#requires qw( run );
 
 has form_factory => (
     is        => 'ro',
@@ -69,7 +71,7 @@ sub _meta_features {
 sub _init_features {
     my ($self, $features, $set, $attr) = @_;
     push @$features, $self->_meta_features;
-    $set->($value);
+    $set->($features);
 }
 
 sub _build_features {
@@ -91,11 +93,21 @@ sub _build_controls {
     my $features = $self->features;
 
     my %controls;
-    my $meta_controls = $self->meta->get_controls;
-    for my $meta_control (@{ $meta_controls }) {
+    my @meta_controls = $self->meta->get_controls;
+    for my $meta_control (@meta_controls) {
+        my %options = %{ $meta_control->options };
+        for my $key (keys %options) {
+            my $value = $options{$key};
+
+            next unless blessed $value;
+            next unless $value->isa('Qublog::Form::Processor::DeferredValue');
+
+            $options{$key} = $value->code->($self, $key);
+        }
+
         my $control = $factory->new_control($meta_control->control => {
             name => $meta_control->name,
-            %{ $meta_control->options },
+            %options,
         });
 
         my $meta_features = $meta_control->features;
@@ -104,11 +116,15 @@ sub _build_controls {
                               . class_name_from_name($feature_name);
             Class::MOP::load_class($feature_class);
 
-            my $feature = $feature_class->new($meta_features->{$feature_name});
+            my $feature = $feature_class->new(
+                %{ $meta_features->{$feature_name} },
+                action  => $self,
+                control => $control,
+            );
             push @$features, $feature;
         }
 
-        $controls->{ $meta_control->name } = $control;
+        $controls{ $meta_control->name } = $control;
     }
 
     return \%controls;
@@ -155,7 +171,8 @@ sub unstash {
         my $control = $controls->{$control_name};
         my $keys    = $control->stashable_keys;
         for my $key (@$keys) {
-            $control->$key($state->{$key});
+            eval { $control->$key($state->{$key}) };
+            #warn "unstash partially failed: $@" if $@;
         }
     }
 }
@@ -163,19 +180,19 @@ sub unstash {
 sub clear {
     my ($self) = @_;
 
-    for my $key (keys %$globals) {
-        delete $self->globals->{$key};
-    }
+    %{ $self->globals } = ();
 
     my $controls       = $self->controls;
     for my $control_name (keys %$controls) {
+        my $control = $controls->{ $control_name };
         my $keys    = $control->stashable_keys;
         for my $key (@$keys) {
             delete $control->{$key}; # ugly
         }
     }
 
-    $self->result->clear_results;
+    $self->results->clear_results;
+    $self->result(Qublog::Form::Result::Single->new);
 }
 
 sub render {
@@ -183,7 +200,7 @@ sub render {
     my %params = @_;
     my @names  = defined $params{controls} ?    @{ delete $params{controls} } 
                :                             map { $_->name } 
-                                                @{ $self->meta->get_controls }
+                                                   $self->meta->get_controls
                ;
 
     my $controls = $self->controls;
@@ -203,7 +220,7 @@ sub consume {
     my %params = @_;
     my @names  = defined $params{controls} ?    @{ delete $params{controls} } 
                :                             map { $_->name } 
-                                                @{ $self->meta->get_controls }
+                                                   $self->meta->get_controls
                ;
 
     my $controls = $self->controls;

@@ -1,8 +1,6 @@
 package Qublog::Form::Factory::HTML::Widget::Select;
 use Moose;
 
-with qw( Qublog::Form::Factory::HTML::Widget );
-
 extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 has '+tag_name' => (
@@ -37,19 +35,21 @@ has tabindex => (
     predicate => 'has_tabindex',
 );
 
-has available_options => (
+has available_choices => (
     is        => 'ro',
-    isa       => 'ArrayRef[Qublog::Form::Control::Select::Choice]',
+    isa       => 'ArrayRef[Qublog::Form::Control::Choice]',
     required  => 1,
     default   => sub { [] },
 );
 
-has selected_options => (
+has selected_choices => (
     is        => 'ro',
     isa       => 'ArrayRef[Str]',
     required  => 1,
     default   => sub { [] },
 );
+
+sub has_content { 1 }
 
 override more_attributes => sub {
     my $self = shift;
@@ -67,20 +67,19 @@ override more_attributes => sub {
 };
 
 override render_content => sub {
-    my $next = shift;
     my $self = shift;
 
-    my %selected = map { $_ => 1 } @{ $self->selected_options };
+    my %selected = map { $_ => 1 } @{ $self->selected_choices };
 
     my $content = '';
-    for my $option (@{ $self->available_options }) {
+    for my $option (@{ $self->available_choices }) {
         $content .= '<option';
         $content .= ' value="' . $option->value . '"';
         $content .= ' selected="selected"' if $selected{ $option->value };
         $content .= '>' . $option->label . '</option>';
     }
 
-    return $content;
+    return super() . $content;
 };
 
 sub consume_control {

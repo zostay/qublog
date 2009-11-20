@@ -1,6 +1,7 @@
 package Qublog::Form::Factory;
 use Moose::Role;
 
+use Qublog::Form::Stasher::Memory;
 use Qublog::Util qw( class_name_from_name );
 
 requires qw( render_control consume_control );
@@ -13,23 +14,41 @@ Qublog::Form::Factory - interface for control factories
 
 Defines the abstract interface for a form factory. 
 
+=head1 ATTRIBUTES
+
+=head2 stasher
+
+A place for remembering things.
+
+=cut
+
+has stasher => (
+    is        => 'ro',
+    does      => 'Qublog::Form::Stasher',
+    required  => 1,
+    default   => sub { Qublog::Form::Stasher::Memory->new },
+    handles   => [ qw( stash unstash ) ],
+);
+
 =head1 METHODS
 
 =head2 new_action
 
-  my $action = $factory->new_action('Some::Action::Class');
+  my $action = $factory->new_action('Some::Action::Class' => {
+      constructor => 'argument',
+  });
 
 Given the name of an action class, it initializes the class for use with this factory.
 
 =cut
 
 sub new_action {
-    my ($self, $class_name) = @_;
+    my ($self, $class_name, $args) = @_;
 
     Class::MOP::load_class($class_name)
         or die "cannot load $class_name: $@";
 
-    return $class_name->new( form_factory => $self );
+    return $class_name->new( %$args, form_factory => $self );
 }
 
 =head2 control_class
@@ -41,9 +60,9 @@ Returns the control class for the named control.
 =cut
 
 sub control_class {
-    my ($self, $name);
+    my ($self, $name) = @_;
 
-    my $class_name = 'Qublog::Form::Control::' . class_name_from_name $name;
+    my $class_name = 'Qublog::Form::Control::' . class_name_from_name($name);
 
     unless (Class::MOP::load_class($class_name)) {
         warn $@ if $@;

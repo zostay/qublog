@@ -9,7 +9,7 @@ with qw(
 sub check_control {
     my ($self, $control) = @_;
 
-    return if $self->does('Qublog::Form::Control::Role::ScalarValue');
+    return if $control->does('Qublog::Form::Control::Role::ScalarValue');
 
     die "the trim feature only works on scalar values, not $control";
 }

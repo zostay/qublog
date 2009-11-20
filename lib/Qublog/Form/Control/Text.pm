@@ -14,13 +14,13 @@ has value => (
 );
 
 has default_value => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'Str',
     predicate => 'has_default_value',
 );
 
 has '+stashable_keys' => (
-    default   => [ qw( value ) ],
+    default   => sub { [ qw( value ) ] },
 );
 
 sub current_value {

@@ -3,6 +3,8 @@ use Moose;
 
 with qw( Qublog::Form::Factory );
 
+use Scalar::Util qw( blessed );
+
 use Qublog::Form::Factory::HTML::Widget::Div;
 use Qublog::Form::Factory::HTML::Widget::Input;
 use Qublog::Form::Factory::HTML::Widget::Label;
@@ -14,24 +16,27 @@ has renderer => (
     is        => 'ro',
     isa       => 'CodeRef',
     required  => 1,
-    default   => sub { print @_ };
+    default   => sub { print @_ },
 );
 
 has consumer => (
     is        => 'ro',
     isa       => 'CodeRef',
     required  => 1,
-    default   => sub { my %params = @_; $params{request} }
+    default   => sub { my %params = @_; $params{request} },
 );
 
 sub new_widget_for_control {
-    my $self = shift;
-    my $name = shift;
+    my $self    = shift;
+    my $control = shift;
 
-    return if $name =~ /\W/;
+    my $control_type = blessed $control;
+    my ($name) = $control_type =~ /^Qublog::Form::Control::(\w+)$/;
+    return unless $name;
+    $name = lc $name;
 
-    my $method = 'new_widget_for' . $name;
-    return $self->$method(@_) if $self->can($method);
+    my $method = 'new_widget_for_' . $name;
+    return $self->$method($control) if $self->can($method);
     return;
 }
 
@@ -40,7 +45,7 @@ sub _wrapper($$@) {
 
     return Qublog::Form::Factory::HTML::Widget::Div->new(
         id      => $name . '-wrapper',
-        classes => [ qw( widget wrapper ), $type ) ],
+        classes => [ qw( widget wrapper ), $type ],
         widgets => \@widgets,
     );
 }
@@ -56,7 +61,7 @@ sub _label($$$) {
     );
 }
 
-sub _input($$$$%) {
+sub _input($$$;$%) {
     my ($name, $type, $input_type, $value, %args) = @_;
 
     return Qublog::Form::Factory::HTML::Widget::Input->new(
@@ -64,7 +69,7 @@ sub _input($$$$%) {
         name    => $name,
         type    => $input_type,
         classes => [ qw( widget field ), $type ],
-        value   => $value,
+        value   => $value || '',
         %args,
     );
 }
@@ -96,7 +101,7 @@ sub new_widget_for_checkbox {
     );
 }
 
-sub new_widget_for_full_text {
+sub new_widget_for_fulltext {
     my ($self, $control) = @_;
 
     return _wrapper($control->name, 'full-text',
@@ -115,13 +120,13 @@ sub new_widget_for_password {
     my ($self, $control) = @_;
 
     return _wrapper($control->name, 'password',
-        _label($control->name, 'password', 'password', $control->label),
+        _label($control->name, 'password', $control->label),
         _input($control->name, 'password', $control->current_value),
         _alerts($control->name, 'password'),
     );
 }
 
-sub new_widget_for_select_many {
+sub new_widget_for_selectmany {
     my ($self, $control) = @_;
 
     my @checkboxes;
@@ -143,7 +148,7 @@ sub new_widget_for_select_many {
     );
 }
 
-sub new_widget_for_select_one {
+sub new_widget_for_selectone {
     my ($self, $control) = @_;
 
     return _wrapper($control->name, 'select-one',
@@ -153,8 +158,8 @@ sub new_widget_for_select_one {
             name     => $control->name,
             classes  => [ qw( widget field select-one ) ],
             size     => 1,
-            options  => $control->available_choices,
-            selected => [ $control->current_value ],
+            available_choices => $control->available_choices,
+            selected_choices  => [ $control->current_value ],
         ),
         _alerts($control->name, 'select-one'),
     );
@@ -164,7 +169,7 @@ sub new_widget_for_text {
     my ($self, $control) = @_;
 
     return _wrapper($control->name, 'text',
-        _label($control->name, 'text', 'text', $control->label),
+        _label($control->name, 'text', $control->label),
         _input($control->name, 'text', $control->current_value),
         _alerts($control->name, 'text'),
     );
@@ -192,6 +197,7 @@ sub render_control {
     my ($self, $control, %optiosn) = @_;
 
     my $widget = $self->new_widget_for_control($control);
+    die "no widget found for $control" unless $widget;
     $self->renderer->($widget->render);
 }
 

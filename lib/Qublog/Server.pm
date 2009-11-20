@@ -1,7 +1,5 @@
 package Qublog::Server;
-
-use strict;
-use warnings;
+use Moose;
 
 use Catalyst::Runtime 5.80;
 
@@ -12,6 +10,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );
 
 use Qublog::DateTime;
+use Qublog::Form::Factory::HTML;
 
 # Set flags and add plugins for the application
 #
@@ -77,7 +76,7 @@ This is the object used to render and process forms.
 
 =cut
 
-has form_factory => (
+has _form_factory => (
     is        => 'ro',
     isa       => 'Qublog::Form::Factory::HTML',
     required  => 1,
@@ -90,6 +89,12 @@ has form_factory => (
     }
 );
 
+sub form_factory {
+    my $c = shift;
+    $c->_form_factory->stasher->stash_hash($c->session);
+    return $c->_form_factory;
+}
+
 =head1 METHODS
 
 =head2 action_form
@@ -100,18 +105,23 @@ Helper to get form objects to rendering and processing actions.
 
 {
     my %action_form_type_prefixes = (
-        schema => 'Qublog::Schema::Action::';
+        schema => 'Qublog::Schema::Action::',
     );
 
     sub action_form {
-        my ($self, $type, $name) = @_;
+        my ($c, $type, $name) = @_;
         die "invalid action name $name" if $name =~ /[^\w:]/;
 
         my $class_name = $action_form_type_prefixes{$type};
         die "invalid action type $type" unless $class_name;
         $class_name .= $name;
 
-        $self->form_factory->new_action($class_name);
+        my %args;
+        if ($type eq 'schema') {
+            $args{schema} = $c->model('DB')->schema;
+        }
+
+        $c->form_factory->new_action($class_name => \%args);
     }
 }
 

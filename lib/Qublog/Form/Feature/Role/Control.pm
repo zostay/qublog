@@ -6,13 +6,13 @@ use Scalar::Util qw( blessed );
 requires qw( check_control );
 
 has control => (
-    is        => 'ro',
-    does      => 'Qublog::Form::Control',
-    required  => 1,
+    is          => 'ro',
+    does        => 'Qublog::Form::Control',
+    required    => 1,
+    weak_ref    => 1,
     initializer => sub {
         my ($self, $value, $set, $attr) = @_;
         $self->check_control($value);
-        $self->action($value->action);
         $set->($value);
     },
 );
@@ -40,6 +40,7 @@ sub post_process {
 sub format_message {
     my $self    = shift;
     my $message = $self->message || shift;
+    my $control = $self->control;
 
     my $control_label 
         = $control->does('Qublog::Form::Control::Role::Labeled') ? $control->label

@@ -3,12 +3,12 @@ use Moose::Role;
 
 use Qublog::Form::Message;
 
-requires qw(
-    is_valid is_validated
-    is_success is_outcome_known
-    content
-    messages
-);
+# requires qw(
+#     is_valid is_validated
+#     is_success is_outcome_known
+#     content
+#     messages
+# );
 
 sub is_failure {
     my $self = shift;

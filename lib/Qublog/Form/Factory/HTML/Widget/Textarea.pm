@@ -1,9 +1,11 @@
 package Qublog::Form::Factory::HTML::Widget::Textarea;
 use Moose;
 
-with qw( Qublog::Form::Factory::HTML::Widget );
-
 extends qw( Qublog::Form::Factory::HTML::Widget::Element );
+
+has '+tag_name' => (
+    default   => 'textarea',
+);
 
 has name => (
     is        => 'ro',
@@ -23,7 +25,9 @@ has cols => (
     predicate => 'has_cols',
 );
 
-override more_attributes => (
+sub has_content { 1 }
+
+override more_attributes => sub {
     my $self = shift;
 
     my %attributes = (
@@ -34,7 +38,7 @@ override more_attributes => (
     $attributes{cols} = $self->cols if $self->has_cols;
 
     return \%attributes;
-}
+};
 
 sub consume_control {
     my ($self, %options) = @_;

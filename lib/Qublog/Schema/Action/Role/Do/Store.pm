@@ -1,7 +1,7 @@
 package Qublog::Schema::Action::Role::Do::Store;
 use Moose::Role;
 
-requires qw( find result_source );
+#requires qw( find result_source );
 
 sub do {
     my ($self, $options) = @_;

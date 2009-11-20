@@ -1,9 +1,11 @@
 package Qublog::Form::Factory::HTML::Widget::Label;
 use Moose;
 
-with qw( Qublog::Form::Factory::HTML::Widget );
-
 extends qw( Qublog::Form::Factory::HTML::Widget::Element );
+
+has '+tag_name' => (
+    default   => 'label',
+);
 
 has for => (
     is        => 'ro',
@@ -22,7 +24,5 @@ override more_attributes => sub {
         for => $self->for,
     };
 };
-
-sub consume_control { }
 
 1;

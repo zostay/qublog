@@ -1,6 +1,8 @@
 package Qublog::Form::Factory::HTML::Widget::Element;
 use Moose;
 
+with qw( Qublog::Form::Factory::HTML::Widget );
+
 has tag_name => (
     is        => 'ro',
     isa       => 'Str',
@@ -30,21 +32,26 @@ has attributes => (
 has content => (
     is        => 'ro',
     isa       => 'Str',
-    predicate => 'has_content',
+    predicate => '_has_content',
 );
+
+sub has_content {
+    my $self = shift;
+    return $self->_has_content;
+}
 
 sub render_control {
     my ($self, %options) = @_;
 
     my $html = '<' . $self->tag_name;
-    $html .= $self->render_id(%optiosn);
+    $html .= $self->render_id(%options);
     $html .= $self->render_class(%options);
     $html .= $self->render_attributes(%options);
 
     if ($self->has_content) {
         $html .= '>';
         $html .= $self->render_content(%options);
-        $html .= '</' . $name . '>';
+        $html .= '</' . $self->tag_name . '>';
     }
 
     else {
@@ -57,7 +64,7 @@ sub render_control {
 sub render_content {
     my $self = shift;
     my $content = $self->content;
-    return $self->content . (inner() || '');
+    return $self->content || '';
 }
 
 sub render_id {
@@ -88,6 +95,8 @@ sub render_attributes {
     return join ' ', @attributes;
 }
 
-sub more_attributes { () }
+sub more_attributes { {} }
+
+sub consume_control { }
 
 1;

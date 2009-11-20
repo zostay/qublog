@@ -1,9 +1,11 @@
 package Qublog::Form::Factory::HTML::Widget::Div;
 use Moose;
 
-with qw( Qublog::Form::Factory::HTML::Widget );
-
 extends qw( Qublog::Form::Factory::HTML::Widget::Element );
+
+has '+tag_name' => (
+    default   => 'div',
+);
 
 has widgets => (
     is        => 'ro',
@@ -12,9 +14,20 @@ has widgets => (
     default   => sub { [] },
 );
 
-augment render_content => sub {
+sub has_content { 1 }
+
+sub render_widgets {
     my $self = shift;
-    return $self->content . (inner() || '');
+    my $content = '';
+    for my $widget (@{ $self->widgets }) {
+        $content .= $widget->render;
+    }
+    return $content;
+}
+
+override render => sub {
+    my $self = shift;
+    return super() . $self->render_widgets;
 };
 
 sub consume_control {

@@ -21,7 +21,7 @@ has value => (
 );
 
 has '+stashable_keys' => (
-    default   => [ qw( value ) ],
+    default   => sub { [ qw( value ) ] },
 );
 
 sub current_value { 

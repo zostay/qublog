@@ -6,9 +6,18 @@ use Qublog::Form::Processor;
 extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::Find);
 
+has_control name => (
+    control  => 'view',
+    options  => {
+        label => 'Login name',
+    },
+);
+
 has_control old_password => (
-    label    => 'Old Password',
     control  => 'password',
+    options  => {
+        label => 'Old Password',
+    },
     features => {
         required => 1,
     },

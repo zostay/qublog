@@ -18,13 +18,13 @@ has selected_choices => (
 );
 
 has default_selected_choices => (
-    is        => 'ro',
+    is        => 'rw',
     isa       => 'ArrayRef[Str]',
     predicate => 'has_default_selected_choices',
 );
 
 has '+stashable_keys' => (
-    default   => [ qw( selected_choices ) ],
+    default   => sub { [ qw( selected_choices ) ] },
 );
 
 sub current_values {

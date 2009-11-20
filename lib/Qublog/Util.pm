@@ -8,7 +8,7 @@ use Sub::Exporter -setup => {
 };
 
 sub class_name_from_name($) {
-    my ($self, $name) = @_;
+    my ($name) = @_;
 
     $name =~ s/(?:[^A-Za-z]+|^)([A-Za-z])/\U$1/g;
     return ucfirst $name;

@@ -227,6 +227,7 @@ template 'user/register' => sub {
             form { { method is 'POST', action is '/api/model/user/create/register' }
                 
                 my $action = $c->action_form(schema => 'User::Create');
+                $action->controls->{time_zone}->default_value( $c->time_zone->name );
                 $action->unstash('register');
                 $action->globals->{origin}    = $c->request->uri;
                 $action->globals->{return_to} = $c->uri_for('/user/login');

@@ -19,10 +19,10 @@ has options => (
 );
 
 has features => (
-    is        => 'ro',
-    isa       => 'HashRef[HashRef]',
-    required  => 1,
-    default   => sub { {} },
+    is          => 'ro',
+    isa         => 'HashRef[HashRef]',
+    required    => 1,
+    default     => sub { {} },
 );
 
 1;

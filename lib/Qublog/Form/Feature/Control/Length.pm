@@ -27,7 +27,7 @@ sub BUILDARGS {
         die 'length minimum must be less than maximum';
     }
 
-    return $self->SUPER::BUILDARGS(@_);
+    return $class->SUPER::BUILDARGS(@_);
 }
 
 sub check_control {

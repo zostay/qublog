@@ -1,8 +1,6 @@
 package Qublog::Form::Factory::HTML::Widget::Input;
 use Moose;
 
-with qw( Qublog::Form::Factory::HTML::Widget );
-
 extends qw( Qublog::Form::Factory::HTML::Widget::Element );
 
 =head1 NAME
@@ -184,7 +182,7 @@ override more_attributes => sub {
     $attributes{checked}   = 'checked'        if $self->checked;
 
     return \%attributes;
-}
+};
 
 =head1 AUTHOR
 

@@ -11,7 +11,7 @@ has_control name => (
     placement => 10,
     control   => 'text',
     options   => {
-        label => 'Login name',
+        label => 'Login Name',
     },
     features  => {
         trim        => 1,

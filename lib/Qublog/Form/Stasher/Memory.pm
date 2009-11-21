@@ -17,7 +17,7 @@ sub stash {
 
 sub unstash {
     my ($self, $moniker) = @_;
-    return $self->stash_hash->{ $moniker };
+    $self->stash_hash->{ $moniker };
 }
 
 1;

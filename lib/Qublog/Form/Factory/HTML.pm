@@ -118,7 +118,7 @@ sub new_widget_for_checkbox {
     my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'checkbox', 
-        _input($control->name, 'checkbox', 'checkbox', $control->value, 
+        _input($control->name, 'checkbox', 'checkbox', $control->current_value, 
             checked => $control->is_checked),
         _label($control->name, 'checkbox', $control->label),
         _alerts($control->name, 'checkbox', @alerts),
@@ -145,7 +145,7 @@ sub new_widget_for_password {
 
     return _wrapper($control->name, 'password',
         _label($control->name, 'password', $control->label),
-        _input($control->name, 'password', $control->current_value),
+        _input($control->name, 'password', 'password', $control->current_value),
         _alerts($control->name, 'password', @alerts),
     );
 }
@@ -194,7 +194,7 @@ sub new_widget_for_text {
 
     return _wrapper($control->name, 'text',
         _label($control->name, 'text', $control->label),
-        _input($control->name, 'text', $control->current_value),
+        _input($control->name, 'text', 'text', $control->current_value),
         _alerts($control->name, 'text', @alerts),
     );
 }

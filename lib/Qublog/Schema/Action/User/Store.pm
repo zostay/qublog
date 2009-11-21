@@ -25,7 +25,7 @@ has_control email => (
     placement => 20,
     control   => 'text',
     options   => {
-        label => 'Email address',
+        label => 'Email Address',
     },
     features  => {
         trim       => 1,
@@ -44,7 +44,6 @@ has_control time_zone => (
     placement => 100,
     control   => 'select_one',
     options   => {
-        label             => 'Time zone',
         available_choices => deferred_value {
             [ 
                 map { Qublog::Form::Control::Choice->new($_) }
@@ -61,9 +60,6 @@ has_control time_zone => (
 has_control new_password => (
     placement => 50,
     control   => 'password',
-    options   => {
-        label => 'New Password',
-    },
     features => {
         required => 1,
         length   => {
@@ -75,9 +71,6 @@ has_control new_password => (
 has_control confirm_password => (
     placement => 60,
     control   => 'password',
-    options   => {
-        label => 'Confirm password',
-    },
     features => {
         required => 1,
     },
@@ -86,10 +79,13 @@ has_control confirm_password => (
 has_checker password_and_confirmation => sub {
     my ($self) = @_;
 
-    unless ($self->password eq $self->confirm_password) {
-        $self->result->error({
-            message => 'the passwords you entered do not match, please try again',
-        });
+    return unless $self->new_password;
+    return unless $self->confirm_password;
+
+    if ($self->new_password ne $self->confirm_password) {
+        $self->result->error(
+            'the passwords you entered do not match, please try again',
+        );
     }
 };
 

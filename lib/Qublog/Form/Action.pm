@@ -57,7 +57,7 @@ sub _meta_features {
     my $self = shift;
 
     my @features;
-    for my $feature_config (@{ $self->meta->features }) {
+    for my $feature_config (@{ $self->meta->get_all_features }) {
         my $feature = Qublog::Form::Feature::Functional->new(
             %$feature_config,
             action => $self,

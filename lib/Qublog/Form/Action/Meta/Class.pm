@@ -25,4 +25,21 @@ sub get_controls {
                        @controls;
 }
 
+sub get_all_features {
+    my $meta = shift;
+
+    my @features = @{ $meta->features };
+    for my $class (reverse $meta->linearized_isa) {
+        my $other_meta = $meta->initialize($class);
+
+        next unless $other_meta->can('meta');
+        next unless $other_meta->meta->can('does_role');
+        next unless $other_meta->meta->does_role('Qublog::Form::Action::Meta::Class');
+
+        push @features, @{ $other_meta->features };
+    }
+
+    return \@features;
+}
+
 1;

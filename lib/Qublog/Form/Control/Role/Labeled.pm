@@ -10,9 +10,10 @@ has label => (
 
 sub build_label {
     my $self = shift;
-
-    # TODO This can be much smarter
-    return ucfirst $self->name;
+    my $label = $self->name;
+    $label =~ s/_/ /g;
+    $label =~ s/\b(\w)/\U$1\E/g;
+    return $label;
 }
 
 1;

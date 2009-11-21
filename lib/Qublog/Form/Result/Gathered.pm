@@ -45,6 +45,12 @@ sub clear_messages_for_field {
     $_->clear_messages_for_field($field) for $self->results;
 }
 
+sub clear_all {
+    my $self = shift;
+    $self->clear_messages;
+    $self->clear_results;
+}
+
 sub is_valid {
     my $self = shift;
     return all { $_->is_valid } $self->results;

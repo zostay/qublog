@@ -79,12 +79,14 @@ has_control confirm_password => (
 has_checker password_and_confirmation => sub {
     my ($self) = @_;
 
-    return unless $self->new_password;
-    return unless $self->confirm_password;
+    my $new_password     = $self->controls->{new_password}->current_value;
+    my $confirm_password = $self->controls->{confirm_password}->current_value;
 
-    if ($self->new_password ne $self->confirm_password) {
-        $self->result->error(
-            'the passwords you entered do not match, please try again',
+    next unless $new_password and $confirm_password;
+
+    if ($new_password ne $confirm_password) {
+        $self->result->field_error(
+            confirm_password => 'the passwords you entered do not match, please try again',
         );
     }
 };

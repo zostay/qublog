@@ -63,12 +63,13 @@ sub check :Private {
     my $user = $c->user->get_object;
     my $agreed_to = $user->agreed_to_terms_md5;
     if (not $agreed_to or $agreed_to ne $current_terms) {
+        my $message = 'The %s has changed.';
+        $message = 'You must agree to the %s.';
+        $message .= ' Please read the following and select an action below to continue.';
+
         push @{ $c->flash->{messages} }, {
             type    => 'warning',
-            message => sprintf(
-                'The %s has changed. Please read the following and select an action below to continue.',
-                $c->config->{'Qublog::Terms'}{title},
-            ),
+            message => sprintf($message, $c->config->{'Qublog::Terms'}{title}),
         };
 
         $c->response->redirect('/user/agreement');

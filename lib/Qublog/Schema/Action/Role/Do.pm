@@ -1,7 +1,7 @@
 package Qublog::Schema::Action::Role::Do;
 use Moose::Role;
 
-requires qw( do schema success_message has_record );
+#requires qw( do schema success_message has_record );
 
 sub run {
     my $self = shift;

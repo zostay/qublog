@@ -20,21 +20,28 @@ has_control name => (
             minimum => 3,
         },
         match_regex => {
-            regex   => qr/^[\w\ '\-]+$/,
+            regex   => qr/^[\w\ '\-]*$/,
             message => 'your %s may only contain letters, numbers, spaces, apostrophes, and hypens',
         },
     },
 );
 
+has_control password => (
+    control => 'value',
+    options => {
+        value => '*',
+    },
+);
+
 has_checker user => sub {
     my ($self) = @_;
+    my $name = $self->controls->{name}->current_value;
 
-    my $user = $self->schema->resultset('User')->find({ name => $self->name });
+    my $user = $self->schema->resultset('User')->find({ name => $name });
     if ($user) {
-        $self->result->field_error({
-            field   => 'name',
-            message => 'sorry, that %s is already in use',
-        });
+        $self->result->field_error(
+            name => 'sorry, that login name is already in use',
+        );
     }
 };
 
@@ -44,7 +51,7 @@ after do => sub {
     return unless $self->is_success;
 
     $self->record->change_password($self->new_password);
-    $self->update;
+    $self->record->update;
 };
 
 override success_message => sub { 'created your profile, you may now sign in' };

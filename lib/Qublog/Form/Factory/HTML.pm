@@ -57,15 +57,29 @@ sub _wrapper($$@) {
     );
 }
 
-sub _label($$$) {
-    my ($name, $type, $label) = @_;
+sub _label($$$;$) {
+    my ($name, $type, $label, $is_required) = @_;
 
     return Qublog::Form::Factory::HTML::Widget::Label->new(
         id      => $name . '-label',
         classes => [ qw( widget label ), $type ],
         for     => $name,
-        content => $label,
+        content => $label . _required_marker($is_required),
     );
+}
+
+sub _required_marker($) {
+    my ($is_required) = @_;
+    
+    if ($is_required) {
+        return Qublog::Form::Factory::HTML::Widget::Span->new(
+            classes => [ qw( required ) ],
+            content => '*',
+        )->render;
+    }
+    else {
+        return '';
+    }
 }
 
 sub _input($$$;$%) {
@@ -129,7 +143,8 @@ sub new_widget_for_fulltext {
     my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'full-text',
-        _label($control->name, 'full-text', $control->label),
+        _label($control->name, 'full-text', $control->label, 
+            $control->has_feature('required')),
         Qublog::Form::Factory::HTML::Widget::Textarea->new(
             id      => $control->name,
             name    => $control->name,
@@ -144,7 +159,8 @@ sub new_widget_for_password {
     my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'password',
-        _label($control->name, 'password', $control->label),
+        _label($control->name, 'password', $control->label,
+            $control->has_feature('required')),
         _input($control->name, 'password', 'password', $control->current_value),
         _alerts($control->name, 'password', @alerts),
     );
@@ -162,7 +178,8 @@ sub new_widget_for_selectmany {
     }
 
     return _wrapper($control->name, 'select-many',
-        _label($control->name, 'select-many', $control->label),
+        _label($control->name, 'select-many', $control->label,
+            $control->has_feature('required')),
         Qublog::Form::Factory::HTML::Widget::Div->new(
             id      => $control->name . '-list',
             classes => [ qw( widget list select-many ) ],
@@ -176,7 +193,8 @@ sub new_widget_for_selectone {
     my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'select-one',
-        _label($control->name, 'select-one', $control->label),
+        _label($control->name, 'select-one', $control->label,
+            $control->has_feature('required')),
         Qublog::Form::Factory::HTML::Widget::Select->new(
             id       => $control->name,
             name     => $control->name,
@@ -193,7 +211,8 @@ sub new_widget_for_text {
     my ($self, $control, @alerts) = @_;
 
     return _wrapper($control->name, 'text',
-        _label($control->name, 'text', $control->label),
+        _label($control->name, 'text', $control->label,
+            $control->has_feature('required')),
         _input($control->name, 'text', 'text', $control->current_value),
         _alerts($control->name, 'text', @alerts),
     );
@@ -221,7 +240,7 @@ sub render_control {
     my ($self, $control, %options) = @_;
 
     my $widget = $self->new_widget_for_control($control, $options{results});
-    die "no widget found for $control" unless $widget;
+    return unless $widget;
     $self->renderer->($widget->render);
 }
 
@@ -235,6 +254,8 @@ sub consume_control {
             or $control->does('Qublog::Form::Control::Role::ListValue');
 
     my $widget = $self->new_widget_for_control($control);
+    return unless defined $widget;
+
     my $params = $widget->consume( params => $self->consumer->($options{request}) );
 
     return unless defined $params->{ $control->name };

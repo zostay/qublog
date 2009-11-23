@@ -28,7 +28,7 @@ sub get_controls {
 sub get_all_features {
     my $meta = shift;
 
-    my @features = @{ $meta->features };
+    my @features;
     for my $class (reverse $meta->linearized_isa) {
         my $other_meta = $meta->initialize($class);
 

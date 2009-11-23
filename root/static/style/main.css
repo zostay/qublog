@@ -42,6 +42,10 @@ label, input.text, input.password, textarea, select {
     display: block;
 }
 
+label span.required {
+    color: #f33;
+}
+
 label.checkbox {
     display: inline;
 }

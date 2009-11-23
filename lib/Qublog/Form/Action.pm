@@ -117,6 +117,7 @@ sub _build_controls {
                 control => $control,
             );
             push @$features, $feature;
+            push @{ $control->features }, $feature;
         }
 
         $controls{ $meta_control->name } = $control;
@@ -151,7 +152,6 @@ sub stash {
 
 sub unstash {
     my ($self, $moniker) = @_;
-    $self->clear;
 
     my $stash = $self->form_factory->unstash($moniker);
     return unless defined $stash;
@@ -168,6 +168,7 @@ sub unstash {
         my $control = $controls->{$control_name};
         my $keys    = $control->stashable_keys;
         for my $key (@$keys) {
+            next unless exists $state->{$key};
             eval { $control->$key($state->{$key}) };
             #warn "unstash partially failed: $@" if $@;
         }
@@ -271,26 +272,36 @@ sub check {
     $self->gather_results;
 
     my @errors = $self->error_messages;
-    $self->is_valid(@errors == 0);
+    $self->result->is_valid(@errors == 0);
+}
+
+sub set_attributes_from_controls {
+    my $self = shift;
+    my $meta = $self->meta;
+
+    my $controls = $self->controls;
+    while (my ($name, $control) = each %$controls) {
+        my $attribute = $meta->find_attribute_by_name($name);
+        die "attribute for control $name not found on $self" 
+            unless defined $attribute;
+        $control->set_attribute_value($self, $attribute);
+    }
 }
 
 sub process {
     my $self = shift;
     return unless $self->is_valid;
 
+    $self->set_attributes_from_controls;
+
     $self->_run_features('pre_process');
-
-    $self->gather_results;
-    return unless $self->is_success;
-
     $self->run;
-
     $self->_run_features('post_process');
 
     $self->gather_results;
 
     my @errors = $self->error_messages;
-    $self->is_success(@errors == 0);
+    $self->result->is_success(@errors == 0);
 }
 
 sub consume_and_clean_and_check_and_process {

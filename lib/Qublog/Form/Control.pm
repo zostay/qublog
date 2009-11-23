@@ -1,6 +1,8 @@
 package Qublog::Form::Control;
 use Moose::Role;
 
+use List::Util qw( first );
+
 =head1 NAME
 
 Qublog::Form::Control - high-level API for working with form controls
@@ -23,6 +25,19 @@ has name => (
     required  => 1,
 );
 
+=head2 feature
+
+This is the list of L<Qublog::Form::Feature::Role::Control> features associated with the control.
+
+=cut
+
+has features => (
+    is        => 'ro',
+    isa       => 'ArrayRef',
+    required  => 1,
+    default   => sub { [] },
+);
+
 =head2 stashable_keys
 
 This is the list of control keys that may be stashed.
@@ -37,5 +52,16 @@ has stashable_keys => (
     lazy      => 1,
     default   => sub { [] },
 );
+
+sub get_feature_by_name {
+    my ($self, $name) = @_;
+    return first { $_->name eq $name } @{ $self->features };
+}
+
+sub has_feature {
+    my ($self, $name) = @_;
+    return 1 if $self->get_feature_by_name($name);
+    return '';
+}
 
 1;

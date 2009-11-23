@@ -12,7 +12,7 @@ has tag_name => (
 has id => (
     is        => 'ro',
     isa       => 'Str',
-    required  => 1,
+    predicate => 'has_id',
 );
 
 has classes => (
@@ -69,6 +69,7 @@ sub render_content {
 
 sub render_id {
     my $self = shift;
+    return '' unless $self->has_id;
     return ' id="' . $self->id . '"';
 }
 

@@ -1,7 +1,28 @@
 package Qublog::Form::Feature;
 use Moose::Role;
 
+use Scalar::Util qw( blessed );
+
 requires qw( clean check pre_process post_process );
+
+has name => (
+    is        => 'ro',
+    isa       => 'Str',
+    required  => 1,
+    lazy      => 1,
+    default   => sub {
+        my $self = shift;
+        my $class_name = blessed $self;
+        unless ($class_name =~ s/^Qublog::Form::Feature::Control:://) {
+            $class_name =~ s/^Qublog::Form::Feature:://;
+        }
+        $class_name =~ s/(\p{Lu})/_\l$1/g;
+        $class_name =~ s/\W+/_/g;
+        $class_name =~ s/_+/_/g;
+        $class_name =~ s/^_//;
+        return lc $class_name;
+    },
+);
 
 has action => (
     is        => 'ro',

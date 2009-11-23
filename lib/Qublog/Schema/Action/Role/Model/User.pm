@@ -5,7 +5,7 @@ with qw( Qublog::Schema::Action::Role::Model );
 
 has '+result_source' => (
     lazy      => 1,
-    default   => sub { shift->schema->resultsource('User') },
+    default   => sub { shift->schema->source('User') },
 );
 
 1;

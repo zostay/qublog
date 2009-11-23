@@ -22,19 +22,39 @@ sub _return(&@) {
     return wantarray ? @filtered : join "\n", @filtered;
 }
 
+sub all_messages {
+    my $self = shift;
+    return _return { 1 } @{ $self->messages };
+}
+
 sub info_messages {
     my $self = shift;
-    return _return { not $_->is_tied_to_field and $_->type eq 'message' } 
-               @{ $self->messages };
+    return _return { $_->type eq 'info' } @{ $self->messages };
 }
 
 sub warning_messages {
     my $self = shift;
-    return _return { not $_->is_tied_to_field and $_->type eq 'warning' } \
-               @{ $self->messages };
+    return _return { $_->type eq 'warning' } @{ $self->messages };
 }
 
 sub error_messages {
+    my $self = shift;
+    return _return { $_->type eq 'error' } @{ $self->messages };
+}
+
+sub regular_info_messages {
+    my $self = shift;
+    return _return { not $_->is_tied_to_field and $_->type eq 'info' } 
+               @{ $self->messages };
+}
+
+sub regular_warning_messages {
+    my $self = shift;
+    return _return { not $_->is_tied_to_field and $_->type eq 'warning' }
+               @{ $self->messages };
+}
+
+sub regular_error_messages {
     my $self = shift;
     return _return { not $_->is_tied_to_field and $_->type eq 'error' } 
                @{ $self->messages };

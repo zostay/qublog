@@ -13,7 +13,7 @@ use Email::Valid;
 
 use Moose::Util::TypeConstraints;
 
-subtype 'Qublog::DateTime::TimeZone' => as class_type('DateTime::Timezone');
+subtype 'Qublog::DateTime::TimeZone' => as class_type('DateTime::TimeZone');
 
 coerce 'Qublog::DateTime::TimeZone' 
     => from 'Str'
@@ -31,7 +31,10 @@ has_control email => (
         trim       => 1,
         required   => 1,
         match_code => {
-            code    => sub { Email::Valid->address(shift) },
+            code    => sub { 
+                my $value = shift;
+                length($value) == 0 or Email::Valid->address($value);
+            },
             message => 'the %s you typed does not look right',
         },
     },

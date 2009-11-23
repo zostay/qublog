@@ -1,6 +1,8 @@
 package Qublog::Schema::Action::Role::Do::Store;
 use Moose::Role;
 
+with qw( Qublog::Schema::Action::Role::Do );
+
 #requires qw( find result_source );
 
 sub do {
@@ -8,10 +10,10 @@ sub do {
 
     my $object = $self->record;
     for my $column_name ($self->result_source->columns) {
-        next unless $self->meta->has_attribute($column_name);
+        my $attr = $self->meta->find_attribute_by_name($column_name);
+        next unless defined $attr;
 
-        my $attr = $self->meta->get_attribute($column_name);
-        if ($attr->does('Form::Field')) {
+        if ($attr->does('Qublog::Form::Action::Meta::Attribute::Control')) {
             my $new_value = $attr->get_value($self);
             $object->$column_name($new_value);
         }

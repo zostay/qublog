@@ -5,7 +5,7 @@ with qw( Qublog::Schema::Action::Role::Lookup );
 
 sub find {
     my $self = shift;
-    $self->record($self->resultset->new_result);
+    $self->record($self->resultset->new_result({}));
 }
 
 1;

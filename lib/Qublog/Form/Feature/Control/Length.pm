@@ -42,6 +42,8 @@ sub check_value {
     my $self  = shift;
     my $value = $self->control->current_value;
 
+    return if length($value) == 0;
+
     if ($self->has_minimum and length($value) < $self->minimum) {
         $self->control_error(
             "the %s must be at least @{[$self->minimum]} characters long"

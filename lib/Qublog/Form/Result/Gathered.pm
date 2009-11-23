@@ -2,7 +2,7 @@ package Qublog::Form::Result::Gathered;
 use Moose;
 
 use Scalar::Util qw( blessed refaddr );
-use List::MoreUtils qw( all );
+use List::MoreUtils qw( all any );
 
 with qw( Qublog::Form::Result );
 
@@ -53,22 +53,22 @@ sub clear_all {
 
 sub is_valid {
     my $self = shift;
-    return all { $_->is_valid } $self->results;
+    return all { not $_->is_validated or $_->is_valid } $self->results;
 }
 
 sub is_validated {
     my $self = shift;
-    return all { $_->is_validated } $self->results;
+    return any { $_->is_validated } $self->results;
 }
 
 sub is_success {
     my $self = shift;
-    return all { $_->is_success } $self->results;
+    return all { not $_->is_outcome_known or $_->is_success } $self->results;
 }
 
 sub is_outcome_known {
     my $self = shift;
-    return all { $_->is_outcome_known } $self->results;
+    return any { $_->is_outcome_known } $self->results;
 }
 
 sub messages {

@@ -1,7 +1,5 @@
 package Qublog::Schema::Action::User::Update;
-use Moose;
-
-use Qublog::Form::Processor;
+use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::Find);

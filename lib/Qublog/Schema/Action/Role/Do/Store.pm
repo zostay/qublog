@@ -13,7 +13,7 @@ sub do {
         my $attr = $self->meta->find_attribute_by_name($column_name);
         next unless defined $attr;
 
-        if ($attr->does('Qublog::Form::Action::Meta::Attribute::Control')) {
+        if ($attr->does('Form::Factory::Action::Meta::Attribute::Control')) {
             my $new_value = $attr->get_value($self);
             $object->$column_name($new_value);
         }

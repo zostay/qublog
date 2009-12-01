@@ -10,7 +10,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );
 
 use Qublog::DateTime;
-use Qublog::Form::Factory::HTML;
+use Form::Factory;
 
 # Set flags and add plugins for the application
 #
@@ -70,29 +70,29 @@ time on projects in the same place.
 
 =head1 ATTRIBUTES
 
-=head2 form_factory
+=head2 form_interface
 
 This is the object used to render and process forms.
 
 =cut
 
-has _form_factory => (
+has _form_interface => (
     is        => 'ro',
-    isa       => 'Qublog::Form::Factory::HTML',
+    does      => 'Form::Factory::Interface',
     required  => 1,
     lazy      => 1,
     default   => sub { 
-        Qublog::Form::Factory::HTML->new(
+        Form::Factory->new_interface(HTML => {
             renderer => sub { Template::Declare::Tags::outs_raw(@_) },
             consumer => sub { $_[0]->params },
-        );
+        });
     }
 );
 
-sub form_factory {
+sub form_interface {
     my $c = shift;
-    $c->_form_factory->stasher->stash_hash($c->session);
-    return $c->_form_factory;
+    $c->_form_interface->stasher->stash_hash($c->session);
+    return $c->_form_interface;
 }
 
 =head1 METHODS
@@ -121,7 +121,7 @@ Helper to get form objects to rendering and processing actions.
             $args{schema} = $c->model('DB')->schema;
         }
 
-        $c->form_factory->new_action($class_name => \%args);
+        $c->form_interface->new_action($class_name => \%args);
     }
 }
 

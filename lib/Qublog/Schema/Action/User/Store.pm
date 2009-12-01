@@ -1,7 +1,5 @@
 package Qublog::Schema::Action::User::Store;
-use Moose;
-
-use Qublog::Form::Processor;
+use Form::Factory::Processor;
 
 with qw(
     Qublog::Schema::Action::Role::Model::User
@@ -49,7 +47,7 @@ has_control time_zone => (
     options   => {
         available_choices => deferred_value {
             [ 
-                map { Qublog::Form::Control::Choice->new($_) }
+                map { Form::Factory::Control::Choice->new($_) }
                       DateTime::TimeZone->all_names
             ]
         },

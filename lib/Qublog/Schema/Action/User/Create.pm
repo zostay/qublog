@@ -1,8 +1,5 @@
 package Qublog::Schema::Action::User::Create;
-use Moose;
-
-use Qublog::Form::Processor;
-use Qublog::Form::Control::Choice;
+use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::New );

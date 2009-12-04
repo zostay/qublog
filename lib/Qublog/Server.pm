@@ -106,6 +106,7 @@ Helper to get form objects to rendering and processing actions.
 {
     my %action_form_type_prefixes = (
         schema => 'Qublog::Schema::Action::',
+        server => 'Qublog::Server::Action::',
     );
 
     sub action_form {
@@ -119,6 +120,9 @@ Helper to get form objects to rendering and processing actions.
         my %args;
         if ($type eq 'schema') {
             $args{schema} = $c->model('DB')->schema;
+        }
+        elsif ($type eq 'server') {
+            $args{c} = $c;
         }
 
         $c->form_interface->new_action($class_name => \%args);

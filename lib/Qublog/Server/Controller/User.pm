@@ -86,45 +86,27 @@ Present a login form to the user and/or process such a login.
 sub login :Local {
     my ($self, $c) = @_;
 
-    if ($c->request->params->{submit} eq 'Login') {
-        my $username    = $c->request->params->{username};
-        my $password    = $c->request->params->{password};
-        my $next_action = $c->request->params->{next_action} || '/journal';
+    my $action = $c->action_form(server => 'Login');
+    $action->unstash('login');
+    my $submitted = $action->consume_control(button => {
+        name  => 'submit',
+        label => 'Login',
+    }, request => $c->request);
 
-        if ($username and $password) {
-            if ($c->authenticate({ name => $username, password => $password })) {
-                push @{ $c->flash->{messages} }, {
-                    type    => 'info',
-                    message => sprintf('welcome back, %s', $username),
-                };
+    if ($submitted->is_true) {
+        $action->consume_and_clean_and_check_and_process( request => $c->request );
 
-                $c->response->redirect($c->uri_for($next_action));
-            }
-            else {
-                push @{ $c->flash->{messages} }, {
-                    type    => 'error',
-                    message => 'no account matches that username and password',
-                };
-            }
+        if ($action->is_valid and $action->is_success) {
+            $c->response->redirect($c->uri_for(
+                $action->globals->{next_action} || '/journal'
+            ));
         }
-
-        if (not $username) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                field   => 'username',
-                message => 'please enter a username',
-            };
-        }        
-
-        if (not $password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                field   => 'password',
-                message => 'please enter a password',
-            };
+        else {
+            $action->stash('login');
         }
     }
 
+    $c->stash->{action}   = $action;
     $c->stash->{template} = '/user/login';
 }
 
@@ -220,104 +202,6 @@ sub profile :Local {
 
     $c->stash->{user}     = $c->user->get_object;
     $c->stash->{template} = '/user/profile';
-}
-
-=head2 update
-
-Save the current user's profile information.
-
-=cut
-
-sub update :Local {
-    my ($self, $c) = @_;
-    my $user = $c->user->get_object;
-
-    my $email = $c->request->params->{email};
-    unless (Email::Valid->address($email)) {
-        push @{ $c->flash->{messages} }, {
-            type    => 'error',
-            message => 'the email address you typed does not look right',
-        };
-        return $c->detach('/user/profile');
-    }
-
-    my $time_zone = $c->request->params->{time_zone};
-    if (none { $_ eq $time_zone } DateTime::TimeZone->all_names) {
-        push @{ $c->flash->{time_zone} }, {
-            type    => 'error',
-            message => 'please select a time zone',
-        };
-        return $c->detach('/user/profile');
-    }
-
-    $time_zone = DateTime::TimeZone->new( name => $time_zone );
-
-    my $old_password     = $c->request->params->{old_password};
-    my $password         = $c->request->params->{password};
-    my $confirm_password = $c->request->params->{confirm_password};
-
-    if ($old_password or $password or $confirm_password) {
-        unless ($old_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your current password in the Old Password box too',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        unless ($password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your new password in the Password box too',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        unless ($confirm_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'please type your new password again in the Confirm Password box',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        unless (length($password) >= 6) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'your password must be at least 6 characters long',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        unless ($user->check_password($old_password)) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'sorry, the password you gave does not match your current password',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        unless ($password eq $confirm_password) {
-            push @{ $c->flash->{messages} }, {
-                type    => 'error',
-                message => 'the new passwords you entered do not match, please try again',
-            };
-            return $c->detach('/user/profile');
-        }
-
-        $user->change_password($password);
-    }
-
-    $user->email($email);
-    $user->time_zone($time_zone);
-    $user->update;
-
-    push @{ $c->flash->{messages} }, {
-        type    => 'info',
-        message => 'updated your profile',
-    };
-
-    return $c->response->redirect('/user/profile');
 }
 
 =head2 new

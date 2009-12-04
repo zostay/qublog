@@ -35,35 +35,16 @@ template 'user/login' => sub {
     page {
         div { { class is 'login-form' }
             form { { action is '/user/login', method is 'POST' }
-                label { attr { for => 'username' } 'Login name: ' };
-                input {
-                    type is 'text',
-                    class is 'text',
-                    name is 'username',
-                    value is $c->request->params->{username} || '',
-                };
-
-                label { attr { for => 'password' } 'Password:' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    name is 'password',
-                };
+                my $action = $c->stash->{action};
+                $action->stash('register');
+                $action->render;
+                $action->results->clear_all;
 
                 div { { class is 'submit' }
-                    input {
-                        type is 'hidden',
-                        class is 'submit',
-                        name is 'next_action',
-                        value is '/journal',
-                    };
-
-                    input {
-                        type is 'submit',
-                        class is 'submit',
-                        name is 'submit',
-                        value is 'Login',
-                    };
+                    $action->render_control(button => {
+                        name  => 'submit',
+                        label => 'Login',
+                    });
                 };
             };
         };

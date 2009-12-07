@@ -24,6 +24,15 @@ has_control old_password => (
     },
 );
 
+after do => sub {
+    my $self = shift;
+
+    return unless $self->is_success;
+
+    $self->record->change_password($self->new_password);
+    $self->record->update;
+};
+
 override success_message => sub {
     return 'updated your profile';
 };

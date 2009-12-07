@@ -6,6 +6,7 @@ with qw( Qublog::Schema::Action::Role::Lookup::New );
 
 has_control name => (
     placement => 10,
+    traits    => [ 'Model::Column' ],
     control   => 'text',
     options   => {
         label => 'Login Name',
@@ -23,11 +24,12 @@ has_control name => (
     },
 );
 
-has_control password => (
-    control => 'value',
-    options => {
-        value => '*',
-    },
+has password => (
+    is        => 'ro',
+    isa       => 'Str',
+    required  => 1,
+    default   => '*',
+    traits    => [ 'Model::Column' ],
 );
 
 has_checker user => sub {

@@ -7,15 +7,22 @@ sub do {
     my $self = shift;
 
     my $object = $self->record;
-    for my $column_name ($self->result_source->columns) {
-        next unless $self->meta->has_attribute($column_name);
+    my $result_source = $self->result_source;
 
-        my $attr = $self->meta->get_attribute($column_name);
-        if ($attr->does('Form::Field')) {
+    for my $attr ($self->meta->get_all_attributes) {
+        if ($attr->does('Qublog::Schema::Action::Meta::Attribute::Column')) {
             my $new_value = $attr->get_value($self);
-            $object->$column_name($new_value);
+
+            my $column_name = $attr->column_name;
+            if ($result_source->has_column($column_name)) {
+                $object->$column_name($new_value);
+            }
+            else {
+                die "$result_set has no column named $column_name";
+            }
         }
     }
+
     $object->insert;
 }
 

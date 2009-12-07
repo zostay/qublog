@@ -7,6 +7,7 @@ with qw( Qublog::Schema::Action::Role::Lookup::Find);
 has_control name => (
     placement => 10,
     control   => 'view',
+    traits    => [ 'Model::Column' ],
     options   => {
         label => 'Login name',
     },

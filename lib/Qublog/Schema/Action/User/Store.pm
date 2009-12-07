@@ -22,6 +22,7 @@ no Moose::Util::TypeConstraints;
 has_control email => (
     placement => 20,
     control   => 'text',
+    traits    => [ 'Model::Column' ],
     options   => {
         label => 'Email Address',
     },
@@ -44,6 +45,7 @@ has_control time_zone => (
 
     placement => 100,
     control   => 'select_one',
+    traits    => [ 'Model::Column' ],
     options   => {
         available_choices => deferred_value {
             [ 

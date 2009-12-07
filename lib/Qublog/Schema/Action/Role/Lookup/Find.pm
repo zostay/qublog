@@ -1,30 +1,38 @@
 package Qublog::Schema::Action::Role::Lookup::Find;
-use Moose;
+use Moose::Role;
+
+with qw( Qublog::Schema::Action::Role::Lookup );
 
 sub find {
     my $self = shift;
 
     my %lookup_values;
-    for my $column_name ($self->result_source->primary_columns) {
-        my $attr = $self->meta->get_attribute($column_name);
-        unless ($attr and $attr->does('Form::Field')) {
-            my $message = sprintf('unable to lookup a record because process %s for source %s does not have a widget for column %s', 
-                ref $self, $self->result_source->source_name, $column_name
-            );
-            die $message;
-        }
+    my $result_source = $self->result_source;
+    my %column_names = map { $_ => 1 } $result_source->primary_columns;
 
-        $lookup_values{ $column_name } = $attr->get_value($self);
+    for my $attr ($self->meta->get_all_attributes) {
+        next unless $attr->does('Qublog::Schema::Action::Meta::Attribute::Column');
+        next unless delete $column_names{ $attr->column_name };
+
+        $lookup_values{ $attr->column_name } = $attr->get_value($self);
     }
 
-    my $record = $self->result_source->resultset->find(\%lookup_values);
+    if (keys %column_names) {
+        my $message = sprintf('unable to lookup a record because process %s for source %s does not have a value for column(s) %s', 
+            ref $self, $self->result_source->source_name, 
+            join(', ', keys %column_names)
+        );
+        die $message;
+    }
+
+    my $record = $result_source->resultset->find(\%lookup_values);
     if ($record) {
         $self->record($record);
     }
     else {
-        $self->result->error({
+        $self->failure({
             message => sprintf('cannot find the %s you are looking for',
-                $self->result_source->source_name),
+                $result_source->source_name),
         });
     }
 }

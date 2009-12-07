@@ -1,6 +1,8 @@
 package Qublog::Schema::Action::Role::Do;
 use Moose::Role;
 
+use Qublog::Schema::Action::Meta::Attribute::Column;
+
 #requires qw( do schema success_message has_record );
 
 sub run {

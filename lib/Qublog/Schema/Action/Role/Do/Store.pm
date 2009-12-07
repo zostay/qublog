@@ -9,13 +9,19 @@ sub do {
     my $self = shift;
 
     my $object = $self->record;
-    for my $column_name ($self->result_source->columns) {
-        my $attr = $self->meta->find_attribute_by_name($column_name);
-        next unless defined $attr;
+    my $result_source = $self->result_source;
 
-        if ($attr->does('Form::Factory::Action::Meta::Attribute::Control')) {
+    for my $attr ($self->meta->get_all_attributes) {
+        if ($attr->does('Qublog::Schema::Action::Meta::Attribute::Column')) {
             my $new_value = $attr->get_value($self);
-            $object->$column_name($new_value);
+
+            my $column_name = $attr->column_name;
+            if ($result_source->has_column($column_name)) {
+                $object->$column_name($new_value);
+            }
+            else {
+                die "$result_source has no column named $column_name";
+            }
         }
     }
 

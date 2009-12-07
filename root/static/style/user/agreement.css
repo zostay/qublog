@@ -1,3 +1,16 @@
+body {
+    background-color: #eee;
+}
+
+div.terms {
+    background-color: white;
+    overflow: auto;
+    height: 300px;
+    border: 1px solid #999;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
 div.agreement {
     text-align: center;
 }

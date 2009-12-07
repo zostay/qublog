@@ -67,23 +67,19 @@ template 'user/agreement' => sub {
     $c->add_style( file => 'user/agreement' );
 
     page { { class is 'content' }
-        outs_raw typography(markdown($license));
+        div { { class is 'terms' }
+            outs_raw typography(markdown($license));
+        };
 
         div { { class is 'agreement' }
             form { { method is 'POST', action is '/user/check_agreement' }
-                input {
-                    type is 'submit',
-                    name is 'submit',
-                    class is 'submit',
-                    value is sprintf('I Agree to the %s.', ucfirst $c->config->{'Qublog::Terms'}{'title'}),
-                };
-
-                input {
-                    type is 'submit',
-                    name is 'cancel',
-                    class is 'cancel',
-                    value is 'I Do Not Agree.',
-                };
+                my $action = $c->action_form(schema => 'User::AgreeToTerms' => {
+                    record              => $c->user->get_object,
+                    agreed_to_terms_md5 => $c->current_terms_md5,
+                });
+                $action->meta->get_attribute('agreement')->options->{label} = 
+                    sprintf('I Agree to the %s.', ucfirst $c->config->{'Qublog::Terms'}{'title'});
+                $action->render;
             };
         };
     } $c;

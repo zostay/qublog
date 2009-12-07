@@ -63,9 +63,9 @@ sub check :Private {
     my $user = $c->user->get_object;
     my $agreed_to = $user->agreed_to_terms_md5;
     if (not $agreed_to or $agreed_to ne $current_terms) {
-        my $message = 'The %s has changed.';
-        $message = 'You must agree to the %s.';
-        $message .= ' Please read the following and select an action below to continue.';
+        my $message = 'the %s has changed.';
+        $message = 'you must agree to the %s.' if not $agreed_to;
+        $message .= ' Please read the following and select an action below to continue';
 
         push @{ $c->flash->{messages} }, {
             type    => 'warning',
@@ -142,21 +142,25 @@ sub check_agreement :Local {
 
     my $title = $c->config->{'Qublog::Terms'}{title};
 
-    my $agreement = $c->request->params->{submit};
-    my $expected  = sprintf('I Agree to the %s.', ucfirst $title);
-    if (not $agreement or $agreement ne $expected) {
+    my $action = $c->action_form(schema => 'User::AgreeToTerms', {
+        record              => $c->user->get_object,
+        agreed_to_terms_md5 => $c->current_terms_md5,
+    });
+
+    $action->consume_and_clean_and_check_and_process( request => $c->request );
+    if ($action->is_valid and not $action->is_success) {
         push @{ $c->flash->{messages} }, {
             type    => 'error',
             message => sprintf('logging you out. You may not use Qublog unless you agree to the %s', $title),
         };
         $c->detach('logout');
     }
-
-    my $user = $c->user->get_object;
-    $user->agreed_to_terms_md5( $c->current_terms_md5 );
-    $user->update;
-
-    $c->response->redirect('/journal');
+    elsif (not $action->is_valid) {
+        $c->response->redirect('/user/agreement');
+    }
+    else {
+        $c->response->redirect('/journal');
+    }
 }
 
 =head2 logout

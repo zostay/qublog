@@ -110,14 +110,14 @@ Helper to get form objects to rendering and processing actions.
     );
 
     sub action_form {
-        my ($c, $type, $name) = @_;
+        my ($c, $type, $name, $args) = @_;
         die "invalid action name $name" if $name =~ /[^\w:]/;
 
         my $class_name = $action_form_type_prefixes{$type};
         die "invalid action type $type" unless $class_name;
         $class_name .= $name;
 
-        my %args;
+        my %args = %{ $args || {} };
         if ($type eq 'schema') {
             $args{schema} = $c->model('DB')->schema;
         }

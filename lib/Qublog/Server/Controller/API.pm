@@ -38,7 +38,8 @@ sub model :Local :Args(3) {
             $c->response->redirect($action->globals->{return_to});
         }
         else {
-            $c->response->body(join "\n", @{ $action->messages });
+            my $messages = $action->all_messages;
+            $c->response->body($messages);
         }
     }
     else {
@@ -48,7 +49,9 @@ sub model :Local :Args(3) {
             $c->response->redirect($action->globals->{origin});
         }
         else {
-            $c->response->body(join "\n", @{ $action->messages });
+            my $messages = $action->all_messages;
+            $c->response->body($messages);
+            $action->results->clear_all;
         }
     }
 }

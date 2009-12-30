@@ -36,9 +36,10 @@ template 'user/login' => sub {
         div { { class is 'login-form' }
             form { { action is '/user/login', method is 'POST' }
                 my $action = $c->stash->{action};
-                $action->stash('register');
+                $action->unstash('login');
                 $action->render;
                 $action->results->clear_all;
+                $action->stash('login');
 
                 div { { class is 'submit' }
                     $action->render_control(button => {
@@ -118,60 +119,17 @@ template 'user/profile' => sub {
     page {
         div { { class is 'profile-form' }
 
-            form { { method is 'POST', action is '/user/update' }
-                label { attr { for => 'name' }; 'Name' };
-                div { { id is 'name' } $user->name };
-
-                label { attr { for => 'email' }; 'Email Address' };
-                input {
-                    type is 'text',
-                    class is 'text',
-                    id is 'email',
-                    name is 'email',
-                    value is $user->email,
-                };
-
-                label { attr { for => 'old_password' }; 'Old Password' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    id is 'old_password',
-                    name is 'old_password',
-                    value is '',
-                };
-
-                label { attr { for => 'password' }; 'New Password' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    id is 'password',
-                    name is 'password',
-                    value is '',
-                };
-
-                label { attr { for => 'confirm_password' }; 'Confirm Password' };
-                input {
-                    type is 'password',
-                    class is 'password',
-                    id is 'confirm_password',
-                    name is 'confirm_password',
-                    value is '',
-                };
-
-                label { attr { for => 'time_zone' }; 'Time Zone' };
-                select {
-                    { id is 'time_zone', name is 'time_zone' }
-
-                    for my $time_zone (DateTime::TimeZone->all_names) {
-                        option {
-                            if ($time_zone eq $user->time_zone->name) {
-                                { selected is 'selected' }
-                            }
-
-                            $time_zone;
-                        };
-                    }
-                };
+            form { { method is 'POST', action is '/api/model/user/update/profile' }
+                my $action = $c->action_form(schema => 'User::Update' => {
+                    record => $c->user->get_object,
+                });
+                $action->prefill_from_record;
+                $action->unstash('profile');
+                $action->globals->{origin}    = $c->request->uri;
+                $action->globals->{return_to} = $c->request->uri;
+                $action->render;
+                $action->results->clear_all;
+                $action->stash('profile');
 
                 div { { class is 'submit' }
                     input {
@@ -181,7 +139,6 @@ template 'user/profile' => sub {
                     };
                 };
             };
-
         };
     } $c;
 };
@@ -208,9 +165,9 @@ template 'user/register' => sub {
                 $action->unstash('register');
                 $action->globals->{origin}    = $c->request->uri;
                 $action->globals->{return_to} = $c->uri_for('/user/login');
-                $action->stash('register');
                 $action->render;
                 $action->results->clear_all;
+                $action->stash('register');
 
                 div { { class is 'submit' }
                     $action->render_control(button => {

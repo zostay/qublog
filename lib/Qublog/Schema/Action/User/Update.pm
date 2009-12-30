@@ -6,10 +6,15 @@ with qw( Qublog::Schema::Action::Role::Lookup::Find);
 
 has_control name => (
     placement => 10,
-    control   => 'view',
+    control   => 'value',
     traits    => [ 'Model::Column' ],
     options   => {
-        label => 'Login name',
+        label      => 'Login name',
+        is_visible => 1,
+        value      => '',
+    },
+    features  => {
+        fill_from_record => 1,
     },
 );
 
@@ -20,7 +25,8 @@ has_control old_password => (
         label => 'Old Password',
     },
     features  => {
-        required => 1,
+        required           => 1,
+        fill_on_assignment => 1,
     },
 );
 

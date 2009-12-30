@@ -12,6 +12,8 @@ use File::Slurp qw( read_file );
 use Qublog::DateTime;
 use Form::Factory;
 
+use Qublog::Schema::Feature::Control::FillFromRecord;
+
 # Set flags and add plugins for the application
 #
 #         -Debug: activates the debug mode for very useful log messages

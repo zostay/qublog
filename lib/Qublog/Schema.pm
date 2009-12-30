@@ -13,6 +13,22 @@ Qublog::Schema - Qublog database schema
 
 The L<DBIx::Class> schema for Qublog.
 
+=head1 METHODS
+
+=head2 _dumper_hook
+
+Less verbose output for L<Data::Dumper>.
+
+=cut
+
+sub _dumper_hook {
+    $_[0] = bless {
+        %{ $_[0] },
+        storage              => ''.$_[0]{storage},
+        source_registrations => ''.$_[0]{source_registrations},
+    }, ref($_[0]);
+}
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>

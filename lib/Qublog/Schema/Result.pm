@@ -20,7 +20,10 @@ Used as the L<Data::Dumper> freezer method.
 =cut
 
 sub _dumper_hook { 
-    $_[0] = bless { %{ $_[0] }, _source_handle => undef, }, ref($_[0]); 
+    $_[0] = bless { 
+        %{ $_[0] }, 
+        _source_handle => undef, 
+    }, ref($_[0]); 
 } 
 
 =head1 AUTHOR

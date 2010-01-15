@@ -4,6 +4,15 @@ use Form::Factory::Processor;
 extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::New );
 
+use_feature require_none_or_all => {
+    groups => {
+        password => [ qw(
+            new_password
+            confirm_password
+        ) ],
+    },
+};
+
 has_control name => (
     placement => 10,
     traits    => [ 'Model::Column' ],
@@ -12,6 +21,7 @@ has_control name => (
         label => 'Login Name',
     },
     features  => {
+        fill_on_assignment => 1,
         trim        => 1,
         required    => 1,
         length      => {
@@ -30,6 +40,19 @@ has password => (
     required  => 1,
     default   => '*',
     traits    => [ 'Model::Column' ],
+);
+
+has_control '+new_password' => (
+    features  => {
+        required => {},
+    },
+);
+
+has_control '+confirm_password' => (
+    features  => {
+        required => {},
+    },
+
 );
 
 has_checker user => sub {

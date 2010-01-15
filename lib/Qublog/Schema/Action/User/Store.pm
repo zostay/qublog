@@ -17,6 +17,10 @@ coerce 'Qublog::DateTime::TimeZone'
     => from 'Str'
     => via { DateTime::TimeZone->new( name => $_ ) };
 
+coerce 'Str'
+    => from 'DateTime::TimeZone',
+    => via { $_->name };
+
 no Moose::Util::TypeConstraints;
 
 has_control email => (
@@ -27,6 +31,7 @@ has_control email => (
         label => 'Email Address',
     },
     features  => {
+        fill_on_assignment => 1,
         trim             => 1,
         required         => 1,
         match_code       => {
@@ -55,6 +60,7 @@ has_control time_zone => (
         },
     },
     features  => {
+        fill_on_assignment      => 1,
         required                => 1,
         match_available_choices => 1,
     },
@@ -64,7 +70,6 @@ has_control new_password => (
     placement => 50,
     control   => 'password',
     features => {
-        required => 1,
         length   => {
             minimum => 6,
         },
@@ -74,9 +79,6 @@ has_control new_password => (
 has_control confirm_password => (
     placement => 60,
     control   => 'password',
-    features => {
-        required => 1,
-    },
 );
 
 has_checker password_and_confirmation => sub {

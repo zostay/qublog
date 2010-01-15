@@ -4,6 +4,31 @@ use Form::Factory::Processor;
 extends qw( Qublog::Schema::Action::User::Store );
 with qw( Qublog::Schema::Action::Role::Lookup::Find);
 
+use_feature require_none_or_all => {
+    groups => {
+        password => [ qw(
+            old_password
+            new_password
+            confirm_password
+        ) ],
+    },
+};
+
+has_control id => (
+    placement => 10,
+    control   => 'value',
+    traits    => [ 'Model::Column' ],
+
+    options   => {
+        value => 0,
+    },
+    trigger   => sub { 
+        my ($self, $id) = @_;
+        $self->find;
+        $self->controls->{id}->value($id);
+    },
+);
+
 has_control name => (
     placement => 10,
     control   => 'value',
@@ -22,7 +47,6 @@ has_control old_password => (
         label => 'Old Password',
     },
     features  => {
-        required           => 1,
         fill_on_assignment => 1,
     },
 );

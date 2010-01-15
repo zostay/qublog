@@ -27,7 +27,6 @@ has_control email => (
         label => 'Email Address',
     },
     features  => {
-        fill_from_record => 1,
         trim             => 1,
         required         => 1,
         match_code       => {
@@ -57,7 +56,6 @@ has_control time_zone => (
     },
     features  => {
         required                => 1,
-        fill_from_record        => 1,
         match_available_choices => 1,
     },
 );

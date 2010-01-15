@@ -9,7 +9,6 @@ has record => (
     is        => 'rw',
     isa       => 'DBIx::Class::Row',
     predicate => 'has_record',
-    trigger   => sub { shift->prefill_from_record },
 );
 
 sub prefill_from_record {
@@ -28,7 +27,7 @@ sub prefill_from_record {
             # HACK This is an ugly kludge, but it works for the time being
             $value = $value->name if blessed $value and $value->isa('DateTime::TimeZone');
 
-            $attr->set_value($self, $value);
+            $self->controls->{ $attr->name }->current_value($value);
         }
     }
 };

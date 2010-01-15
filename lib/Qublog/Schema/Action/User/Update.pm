@@ -13,9 +13,6 @@ has_control name => (
         is_visible => 1,
         value      => '',
     },
-    features  => {
-        fill_from_record => 1,
-    },
 );
 
 has_control old_password => (

@@ -121,6 +121,7 @@ template 'user/profile' => sub {
 
             form { { method is 'POST', action is '/api/model/user/update/profile' }
                 my $action = $c->action_form(schema => 'User::Update' => {
+                    id     => $c->user->get_object->id,
                     record => $c->user->get_object,
                 });
                 $action->prefill_from_record;

@@ -8,6 +8,8 @@ with qw( Qublog::Schema::Action::Role::Do );
 sub do {
     my $self = shift;
 
+    die "no record has been loaded" unless $self->has_record;
+
     my $object = $self->record;
     my $result_source = $self->result_source;
 

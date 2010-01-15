@@ -30,10 +30,10 @@ sub find {
         $self->record($record);
     }
     else {
-        $self->failure({
-            message => sprintf('cannot find the %s you are looking for',
-                $result_source->source_name),
-        });
+        $self->failure(
+            sprintf('cannot find the %s you are looking for',
+                $result_source->source_name)
+        );
     }
 }
 

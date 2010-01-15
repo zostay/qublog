@@ -10,7 +10,7 @@ sub run {
 
     $self->schema->txn_do(sub {
         $self->find unless $self->has_record;
-        $self->do;
+        $self->do   unless $self->is_failure;
     });
 
     if ($self->is_success) {

@@ -96,6 +96,8 @@ sub login :Local {
     if ($submitted->is_true) {
         $action->consume_and_clean_and_check_and_process( request => $c->request );
 
+        $c->result_to_messages($action->results);
+
         if ($action->is_valid and $action->is_success) {
             $c->response->redirect($c->uri_for(
                 $action->globals->{next_action} || '/journal'

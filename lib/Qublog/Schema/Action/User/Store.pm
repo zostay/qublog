@@ -87,7 +87,7 @@ has_checker password_and_confirmation => sub {
     my $new_password     = $self->controls->{new_password}->current_value;
     my $confirm_password = $self->controls->{confirm_password}->current_value;
 
-    next unless $new_password and $confirm_password;
+    return unless $new_password and $confirm_password;
 
     if ($new_password ne $confirm_password) {
         $self->result->field_error(

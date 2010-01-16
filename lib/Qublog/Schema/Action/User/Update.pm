@@ -53,6 +53,20 @@ has_control old_password => (
     },
 );
 
+has_checker correct_old_password => sub {
+    my $self = shift;
+
+    return unless $self->controls->{old_password}->has_current_value;
+
+    my $password = $self->controls->{old_password}->current_value;
+    unless ($self->record->check_password($password)) {
+        $self->result->field_error(
+            old_password => 'Old password is not correct.'
+        );
+        $self->result->is_valid(0);
+    }
+};
+
 after do => sub {
     my $self = shift;
 

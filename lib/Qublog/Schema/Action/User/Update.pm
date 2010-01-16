@@ -14,6 +14,8 @@ use_feature require_none_or_all => {
     },
 };
 
+use_feature 'automatic_lookup';
+
 has_control id => (
     placement => 10,
     control   => 'value',

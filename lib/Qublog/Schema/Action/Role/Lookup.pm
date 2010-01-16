@@ -3,7 +3,9 @@ use Moose::Role;
 
 use Scalar::Util qw( blessed );
 
-requires qw( find );
+use Qublog::Schema::Feature::AutomaticLookup;
+
+requires qw( can_find find );
 
 has record => (
     is        => 'rw',

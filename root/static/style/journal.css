@@ -6,25 +6,23 @@
     right: 15px;
 }
 
-#goto_date div.argument-date {
-    float: left;
-    clear: none;
+#goto_date label#date-label {
+    display: none;
 }
 
-#goto_date label.argument-date {
-    width: auto;
-}
-
-#goto_date input.date {
+#goto_date input#date {
     width: 15em;
-}
-
-#goto_date div.submit_button {
     float: left;
     clear: none;
 }
 
-#goto_date input.button {
+/* TODO Show these */
+#goto_date ul#date-alerts {
+    display: none;
+}
+
+#goto_date input#submit {
+    display: inline;
     float: left;
     clear: none;
 }

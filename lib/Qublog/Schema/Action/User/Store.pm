@@ -9,20 +9,6 @@ with qw(
 use DateTime::TimeZone;
 use Email::Valid;
 
-use Moose::Util::TypeConstraints;
-
-subtype 'Qublog::DateTime::TimeZone' => as class_type('DateTime::TimeZone');
-
-coerce 'Qublog::DateTime::TimeZone' 
-    => from 'Str'
-    => via { DateTime::TimeZone->new( name => $_ ) };
-
-coerce 'Str'
-    => from 'DateTime::TimeZone',
-    => via { $_->name };
-
-no Moose::Util::TypeConstraints;
-
 has_control email => (
     placement => 20,
     control   => 'text',

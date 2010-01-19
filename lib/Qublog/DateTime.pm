@@ -70,6 +70,7 @@ sub human_formatter {
 
     my $df = DateTime::Format::Natural->new(
         time_zone => $tz,
+        format    => 'm/d/y',
     );
 
     $self->last_human_formatter($df);
@@ -89,6 +90,23 @@ sub parse_human_datetime {
     my ($self, $date_str, $tz) = @_;
     my $df = $self->human_formatter($tz);
     return $df->parse_datetime($date_str);
+}
+
+=head2 parse_human_date
+
+  my DateTime $date = Qublog::DateTime->parse_human_date('today', 'UTC');
+
+Given a string to parse and a time zone, parse the string into a date. Even though dates are parsed according to a time zone, they are returned with time zone set to the floating time zone.
+
+=cut
+
+sub parse_human_date {
+    my ($self, $date_str, $tz) = @_;
+    my $df = $self->human_formatter($tz);
+    my $dt = $df->parse_datetime($date_str);
+    $dt->truncate( to => 'day' );
+    $dt->set_time_zone('floating');
+    return $dt;
 }
 
 =head2 parse_human_time

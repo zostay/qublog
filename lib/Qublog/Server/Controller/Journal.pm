@@ -75,26 +75,20 @@ right corner of the journal.
 sub goto :Local {
     my ($self, $c) = @_;
 
-    my $date_str = $c->request->params->{date};
-    my $date     = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone);
+    my $action = $c->action_form(server => 'GotoJournalDate');
+    $action->unstash('journal-goto');
 
-    if ($date) {
-        $c->response->redirect(
-            $c->uri_for('/journal/day', $date_str)
-        );
-    }
+    $action->consume_and_clean_and_check_and_process( request => $c->request );
 
-    else {
-        push @{ $c->flash->{messages} }, {
-            type    => 'error',
-            field   => 'date',
-            message => 'that date could not be understood, try again',
-        };
+    $c->result_to_messages($action->results);
 
-        my $from_page = $c->request->params->{from_page} 
-                     || '/journal/day/today';
-        $c->response->redirect($c->uri_for($from_page))
-    }
+    return if $action->is_valid and $action->is_success;
+
+    $action->stash('journal-goto');
+
+    my $from_page = $action->globals->{from_page} 
+                    || '/journal/day/today';
+    $c->response->redirect($from_page)
 }
 
 =head2 day

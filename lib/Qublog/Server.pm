@@ -10,6 +10,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );
 
 use Qublog::DateTime;
+use Qublog::Types;
 use Form::Factory;
 
 # Set flags and add plugins for the application

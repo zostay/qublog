@@ -88,7 +88,7 @@
     width: auto;
 }
 
-.new_comment_entry input.task_entry {
+.new_comment_entry input#title {
     font-family: Optima, URW Palladio L;
     width: 30%;
 }
@@ -102,7 +102,11 @@
     background-position: 1px 1px;
 }
 
-.new_comment_entry textarea.comment {
+.new_comment_entry label#detail-label {
+    display: none;
+}
+
+.new_comment_entry textarea#detail {
     width: 100%;
     font-family: Optima, URW Palladio L;
     height: 5em;

@@ -94,10 +94,10 @@ $(document).ready(function() {
         .mouseout(function() {$('.links', this).css({ visibility: 'hidden' })})
         .find('.links').css({ visibility: 'hidden' });
 
-    $('input#new_task_entry')
+    $('input#title')
         .focus(function() { $(this).select() });
 
-    $('textarea#new_comment')
+    $('textarea#detail')
         .keypress(function(evt) {
             if (evt.keyCode == 13 && evt.shiftKey) {
                 $('#new_comment_entry-submit').click();
@@ -105,12 +105,12 @@ $(document).ready(function() {
             }
         });
 
-    if ($('input#new_task_entry').val()) {
-        $('textarea#new_comment').focus();
+    if ($('input#title').val()) {
+        $('textarea#detail').focus();
     }
 
     else {
-        $('input#new_task_entry').focus();
+        $('input#title').focus();
     }
 
     setInterval(updateActiveTimers, 5000); 

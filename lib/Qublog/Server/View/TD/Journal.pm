@@ -192,29 +192,24 @@ template 'journal/bits/new_comment_entry' => sub {
 
     # The create entry form
     div { { class is 'new_comment_entry' }
-        form { { action is '/compat/thingy/new', method is 'POST' }
-            label { attr { for => 'task_entry' } 'On' };
-            input {
-                type  is 'text',
-                class is 'text task_entry',
-                id is 'new_task_entry',
-                name  is 'task_entry',
-                value is $running_name,
-            };
-            textarea {
-                class is 'comment',
-                id is 'new_comment',
-                name is 'comment',
-            };
+        form { { method is 'POST', action is '/api/model/thingy/create/TODO' }
+            my $action = $c->action_form(schema => 'Thingy::Create' => {
+                title => $running_name,
+            });
+
+            # TODO Something better than "TODO" goes' here...
+            $action->unstash('TODO');
+            $action->globals->{origin}    = $c->request->uri;
+            $action->globals->{return_to} = $c->request->uri;
+            $action->render;
+            $action->results->clear_all;
+            $action->stash('TODO');
+
             div { { class is 'submit' }
-                input {
-                    type  is 'submit',
-                    class is 'submit',
-                    id    is 'new_comment_entry-submit',
-                    name  is 'submit',
-                    class is 'new_comment_entry_submit icon v-'.(lc $post_label).' o-thingy',
-                    value is $post_label,
-                };
+                $action->render_control(button => {
+                    name  => 'new_comment_entry-submit',
+                    label => $post_label,
+                });
             };
         };
     };

@@ -17,4 +17,10 @@ coerce 'Qublog::Date'
     => from 'Str'
     => via { Qublog::DateTime->parse_human_date($_, 'UTC') };
 
+subtype 'Qublog::Datetime' => as class_type('DateTime');
+
+coerce 'Qublog::Datetime'
+    => from 'Str'
+    => via { Qublog::DateTime->parse_human_datetime($_, 'UTC') };
+
 no Moose::Util::TypeConstraints;

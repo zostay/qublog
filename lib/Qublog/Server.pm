@@ -126,15 +126,15 @@ Helper to get form objects to rendering and processing actions.
             $args{c} = $c;
         }
 
-        # TODO This is cheating. I need a better way.
+        # Specially requested action attributes
         Class::MOP::load_class($class_name);
         my $meta = Class::MOP::class_of($class_name);
-        if ($meta->has_attribute('today')) {
-            $args{today} = $c->today;
-        }
-        if ($meta->has_attribute('owner')) {
-            $args{owner} = $c->user->get_object;
-        }
+        $args{time_zone} = $c->time_zone
+            if $meta->does_role('Qublog::Action::Role::WantsTimeZone');
+        $args{today} = $c->today
+            if $meta->does_role('Qublog::Action::Role::WantsToday');
+        $args{current_user} = $c->user->get_object
+            if $meta->does_role('Qublog::Action::Role::WantsCurrentUser');
 
         $c->form_interface->new_action($class_name => \%args);
     }

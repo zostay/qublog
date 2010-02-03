@@ -1,6 +1,11 @@
 package Qublog::Schema::Action::Thingy::Create;
 use Form::Factory::Processor;
 
+with qw( 
+    Qublog::Action::Role::WantsCurrentUser
+    Qublog::Action::Role::WantsToday 
+);
+
 use Qublog::Text::CommentParser;
 
 use List::Util qw( min );
@@ -47,18 +52,6 @@ has schema => (
     handles   => [ qw( resultset ) ],
 );
 
-has today => (
-    is        => 'ro',
-    isa       => 'DateTime',
-    required  => 1,
-);
-
-has owner => (
-    is        => 'ro',
-    isa       => 'Qublog::Schema::Result::User',
-    required  => 1,
-);
-
 has journal_timer => (
     is        => 'rw',
     isa       => 'Qublog::Schema::Result::JournalTimer',
@@ -87,7 +80,7 @@ sub _create_comment_stub {
         journal_timer => $self->journal_timer,
         created_on    => Qublog::DateTime->now,
         name          => '',
-        owner         => $self->owner,
+        owner         => $self->current_user,
     });
 
     $self->comment($comment);
@@ -134,7 +127,7 @@ sub _process_task {
 
     else {
         $task->name($self->detail);
-        $task->owner($self->owner);
+        $task->owner($self->current_user);
         $task->task_type('action');
         $task->status('open');
         $task->parent($self->schema('Task')->project_none);
@@ -179,7 +172,7 @@ sub _process_entry {
             $self->today));
         $entry->name($self->title);
         $entry->project($task);
-        $entry->owner($self->owner);
+        $entry->owner($self->current_user);
         $entry->insert;
 
         $timer   = $entry->start_timer;
@@ -238,7 +231,7 @@ sub _process_comment {
                 if $token->has_description;
             $arguments{status}   = $token->status if $token->has_status;
             $arguments{latest_comment} = $self->comment->id;
-            $arguments{owner}    = $self->owner;
+            $arguments{owner}    = $self->current_user;
 
             if ($task) {
                 $task->update(\%arguments);

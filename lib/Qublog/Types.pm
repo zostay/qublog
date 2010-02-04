@@ -2,25 +2,26 @@ package Qublog::Types;
 use Moose;
 
 use Qublog::DateTime;
+use DateTime::TimeZone;
 
 use Moose::Util::TypeConstraints;
 
-subtype 'Qublog::DateTime::TimeZone' => as class_type('DateTime::TimeZone');
+class_type('DateTime::TimeZone');
 
-coerce 'Qublog::DateTime::TimeZone'
+coerce 'DateTime::TimeZone'
     => from 'Str'
     => via { DateTime::TimeZone->new( name => $_ ) };
 
-subtype 'Qublog::Date' => as class_type('DateTime');
+subtype 'DateTime::Date' => as class_type('DateTime');
 
-coerce 'Qublog::Date'
+coerce 'DateTime::Date'
     => from 'Str'
-    => via { Qublog::DateTime->parse_human_date($_, 'UTC') };
+    => via { Qublog::DateTime->parse_human_date($_, 'floating') };
 
-subtype 'Qublog::Datetime' => as class_type('DateTime');
+subtype 'DateTime::DateTime' => as class_type('DateTime');
 
-coerce 'Qublog::Datetime'
+coerce 'DateTime::DateTime'
     => from 'Str'
-    => via { Qublog::DateTime->parse_human_datetime($_, 'UTC') };
+    => via { Qublog::DateTime->parse_human_datetime($_, 'floating') };
 
 no Moose::Util::TypeConstraints;

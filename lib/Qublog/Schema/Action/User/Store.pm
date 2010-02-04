@@ -31,7 +31,7 @@ has_control email => (
 );
 
 has_control time_zone => (
-    isa       => 'Qublog::DateTime::TimeZone',
+    isa       => 'DateTime::TimeZone',
     coerce    => 1,
 
     placement => 100,

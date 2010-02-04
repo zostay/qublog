@@ -7,11 +7,4 @@ has schema => (
     required  => 1,
 );
 
-has result_source => (
-    is        => 'rw',
-    isa       => 'DBIx::Class::ResultSource',
-    required  => 1,
-    handles   => [ qw( resultset ) ],
-);
-
 1;

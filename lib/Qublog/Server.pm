@@ -8,10 +8,11 @@ $Data::Dumper::Freezer = '_dumper_hook';
 
 use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );
+use Form::Factory;
 
 use Qublog::DateTime;
+use Qublog::Feature::Control::DateTime;
 use Qublog::Types;
-use Form::Factory;
 
 # Set flags and add plugins for the application
 #

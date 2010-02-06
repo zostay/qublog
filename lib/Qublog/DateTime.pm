@@ -65,10 +65,11 @@ Sets up the next human formatter to use to parse something. Takes a LDateTime::T
 =cut
 
 sub human_formatter {
-    my ($self, $tz) = @_;
+    my ($self, $tz, $context_date) = @_;
     $tz = $tz->name if blessed $tz and $tz->isa('DateTime::TimeZone');
 
     my $df = DateTime::Format::Natural->new(
+        (defined $context_date ? (datetime => $context_date) : ()),
         time_zone => $tz,
         format    => 'm/d/y',
     );
@@ -87,8 +88,8 @@ Given a string to parse and a time zone, parse the string.
 =cut
 
 sub parse_human_datetime {
-    my ($self, $date_str, $tz) = @_;
-    my $df = $self->human_formatter($tz);
+    my ($self, $date_str, $tz, $context_date) = @_;
+    my $df = $self->human_formatter($tz, $context_date);
     return $df->parse_datetime($date_str);
 }
 
@@ -101,8 +102,8 @@ Given a string to parse and a time zone, parse the string into a date. Even thou
 =cut
 
 sub parse_human_date {
-    my ($self, $date_str, $tz) = @_;
-    my $df = $self->human_formatter($tz);
+    my ($self, $date_str, $tz, $context_date) = @_;
+    my $df = $self->human_formatter($tz, $context_date);
     my $dt = $df->parse_datetime($date_str);
     $dt->truncate( to => 'day' );
     $dt->set_time_zone('floating');
@@ -121,9 +122,8 @@ Given a string to parse, a time zone, and a context date (assumed to be today if
 
 sub parse_human_time {
     my ($self, $time_str, $tz, $context_date) = @_;
-    $context_date ||= DateTime->now( time_zone => $tz );
-    my $df = $self->human_formatter($tz);
-    return $df->parse_datetime($context_date->ymd . ' ' . $time_str)
+    my $df = $self->human_formatter($tz, $context_date);
+    return $df->parse_datetime($time_str)
         ->set_time_zone($tz);
 }
 

@@ -20,7 +20,7 @@ requires 'Catalyst::View::Template::Declare';
 requires 'Crypt::Rijndael';
 requires 'DBIx::Class';
 requires 'DateTime';
-requires 'DateTime::Format::Natural';
+requires 'DateTime::Format::Natural' => 0.83;
 requires 'DateTime::Format::SQLite';
 requires 'DateTime::Span';
 requires 'DateTime::TimeZone';

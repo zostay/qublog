@@ -26,13 +26,25 @@ sub model :Local :Args(3) {
     my $name = join('::', map { class_name_from_name($_) } ($model, $do));
     my $action = $c->action_form(schema => $name);
     $action->unstash($moniker) if $moniker;
-    $action->consume_and_clean_and_check_and_process( request => $c->request );
 
-    $c->result_to_messages($action->results);
+    my $cancel = $action->consume_control(button => {
+        name  => 'cancel',
+        label => 'Cancel',
+    }, request => $c->request);
+    my $canceled = $cancel && $cancel->is_true;
 
-    if ($action->is_valid and $action->is_success) {
+    unless ($canceled) {
+        $action->consume_and_clean_and_check_and_process( request => $c->request );
+
+        $c->result_to_messages($action->results);
+    }
+
+    if ($canceled or ($action->is_valid and $action->is_success)) {
         if ($action->globals->{return_to}) {
             $c->response->redirect($action->globals->{return_to});
+        }
+        elsif ($canceled) {
+            $c->response->body('canceled');
         }
         else {
             my $messages = $action->all_messages;

@@ -287,45 +287,40 @@ template 'form/edit_comment' => sub {
     form { 
         { 
             method is 'POST', 
-            action is $c->uri_for('/compat/comment/update', $comment->id) 
+            action is '/api/model/comment/update/edit_comment-'. $comment->id,
         }
 
-        label { attr { for => 'created_on' }; 'Created on' };
-        input {
-            type is 'text',
-            name is 'created_on',
-            value is $fields->{created_on},
-        };
-
-        label { attr { for => 'name' }; 'Name' };
-        textarea { { name is 'name' } $fields->{name} };
-
-        input {
-            type is 'checkbox',
-            class is 'checkbox',
-            name is 'date_too',
-            value is 1,
-        };
-        label { attr { for => 'date_too', class => 'checkbox' }; 'Set the date too?' };
-
-        input {
-            type is 'hidden',
-            name is 'return_to',
-            value is $fields->{return_to},
-        };
+        my $action = $c->action_form(schema => 'Comment::Update' => {
+            record => $comment,
+            id     => $comment->id,
+        });
+        $action->prefill_from_record;
+        $action->unstash('edit_comment-' . $comment->id);
+        $action->globals->{origin}    = $c->request->uri_with({
+            form       => 'edit_comment',
+            form_place => 'Comment-'.$comment->id,
+            form_type  => 'replace',
+            comment    => $comment->id,
+        });
+        $action->globals->{return_to} = $c->request->uri_with({
+            form       => undef,
+            form_place => undef,
+            form_type  => undef,
+            comment    => undef,
+        });
+        $action->render;
+        $action->results->clear_all;
+        $action->stash('edit_comment-' . $comment->id);
 
         div { { class is 'submit' }
-            input {
-                type is 'submit',
-                name is 'submit',
-                value is 'Save',
-            };
-
-            input {
-                type is 'submit',
-                name is 'cancel',
-                value is 'Cancel',
-            };
+            $action->render_control(button => {
+                name  => 'submit',
+                label => 'Save',
+            });
+            $action->render_control(button => {
+                name  => 'cancel',
+                value => 'Cancel',
+            });
         };
     };
 };

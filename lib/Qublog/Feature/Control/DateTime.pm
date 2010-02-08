@@ -37,7 +37,7 @@ sub clean {
     # Use the action's original value as the context date if we're told to
     my $context_date;
     if ($self->use_attribute_as_context) {
-        my $attr = $action->find_attribute_by_name($control->name);
+        my $attr = $action->meta->find_attribute_by_name($control->name);
         $context_date = $attr->get_value($action);
     }
     

@@ -70,7 +70,7 @@ around do => sub {
         if ($token->isa(TASK)) {
             my $task;
             if (not $token->force_create and $token->has_nickname) {
-                $task = $self->resultset('Task')
+                $task = $self->schema->resultset('Task')
                     ->find_by_tag_name($token->nickname);
             }
 
@@ -100,7 +100,7 @@ around do => sub {
             }
             else {
                 $arguments{project} = $self->project;
-                $task = $self->resultset('Task')->create(\%arguments);
+                $task = $self->schema->resultset('Task')->create(\%arguments);
             }
 
             $task->add_tag( $token->new_nickname )
@@ -123,7 +123,7 @@ around do => sub {
         }
 
         elsif ($token->isa(TAG)) {
-            my $tag = $self->resultset('Tag')->find_or_create({ 
+            my $tag = $self->schema->resultset('Tag')->find_or_create({ 
                 name => $token->nickname 
             });
 

@@ -207,7 +207,7 @@
 .timer .info1 p,
 .timer .info2 p,
 .timer .info3 p {
-    margin-bottom: 0;
+    margin: 0;
     text-align: center;
 }
 

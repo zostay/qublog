@@ -29,6 +29,14 @@ p {
     margin: 0.8em;
 }
 
+b, strong {
+    font-weight: bold;
+}
+
+i, em {
+    font-style: italic;
+}
+
 li {
     margin: 0.25em 0 0.25em 2em;
 }

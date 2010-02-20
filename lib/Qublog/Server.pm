@@ -11,6 +11,7 @@ use Form::Factory;
 
 use Qublog::DateTime;
 use Qublog::Feature::Control::DateTime;
+use Qublog::Feature::Control::TimeZone;
 use Qublog::Types;
 
 # Set flags and add plugins for the application

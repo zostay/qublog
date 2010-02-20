@@ -47,6 +47,7 @@ has_control time_zone => (
     },
     features  => {
         fill_on_assignment      => 1,
+        time_zone               => 1,
         required                => 1,
         match_available_choices => 1,
     },

@@ -26,9 +26,6 @@ sub prefill_from_record {
 
             my $value = $record->$column_name;
 
-            # HACK This is an ugly kludge, but it works for the time being
-            $value = $value->name if blessed $value and $value->isa('DateTime::TimeZone');
-
             $attr->set_value($self, $value);
         }
     }

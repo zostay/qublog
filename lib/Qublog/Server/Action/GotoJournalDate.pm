@@ -1,6 +1,10 @@
 package Qublog::Server::Action::GotoJournalDate;
 use Form::Factory::Processor;
 
+with qw(
+    Qublog::Action::Role::WantsTimeZone
+);
+
 has c => (
     is        => 'ro',
     isa       => 'Qublog::Server',
@@ -8,6 +12,9 @@ has c => (
 );
 
 has_control date => (
+    is        => 'rw',
+    isa       => 'DateTime',
+
     control   => 'text',
     options   => {
         default_value => deferred_value { 
@@ -19,7 +26,13 @@ has_control date => (
         },
     },
     features  => {
-        required => 1,
+        fill_on_assignment => 1,
+        date_time => {
+            parse_method  => 'parse_human_date',
+            format_method => 'format_iso_date',
+        },
+        required  => 1,
+        trim      => 1,
     },
 );
 

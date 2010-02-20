@@ -18,6 +18,8 @@ has parser => (
 );
 
 has_control name => (
+    is        => 'rw',
+
     control   => 'full_text',
     traits    => [ 'Model::Column' ],
     options   => {

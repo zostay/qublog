@@ -182,6 +182,18 @@ sub format_human_time {
     }
 }
 
+=head2 format_iso_date
+
+Returns the YYYY-MM-DD format.
+
+=cut
+
+sub format_iso_date {
+    my ($self, $date) = shift;
+    $date ||= $self->now;
+    return $date->ymd;
+}
+
 =head2 format_js_datetime
 
   my $str = Qublog::DateTime->format_js_datetime($datetime);

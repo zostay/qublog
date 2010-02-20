@@ -28,9 +28,8 @@ sub prefill_from_record {
 
             # HACK This is an ugly kludge, but it works for the time being
             $value = $value->name if blessed $value and $value->isa('DateTime::TimeZone');
-            $value = "$value" if blessed $value;
 
-            $self->controls->{ $attr->name }->current_value($value);
+            $attr->set_value($self, $value);
         }
     }
 };

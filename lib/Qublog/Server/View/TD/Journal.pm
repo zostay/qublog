@@ -152,7 +152,9 @@ template 'journal/bits/list' => sub {
     # Show the Go to form
     div { { id is 'goto_date' }
         form { { action is '/journal/goto', method is 'POST' }
-            my $action = $c->action_form( server => 'GotoJournalDate' );
+            my $action = $c->action_form( server => 'GotoJournalDate', {
+                date => $day->datestamp,
+            });
             $action->globals->{from_page} = $c->request->uri;
             $action->unstash('journal-goto');
             $action->render;

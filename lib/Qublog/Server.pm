@@ -3,8 +3,7 @@ use Moose;
 
 use Catalyst::Runtime 5.80;
 
-use Data::Dumper;
-$Data::Dumper::Freezer = '_dumper_hook';
+use Qublog::Dumper;
 
 use Digest::MD5 qw( md5_hex );
 use File::Slurp qw( read_file );

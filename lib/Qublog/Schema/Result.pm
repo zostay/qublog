@@ -11,21 +11,6 @@ Qublog::Schema::Result - base class for Qublog result sources
 
 This is the base class for all the Qublgo result sources.
 
-=head1 METHODS
-
-=head2 _dumper_hook
-
-Used as the L<Data::Dumper> freezer method.
-
-=cut
-
-sub _dumper_hook { 
-    $_[0] = bless { 
-        %{ $_[0] }, 
-        _source_handle => undef, 
-    }, ref($_[0]); 
-} 
-
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>

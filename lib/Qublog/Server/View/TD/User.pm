@@ -125,12 +125,13 @@ template 'user/profile' => sub {
                     record => $c->user->get_object,
                 });
                 $action->prefill_from_record;
-                $action->unstash('profile');
-                $action->globals->{origin}    = $c->request->uri;
-                $action->globals->{return_to} = $c->request->uri;
-                $action->render;
-                $action->results->clear_all;
-                $action->stash('profile');
+                $action->setup_and_render(
+                    moniker => 'profile',
+                    globals => {
+                        origin    => $c->request->uri,
+                        return_to => $c->request->uri,
+                    },
+                );
 
                 div { { class is 'submit' }
                     input {
@@ -162,13 +163,14 @@ template 'user/register' => sub {
             form { { method is 'POST', action is '/api/model/user/create/register' }
                 
                 my $action = $c->action_form(schema => 'User::Create');
-                $action->controls->{time_zone}->default_value( $c->time_zone->name );
-                $action->unstash('register');
-                $action->globals->{origin}    = $c->request->uri;
-                $action->globals->{return_to} = $c->uri_for('/user/login');
-                $action->render;
-                $action->results->clear_all;
-                $action->stash('register');
+                $action->time_zone($c->time_zone);
+                $action->setup_and_render(
+                    moniker => 'register',
+                    globals => {
+                        origin    => $c->request->uri,
+                        return_to => $c->uri_for('/user/login'),
+                    },
+                );
 
                 div { { class is 'submit' }
                     $action->render_control(button => {

@@ -156,10 +156,9 @@ template 'journal/bits/list' => sub {
                 date => $day->datestamp,
             });
             $action->globals->{from_page} = $c->request->uri;
-            $action->unstash('journal-goto');
-            $action->render;
-            $action->results->clear_all;
-            $action->stash('journal-goto');
+            $action->setup_and_render(
+                moniker => 'journal-goto',
+            );
 
             $action->render_control(button => {
                 name  => 'submit',
@@ -200,12 +199,13 @@ template 'journal/bits/new_comment_entry' => sub {
             });
 
             # TODO Something better than "TODO" goes' here...
-            $action->unstash('TODO');
-            $action->globals->{origin}    = $c->request->uri;
-            $action->globals->{return_to} = $c->request->uri;
-            $action->render;
-            $action->results->clear_all;
-            $action->stash('TODO');
+            $action->setup_and_render(
+                moniker => 'TODO',
+                globals => {
+                    return_to => $c->request->uri,
+                    origin    => $c->request->uri,
+                },
+            );
 
             div { { class is 'submit' }
                 $action->render_control(button => {

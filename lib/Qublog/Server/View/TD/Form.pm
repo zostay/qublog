@@ -295,22 +295,23 @@ template 'form/edit_comment' => sub {
             id     => $comment->id,
         });
         $action->prefill_from_record;
-        $action->unstash('edit_comment-' . $comment->id);
-        $action->globals->{origin}    = $c->request->uri_with({
-            form       => 'edit_comment',
-            form_place => 'Comment-'.$comment->id,
-            form_type  => 'replace',
-            comment    => $comment->id,
-        });
-        $action->globals->{return_to} = $c->request->uri_with({
-            form       => undef,
-            form_place => undef,
-            form_type  => undef,
-            comment    => undef,
-        });
-        $action->render;
-        $action->results->clear_all;
-        $action->stash('edit_comment-' . $comment->id);
+        $action->setup_and_render(
+            moniker => 'edit_comment-' . $comment->id,
+            globals => {
+                origin => $c->request->uri_with({
+                    form       => 'edit_comment',
+                    form_place => 'Comment-'.$comment->id,
+                    form_type  => 'replace',
+                    comment    => $comment->id,
+                }),
+                return_to => $c->request->uri_with({
+                    form       => undef,
+                    form_place => undef,
+                    form_type  => undef,
+                    comment    => undef,
+                }),
+            },
+        );
 
         div { { class is 'submit' }
             $action->render_control(button => {

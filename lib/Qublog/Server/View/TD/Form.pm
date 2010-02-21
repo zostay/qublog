@@ -41,69 +41,49 @@ template 'form/change_start_stop' => sub {
     my ($self, $c) = @_;
     my $timer  = $c->stash->{journal_timer};
 
-    my $fields = $c->field_defaults({
-        which    => 'start',
-        new_time => '-', 
-        origin   => $c->request->uri,
-        date_too => 0,
-    });
-
-    if ($fields->{new_time} eq '-') {
-        $fields->{new_time} = Qublog::DateTime->format_human_time(
-            $fields->{which} eq 'start' ? $timer->start_time 
-          :                               $timer->stop_time,
-            $c->time_zone,
-        );
-    }
+    my $which = $c->request->params->{which} || 'start';
+    $which = 'start' unless $which eq 'start' or $which eq 'stop';
 
     form {
         {
             method is 'POST',
-            action is '/compat/journal_timer/change/' 
-                . $fields->{which} . '/' . $timer->id,
+            action is '/api/model/journal_timer/change_' . $which . '/'
+                . $which . '-' . $timer->id,
         }
 
-        input {
-            type is 'hidden',
-            name is 'origin',
-            value is $fields->{origin},
-        };
-
-        label { attr { for => 'new_time' } 'New time' };
-        input {
-            type is 'text',
-            name is 'new_time',
-            class is 'text',
-            value is $fields->{new_time},
-        };
-
-        input {
-            {
-                type is 'checkbox',
-                name is 'date_too',
-                class is 'checkbox',
-                value is 1,
-            }
-
-            if ($fields->{date_too}) {
-                checked is $fields->{date_too};
-            }
-
-            undef;
-        };
-        label { attr { for => 'date_too', class => 'checkbox' }; 'Change date too?' };
+        my $action_class = 'JournalTimer::Change' . ucfirst($which);
+        my $action = $c->action_form(schema => $action_class => {
+            record => $timer,
+            id     => $timer->id,
+        });
+        $action->prefill_from_record;
+        $action->setup_and_render(
+            moniker => $which . '-' . $timer->id,
+            globals => {
+                origin => $c->request->uri_with({
+                    form       => 'change_start_stop',
+                    form_place => 
+                        join('-', 'JournalTimer', $timer->id, $which),
+                    comment    => $timer->id,
+                }),
+                return_to => $c->request->uri_with({
+                    form       => undef,
+                    form_place => undef,
+                    form_type  => undef,
+                    comment    => undef,
+                }),
+            },
+        );
 
         div { { class is 'submit' }
-            input {
-                type is 'submit',
-                name is 'submit',
-                value is "Set \u$fields->{which} Time",
-            };
-            input {
-                type is 'submit',
-                name is 'cancel',
-                value is 'Cancel',
-            };
+            $action->render_control(button => {
+                name  => 'submit',
+                label => 'Save',
+            });
+            $action->render_control(button => {
+                name  => 'cancel',
+                label => 'Cancel',
+            });
         };
     };
 };

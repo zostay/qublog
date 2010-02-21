@@ -11,7 +11,7 @@
 }
 
 #goto_date input#date {
-    width: 15em;
+    width: 8em;
     float: left;
     clear: none;
 }

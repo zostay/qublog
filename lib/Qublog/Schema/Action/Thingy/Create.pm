@@ -12,29 +12,37 @@ use Qublog::Schema::Action::Comment::Update;
 use List::Util qw( min );
 
 has_control title => (
+    is        => 'rw',
+    default   => '',
+
     control   => 'text',
+
     features  => {
         fill_on_assignment => 1,
         trim     => 1,
         required => 1,
     },
+
     options   => {
         label => 'On',
     },
-    default   => '',
 );
 
 has_control detail => (
+    is        => 'rw',
+    default   => '',
+
     control   => 'full_text',
+
     features  => {
         fill_on_assignment => 1,
         trim     => 1,
         required => 1,
     },
+
     options   => {
         label => 'Comment',
     },
-    default   => '',
 );
 
 has schema => (

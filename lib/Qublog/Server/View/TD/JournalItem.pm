@@ -255,8 +255,10 @@ template 'journal_item/result/Comment' => sub {
             {
                 label   => 'Remove',
                 class   => 'icon v-delete o-comment',
-                action  => $c->uri_for('/compat/comment/delete', $self->id, {
+                action  => $c->uri_for('/api/model/comment/delete/remove_comment-'. $self->id, {
+                    id        => $self->id,
                     return_to => $c->request->uri,
+                    origin    => $c->request->uri,
                 }),
             },
         ],

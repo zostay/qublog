@@ -8,16 +8,18 @@ with qw(
 );
 
 has_control id => (
+    is        => 'rw',
+    isa       => 'Int',
+
     control   => 'value',
     traits    => [ 'Model::Column' ],
 
     options   => {
         value => 0,
     },
-    trigger   => sub {
-        my ($self, $id) = @_;
-        $self->find;
-        $self->controls->{id}->value($id);
+
+    features  => {
+        fill_on_assignment => { slot => 'value' },
     },
 );
 

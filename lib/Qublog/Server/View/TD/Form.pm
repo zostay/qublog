@@ -115,56 +115,40 @@ template 'form/edit_entry' => sub {
     form {
         {
             method is 'POST',
-            action is '/compat/journal_entry/update/' . $entry->id,
+            action is '/api/model/journal_entry/update/edit_journal-' . $entry->id,
         }
 
-        label { attr { for => 'name' }; 'Name' };
-        input {
-            type is 'text',
-            name is 'name',
-            value is $fields->{name},
-        };
-
-        label { attr { for => 'primary_link' }; 'Primary link' };
-        input {
-            type is 'text',
-            name is 'primary_link',
-            value is $fields->{primary_link},
-        };
-
-        label { attr { for => 'project' }; 'Project' };
-        select { { name is 'project' }
-
-            my $projects = $c->model('DB::Task')->search({
-                task_type => 'project',
-                status    => 'open',
-            }, { order_by => { -desc => 'created_on' } });
-
-            while (my $project = $projects->next) {
-                option { 
-                    { value is $project->id }
-
-                    if ($project->id == $fields->{project}) {
-                        selected is 'selected';
-                    }
-
-                    '#' . $project->tag . ': ' . $project->name
-                };
-            }
-        };
+        my $action = $c->action_form(schema => 'JournalEntry::Update' => {
+            record => $entry,
+        });
+        $action->prefill_from_record;
+        $action->setup_and_render(
+            moniker => 'edit_journal-' . $entry->id,
+            globals => {
+                origin => $c->request->uri_with({
+                    form          => 'edit_entry',
+                    form_place    => $c->request->params->{form_place},
+                    journal_entry => $entry->id,
+                }),
+                return_to => $c->request->uri_with({
+                    form          => undef,
+                    form_place    => undef,
+                    form_type     => undef,
+                    journal_entry => undef,
+                }),
+            },
+        );
 
         div { { class is 'submit' }
-            input { 
-                type is 'submit',
-                name is 'submit',
-                value is 'Save',
-            };
+            $action->render_control(button => {
+                name  => 'submit',
+                label => 'Save',
+            });
 
-            input {
-                type is 'submit',
-                name is 'cancel',
-                value is 'Cancel',
-            };
+            $action->render_control(button => {
+                name  => 'cancel',
+                label => 'Cancel',
+            });
         };
     };
 };

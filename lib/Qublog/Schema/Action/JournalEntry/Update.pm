@@ -74,6 +74,8 @@ has_control project => (
                 }, { order_by => { -desc => 'created_on' } })
             ]
         },
+
+        # TODO Conver this into a feature for object refs
         value_to_control => sub {
             my ($action, $control, $value) = @_;
             $value->id;

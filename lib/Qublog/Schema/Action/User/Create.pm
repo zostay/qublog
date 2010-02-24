@@ -17,11 +17,12 @@ has_control name => (
     placement => 10,
     traits    => [ 'Model::Column' ],
     control   => 'text',
+
     options   => {
         label => 'Login Name',
     },
+
     features  => {
-        fill_on_assignment => 1,
         trim        => 1,
         required    => 1,
         length      => {
@@ -37,6 +38,7 @@ has_control name => (
 has password => (
     is        => 'ro',
     isa       => 'Str',
+
     required  => 1,
     default   => '*',
     traits    => [ 'Model::Column' ],
@@ -52,7 +54,6 @@ has_control '+confirm_password' => (
     features  => {
         required => {},
     },
-
 );
 
 has_checker user => sub {

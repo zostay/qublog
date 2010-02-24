@@ -10,12 +10,16 @@ use DateTime::TimeZone;
 use Email::Valid;
 
 has_control email => (
+    is        => 'rw',
+
     placement => 20,
     control   => 'text',
     traits    => [ 'Model::Column' ],
+
     options   => {
         label => 'Email Address',
     },
+
     features  => {
         fill_on_assignment => 1,
         trim             => 1,
@@ -31,12 +35,14 @@ has_control email => (
 );
 
 has_control time_zone => (
+    is        => 'rw',
     isa       => 'DateTime::TimeZone',
     coerce    => 1,
 
     placement => 100,
     control   => 'select_one',
     traits    => [ 'Model::Column' ],
+
     options   => {
         available_choices => deferred_value {
             [ 
@@ -45,6 +51,7 @@ has_control time_zone => (
             ]
         },
     },
+
     features  => {
         fill_on_assignment      => 1,
         time_zone               => 1,
@@ -56,7 +63,7 @@ has_control time_zone => (
 has_control new_password => (
     placement => 50,
     control   => 'password',
-    features => {
+    features  => {
         length   => {
             minimum => 6,
         },

@@ -121,7 +121,6 @@ template 'user/profile' => sub {
 
             form { { method is 'POST', action is '/api/model/user/update/profile' }
                 my $action = $c->action_form(schema => 'User::Update' => {
-                    id     => $c->user->get_object->id,
                     record => $c->user->get_object,
                 });
                 $action->prefill_from_record;
@@ -134,11 +133,10 @@ template 'user/profile' => sub {
                 );
 
                 div { { class is 'submit' }
-                    input {
-                        type is 'submit',
-                        name is 'submit',
-                        value is 'Save Changes',
-                    };
+                    $action->render_control(button => {
+                        name  => 'submit',
+                        label => 'Save Changes',
+                    });
                 };
             };
         };

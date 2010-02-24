@@ -17,6 +17,9 @@ use_feature require_none_or_all => {
 use_feature 'automatic_lookup';
 
 has_control id => (
+    is        => 'rw',
+    isa       => 'Int',
+
     placement => 10,
     control   => 'value',
     traits    => [ 'Model::Column' ],
@@ -24,32 +27,38 @@ has_control id => (
     options   => {
         value => 0,
     },
-    trigger   => sub { 
-        my ($self, $id) = @_;
-        $self->find;
-        $self->controls->{id}->value($id);
+
+    features  => {
+        fill_on_assignment => { slot => 'value' }
     },
 );
 
 has_control name => (
+    is        => 'rw',
+
     placement => 10,
     control   => 'value',
     traits    => [ 'Model::Column' ],
+
     options   => {
         label      => 'Login name',
         is_visible => 1,
         value      => '',
     },
+
+    features  => {
+        fill_on_assignment => { slot => 'value' },
+    },
 );
 
 has_control old_password => (
+    is        => 'rw',
+
     placement => 40,
     control   => 'password',
+
     options   => {
         label => 'Old Password',
-    },
-    features  => {
-        fill_on_assignment => 1,
     },
 );
 

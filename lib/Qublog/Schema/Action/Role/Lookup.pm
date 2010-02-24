@@ -26,7 +26,12 @@ sub prefill_from_record {
 
             my $value = $record->$column_name;
 
-            $attr->set_value($self, $value);
+            if (defined $value) {
+                $attr->set_value($self, $value);
+            }
+            else {
+                $attr->clear_value($self, $value);
+            }
         }
     }
 };

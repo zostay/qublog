@@ -10,7 +10,7 @@ sub do {
 
     die "no record has been loaded" unless $self->has_record;
 
-    my $object = $self->record;
+    my $record = $self->record;
     my $result_source = $self->result_source;
 
     for my $attr ($self->meta->get_all_attributes) {
@@ -19,7 +19,7 @@ sub do {
 
             my $column_name = $attr->column_name;
             if ($result_source->has_column($column_name)) {
-                $object->$column_name($new_value);
+                $record->$column_name($new_value);
             }
             else {
                 die "$result_source has no column named $column_name";
@@ -27,7 +27,7 @@ sub do {
         }
     }
 
-    $object->update_or_insert;
+    $record->update_or_insert;
 }
 
 sub success_message {

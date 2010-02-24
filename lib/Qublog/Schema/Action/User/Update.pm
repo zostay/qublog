@@ -81,8 +81,10 @@ after do => sub {
 
     return unless $self->is_success;
 
-    $self->record->change_password($self->new_password);
-    $self->record->update;
+    if ($self->new_password) {
+        $self->record->change_password($self->new_password);
+        $self->record->update;
+    }
 };
 
 override success_message => sub {

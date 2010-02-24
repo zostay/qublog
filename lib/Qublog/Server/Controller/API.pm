@@ -25,6 +25,11 @@ sub model :Local :Args(3) {
 
     my $name = join('::', map { class_name_from_name($_) } ($model, $do));
     my $action = $c->action_form(schema => $name);
+
+    # Some extra special overrides
+    $action->globals->{$_} = $c->request->params->{$_}
+        for qw( return_to origin );
+
     $action->unstash($moniker) if $moniker;
 
     my $cancel = $action->consume_control(button => {

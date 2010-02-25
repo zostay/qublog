@@ -394,16 +394,23 @@ template 'journal_item/result/JournalTimer/stop' => sub {
         };
     }
 
-    push @stop_links, {
-        label   => 'List Actions',
-        class   => 'icon v-view a-list o-task',
-        tooltip => 'Show the list of tasks for this project.',
-        goto    => $c->request->uri_with({ 
-            form          => 'list_actions',
-            form_place    => $item->{name},
-            journal_entry => $journal_entry->id 
-        }),
-    } if $journal_entry->project;
+    if ($journal_entry->project) {
+        my $count = $c->model('DB::Task')->search({ 
+            project => $journal_entry->project->id,
+            status  => 'open',
+        })->count;
+
+        push @stop_links, {
+            label   => "List Tasks ($count)",
+            class   => 'icon v-view a-list o-task',
+            tooltip => 'Show the list of tasks for this project.',
+            goto    => $c->request->uri_with({ 
+                form          => 'list_actions',
+                form_place    => $item->{name},
+                journal_entry => $journal_entry->id 
+            }),
+        } if $count > 0;
+    }
 
     $item = {
         %$item,

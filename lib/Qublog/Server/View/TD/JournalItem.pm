@@ -373,8 +373,10 @@ template 'journal_item/result/JournalTimer/stop' => sub {
                 label   => 'Restart',
                 class   => 'icon v-start o-timer',
                 tooltip => 'Start a new timer for this entry.',
-                action  => $c->uri_for('/compat/timer/start', $journal_entry->id, {
+                action  => $c->uri_for('/api/model/journal_entry/start/start_timer-' . $journal_entry->id, {
+                    id        => $journal_entry->id,
                     return_to => $c->request->uri,
+                    origin    => $c->request->uri,
                 }),
             };
         }

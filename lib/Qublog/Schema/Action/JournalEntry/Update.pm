@@ -75,7 +75,7 @@ has_control project => (
             ]
         },
 
-        # TODO Conver this into a feature for object refs
+        # TODO Convert this into a feature for object refs
         value_to_control => sub {
             my ($action, $control, $value) = @_;
             $value->id;

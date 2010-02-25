@@ -1,16 +1,16 @@
-package Qublog::Schema::Action::JournalEntry::Start;
+package Qublog::Schema::Action::JournalEntry::Stop;
 use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::JournalEntry::Do );
 
 sub do {
     my $self = shift;
-    $self->record->start_timer;
+    $self->record->stop_timer;
 }
 
 sub success_message {
     my $self = shift;
-    return sprintf('started the timer for %s', $self->record->name);
+    return sprintf('stopped the timer for %s', $self->record->name);
 }
 
 1;

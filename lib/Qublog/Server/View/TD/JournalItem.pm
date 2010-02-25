@@ -386,8 +386,10 @@ template 'journal_item/result/JournalTimer/stop' => sub {
             label   => 'Stop',
             class   => 'icon v-stop o-timer',
             tooltip => 'Stop this timer.',
-            action  => $c->uri_for('/compat/timer/stop', $journal_entry->id, {
+            action  => $c->uri_for('/api/model/journal_entry/stop/stop_timer-' . $journal_entry->id, {
+                id        => $journal_entry->id,
                 return_to => $c->request->uri,
+                origin    => $c->request->uri,
             }),
         };
     }

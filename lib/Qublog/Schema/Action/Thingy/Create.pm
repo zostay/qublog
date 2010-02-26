@@ -167,6 +167,7 @@ sub _process_comment {
                 id            => $self->comment->id,
                 created_on    => $self->comment->created_on,
                 name          => $self->detail,
+                current_user  => $self->current_user,
             },
         );
     }
@@ -181,6 +182,7 @@ sub _process_comment {
                 created_on    => Qublog::DateTime->now,
                 name          => $self->detail,
                 owner         => $self->current_user,
+                current_user  => $self->current_user,
             },
         );
     }

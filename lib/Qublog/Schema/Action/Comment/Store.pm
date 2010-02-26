@@ -2,11 +2,13 @@ package Qublog::Schema::Action::Comment::Store;
 use Form::Factory::Processor;
 
 with qw(
+    Qublog::Action::Role::WantsCurrentUser
     Qublog::Schema::Action::Role::Model::Comment
     Qublog::Schema::Action::Role::Do::Store
 );
 
 use Qublog::Text::CommentParser;
+use List::Util qw( min );
 
 has parser => (
     is        => 'ro',

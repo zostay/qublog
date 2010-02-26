@@ -31,6 +31,7 @@ template 'journal/index' => sub {
     my ($self, $c) = @_;
 
     $c->add_style( file => 'journal' );
+    $c->add_style( file => 'tasks' );
     $c->add_script( file => 'journal' );
 
     my $day = $c->stash->{day};

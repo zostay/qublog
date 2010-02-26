@@ -189,6 +189,13 @@
     margin: 0 300px 0 90px;
 }
 
+.project-summary {
+    background-color: #fff;
+    border: 1px solid #999;
+    overflow-y: scroll;
+    height: 10em;
+}
+
 /*** Journal Timer Style ***/
 
 .timer .item-content,

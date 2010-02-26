@@ -4,6 +4,7 @@ use Moose;
 use Scalar::Util qw( blessed );
 
 extends qw( Data::Dumper Moose::Object );
+$Data::Dumper::Useperl = 1;
 
 our @EXPORT = qw( Dumper );
 
@@ -24,6 +25,7 @@ sub _dump {
         if ($val->isa('Qublog::Schema')) {
             local $val->{storage}              = ''.$val->{storage};
             local $val->{source_registrations} = ''.$val->{source_registrations};
+            local $val->{class_mappings}       = ''.$val->{class_mappings};
             return $self->SUPER::_dump($val, $name);
         }
     }
@@ -33,7 +35,6 @@ sub _dump {
 
 sub Dump {
     my $class = shift;
-    $class->Useperl(1);
     $class->SUPER::Dump(@_);
 }
 

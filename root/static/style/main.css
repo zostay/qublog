@@ -187,6 +187,25 @@ div#messages .error {
     background-color: #fcc;
 }
 
+div#mssages .info p {
+    background-image: url(/static/images/icons/information.png);
+}
+
+div#mssages .warning p {
+    background-image: url(/static/images/icons/exclamation.png);
+}
+
+div#messages .error p {
+    background-image: url(/static/images/icons/exclamation-red.png);
+}
+
+div#messages p {
+    margin: 0;
+    padding-left: 18px;
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+}
+
 ul.alerts {
     font-size: 0.8em;
 }

@@ -16,15 +16,7 @@ has_control date => (
     isa       => 'DateTime',
 
     control   => 'text',
-    options   => {
-        default_value => deferred_value { 
-            my $self = shift;
-            Qublog::DateTime->format_human_date(
-                $self->c->today, 
-                $self->c->time_zone
-            );
-        },
-    },
+
     features  => {
         fill_on_assignment => 1,
         date_time => {
@@ -56,7 +48,7 @@ sub run {
     my $self = shift;
 
     $self->c->response->redirect(
-        $self->c->uri_for('/journal/day', $self->date)
+        $self->c->uri_for('/journal/day', $self->date->ymd)
     );
 }
 

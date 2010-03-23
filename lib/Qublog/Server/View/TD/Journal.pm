@@ -156,6 +156,10 @@ template 'journal/bits/list' => sub {
             my $action = $c->action_form( server => 'GotoJournalDate', {
                 date => $day->datestamp,
             });
+
+            # TODO I HAVE TO DO THIS BECAUSE SOMETHING IS BROKEN!!!
+            $action->controls->{date}->default_value($day->datestamp->ymd);
+
             $action->globals->{from_page} = $c->request->uri;
             $action->setup_and_render(
                 moniker => 'journal-goto',

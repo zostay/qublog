@@ -137,6 +137,10 @@ Helper to get form objects to rendering and processing actions.
         $args{current_user} = $c->user->get_object
             if $meta->does_role('Qublog::Action::Role::WantsCurrentUser');
 
+#        # This forces me to make my actions secure
+#        die "will not run insecure actions"
+#            unless $meta->does_role('Qublog::Action::Role::Secure');
+
         $c->form_interface->new_action($class_name => \%args);
     }
 }

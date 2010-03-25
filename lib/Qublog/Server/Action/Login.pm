@@ -1,6 +1,8 @@
 package Qublog::Server::Action::Login;
 use Form::Factory::Processor;
 
+with qw( Qublog::Action::Role::Secure::AlwaysRun );
+
 has c => (
     is        => 'ro',
     isa       => 'Qublog::Server',

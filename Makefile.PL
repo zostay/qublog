@@ -28,7 +28,7 @@ requires 'Digest';
 requires 'Digest::MD5';
 requires 'Email::Valid';
 requires 'File::Slurp';
-requires 'Form::Factory' => 0.017;
+requires 'Form::Factory' => 0.018;
 requires 'Hash::Merge';
 requires 'HTML::Element';
 requires 'Lingua::EN::Inflect';

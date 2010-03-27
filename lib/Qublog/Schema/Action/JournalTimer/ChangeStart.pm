@@ -5,6 +5,8 @@ extends qw( Qublog::Schema::Action::JournalTimer::Store );
 with qw(
     Qublog::Schema::Action::Role::Lookup::Find
     Qublog::Action::Role::WantsTimeZone
+    Qublog::Action::Role::WantsCurrentUser
+    Qublog::Action::Role::Secure
 );
 
 has_control id => (
@@ -38,5 +40,14 @@ has_control start_time => (
         },
     },
 );
+
+sub may_run {
+    my $self = shift;
+
+    unless ($self->current_user->id == $self->record->journal_entry->owner->id) {
+        $self->error('you cannot change a timer belonging to a different user');
+        $self->is_valid(0);
+    }
+}
 
 1;

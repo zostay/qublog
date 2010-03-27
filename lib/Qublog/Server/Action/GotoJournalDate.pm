@@ -3,6 +3,8 @@ use Form::Factory::Processor;
 
 with qw(
     Qublog::Action::Role::WantsTimeZone
+    Qublog::Action::Role::WantsCurrentUser
+    Qublog::Action::Role::Secure::AlwaysRun
 );
 
 has c => (

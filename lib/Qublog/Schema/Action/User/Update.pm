@@ -2,7 +2,10 @@ package Qublog::Schema::Action::User::Update;
 use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::User::Store );
-with qw( Qublog::Schema::Action::Role::Lookup::Find);
+with qw( 
+    Qublog::Schema::Action::Role::Lookup::Find
+    Qublog::Action::Role::Secure
+);
 
 use_feature require_none_or_all => {
     groups => {
@@ -13,8 +16,6 @@ use_feature require_none_or_all => {
         ) ],
     },
 };
-
-use_feature 'automatic_lookup';
 
 has_control id => (
     is        => 'rw',
@@ -90,5 +91,14 @@ after do => sub {
 override success_message => sub {
     return 'updated your profile';
 };
+
+sub may_run {
+    my $self = shfit;
+
+    unless ($self->current_user->id == $self->record->id) {
+        $self->error('you cannot update a profile for different user');
+        $self->is_valid(0);
+    }
+}
 
 1;

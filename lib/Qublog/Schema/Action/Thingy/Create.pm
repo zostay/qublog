@@ -4,6 +4,7 @@ use Form::Factory::Processor;
 with qw( 
     Qublog::Action::Role::WantsCurrentUser
     Qublog::Action::Role::WantsToday 
+    Qublog::Action::Role::Secure
 );
 
 use Qublog::Schema::Action::Comment::Create;
@@ -263,6 +264,29 @@ sub run {
     }
 
     });
+}
+
+sub may_run {
+    my $self = shift;
+
+    if ($self->has_journal_timer) {
+        unless ($self->current_user->id == $self->journal_timer->journal_entry->owner->id) {
+            $self->error('you cannot work on a comment on a timer for a different user');
+            $self->is_valid(0);
+        }
+    }
+
+    if ($self->has_comment) {
+        unless ($self->current_user->id == $self->comment->owner->id) {
+            $self->error('you cannot modify a comment for a different user');
+            $self->is_valid(0);
+        }
+    }
+
+    unless ($self->current_user->id == $self->project->owner->id) {
+        $self->error('you cannot comment on a project for a different user');
+        $self->is_valid(0);
+    }
 }
 
 1;

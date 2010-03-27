@@ -5,6 +5,7 @@ with qw(
     Qublog::Schema::Action::Role::Model::Comment
     Qublog::Schema::Action::Role::Lookup::Find
     Qublog::Schema::Action::Role::Do::Delete
+    Qublog::Action::Role::Secure::CheckOwner
 );
 
 has_control id => (
@@ -18,5 +19,5 @@ has_control id => (
         fill_on_assignment => 1,
     },
 );
-    
+
 1;

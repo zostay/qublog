@@ -4,6 +4,7 @@ use Form::Factory::Processor;
 extends qw( Qublog::Schema::Action::JournalEntry::Store );
 with qw(
     Qublog::Schema::Action::Role::Lookup::Find
+    Qublog::Action::Role::Secure::CheckOwner
 );
 
 has_control id => (

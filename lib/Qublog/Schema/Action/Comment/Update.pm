@@ -5,6 +5,7 @@ extends qw( Qublog::Schema::Action::Comment::Store );
 with qw( 
     Qublog::Schema::Action::Role::Lookup::Find 
     Qublog::Action::Role::WantsTimeZone
+    Qublog::Action::Role::Secure::CheckOwner
 );
 
 has_control id => (

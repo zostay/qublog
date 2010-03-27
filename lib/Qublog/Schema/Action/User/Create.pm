@@ -2,7 +2,10 @@ package Qublog::Schema::Action::User::Create;
 use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::User::Store );
-with qw( Qublog::Schema::Action::Role::Lookup::New );
+with qw( 
+    Qublog::Schema::Action::Role::Lookup::New 
+    Qublog::Action::Role::Secure::AlwaysRun
+);
 
 use_feature require_none_or_all => {
     groups => {

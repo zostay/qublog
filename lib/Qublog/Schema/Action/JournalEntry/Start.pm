@@ -2,6 +2,7 @@ package Qublog::Schema::Action::JournalEntry::Start;
 use Form::Factory::Processor;
 
 extends qw( Qublog::Schema::Action::JournalEntry::Do );
+with    qw( Qublog::Action::Role::Secure::CheckOwner );
 
 sub do {
     my $self = shift;

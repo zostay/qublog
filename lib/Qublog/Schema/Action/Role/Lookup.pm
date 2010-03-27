@@ -1,9 +1,11 @@
 package Qublog::Schema::Action::Role::Lookup;
-use Moose::Role;
+use Form::Factory::Processor::Role;
 
 use Scalar::Util qw( blessed );
 
 use Qublog::Schema::Feature::AutomaticLookup;
+
+use_feature 'automatic_lookup';
 
 requires qw( can_find find );
 

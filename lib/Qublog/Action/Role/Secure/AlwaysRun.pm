@@ -3,6 +3,6 @@ use Form::Factory::Processor::Role;
 
 with qw( Qublog::Action::Role::Secure );
 
-sub may_run { 1 };
+sub may_run { }
 
 1;

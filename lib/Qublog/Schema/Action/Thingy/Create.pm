@@ -53,6 +53,12 @@ has schema => (
     handles   => [ qw( resultset ) ],
 );
 
+has journal_session => (
+    is        => 'rw',
+    isa       => 'Qublog::Schema::Result::JournalSession',
+    predicate => 'has_journal_session',
+);
+
 has journal_timer => (
     is        => 'rw',
     isa       => 'Qublog::Schema::Result::JournalTimer',
@@ -133,8 +139,7 @@ sub _process_entry {
         my $task = $schema->resultset('Task')->find_by_tag_name($nickname);
            $task = $schema->resultset('Task')->project_none unless $task;
 
-        $entry->journal_day($schema->resultset('JournalDay')->for_today(
-            $self->today));
+        $entry->journal_session($self->journal_session);
         $entry->name($self->title);
         $entry->project($task);
         $entry->owner($self->current_user);
@@ -176,14 +181,13 @@ sub _process_comment {
     else {
         $action = $self->form_interface->new_action(
             'Qublog::Schema::Action::Comment::Create' => {
-                schema        => $self->schema,
-                journal_day   => 
-                    $self->resultset('JournalDay')->for_today($self->today),
-                journal_timer => $self->journal_timer,
-                created_on    => Qublog::DateTime->now,
-                name          => $self->detail,
-                owner         => $self->current_user,
-                current_user  => $self->current_user,
+                schema          => $self->schema,
+                journal_session => $self->journal_session,
+                journal_timer   => $self->journal_timer,
+                created_on      => Qublog::DateTime->now,
+                name            => $self->detail,
+                owner           => $self->current_user,
+                current_user    => $self->current_user,
             },
         );
     }

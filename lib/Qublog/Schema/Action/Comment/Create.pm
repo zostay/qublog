@@ -38,13 +38,13 @@ has created_on => (
 after may_run => sub {
     my $self = shift;
 
-    my $journal_timer = $self->schema->source('JournalTimer')->find(
-        $self->controls->{journal_timer}->current_value,
+    my $journal_timer = $self->schema->resultset('JournalTimer')->find(
+        $self->journal_timer
     );
     return unless $journal_timer;
 
     my $journal_entry = $journal_timer->journal_entry;
-    unless ($self->controls->{owner}->current_value == $journal_entry->owner->id) {
+    unless ($self->owner->id == $journal_entry->owner->id) {
         $self->error('you cannot create a comment on an entry for someone else');
         $self->is_valid(0);
     }

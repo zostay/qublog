@@ -9,8 +9,13 @@ with qw(
 sub may_run {
     my $self = shift;
 
-    if ($self->meta->find_attribute_by_name('owner')) {
-        unless ($self->current_user->id == $self->controls->{owner}->current_value) {
+    my $attr = $self->meta->find_attribute_by_name('owner');
+    if ($attr) {
+        my $owner_id = $attr->does('Form::Factory::Action::Meta::Control')
+                     ? $self->controls->{owner}->current_value
+                     : $self->owner->id;
+
+        unless ($self->current_user->id == $owner_id) {
             $self->error('you cannot do that for a different user');
             $self->is_valid(0);
         }

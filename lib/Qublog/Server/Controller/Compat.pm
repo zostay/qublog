@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use Qublog::Schema::Action::CreateThingy;
-
 =head1 NAME
 
 Qublog::Server::Controller::Compat - Catalyst Controller

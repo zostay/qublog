@@ -44,11 +44,11 @@ template 'form/change_start_stop' => sub {
     my $which = $c->request->params->{which} || 'start';
     $which = 'start' unless $which eq 'start' or $which eq 'stop';
 
+    my $moniker = join('-', $which, $timer->id);
     form {
         {
             method is 'POST',
-            action is '/api/model/journal_timer/change_' . $which . '/'
-                . $which . '-' . $timer->id,
+            action is '/api/model/journal_timer/change_' . $which . '/' . $moniker,
         }
 
         my $action_class = 'JournalTimer::Change' . ucfirst($which);
@@ -58,7 +58,7 @@ template 'form/change_start_stop' => sub {
         });
         $action->prefill_from_record;
         $action->setup_and_render(
-            moniker => $which . '-' . $timer->id,
+            moniker => $moniker,
             globals => {
                 origin => $c->request->uri_with({
                     form       => 'change_start_stop',

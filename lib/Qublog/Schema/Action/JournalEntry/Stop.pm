@@ -4,6 +4,8 @@ use Form::Factory::Processor;
 extends qw( Qublog::Schema::Action::JournalEntry::Do );
 with    qw( Qublog::Action::Role::Secure::CheckOwner );
 
+use_feature 'automatic_lookup';
+
 sub do {
     my $self = shift;
     $self->record->stop_timer;

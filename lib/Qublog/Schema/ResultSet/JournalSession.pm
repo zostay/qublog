@@ -15,15 +15,13 @@ Handy result set methods.
 
 =head1 METHODS
 
-=head2 for_date
-
-=head2 find_by_date
+=head2 search_by_day
 
 Given a date, returns a modified result that only includes journal sessions that were used during that day.
 
 =cut
 
-sub find_by_date {
+sub search_by_day {
     my ($self, $date) = @_;
     my $day = $date->clone->truncate( to => 'day' );
 
@@ -37,8 +35,6 @@ sub find_by_date {
         ],
     ]);
 }
-
-*for_date = *$find_by_date;
 
 =head1 AUTHOR
 

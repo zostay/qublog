@@ -217,10 +217,26 @@ sub run {
     # Otherwise, we're trying to create an entry/timer/comment
     else {
 
-        # Get the current day; we'll use it to find timers
-        my $day = $schema->resultset('JournalDay')->for_today($self->today);
+        my $session;
 
-        my $matching_entries = $day->search_related(journal_entries => {
+        # Were we given a journal session to work with? Use it
+        if ($self->has_journal_session) {
+            $session = $self->journal_session;
+
+            # Make sure the session is running
+            unless ($session->is_running) {
+                $self->failure('cannot modify a closed session, please select a different session or open a new one');
+                return;
+            }
+        }
+
+        # Otherwise, fail...
+        else {
+            $self->failure('please select a session or open a new one');
+            return;
+        }
+
+        my $matching_entries = $session->search_related(journal_entries => {
             name => $title,
         });
 

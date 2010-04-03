@@ -7,9 +7,9 @@ with qw(
     Qublog::Action::Role::Secure::CheckOwner
 );
 
-has journal_day => (
+has journal_session => (
     is        => 'ro',
-    isa       => 'Qublog::Schema::Result::JournalDay',
+    isa       => 'Qublog::Schema::Result::JournalSession',
     required  => 1,
     traits    => [ 'Model::Column' ],
 );

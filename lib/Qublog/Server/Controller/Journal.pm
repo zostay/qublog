@@ -102,9 +102,10 @@ sub day :Local :Args(1) {
 
     my $date = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone) 
             || $c->today;
-    my $day  = $c->model('DB')->resultset('JournalDay')->find_by_date($date);
+    my $sessions = $c->model('DB::JournalSession')->search_by_day($date);
 
-    $c->stash->{day}      = $day;
+    $c->stash->{day}      = $date;
+    $c->stash->{sessions} = $sessions;
 
     $c->stash->{template} = '/journal/index';
 }

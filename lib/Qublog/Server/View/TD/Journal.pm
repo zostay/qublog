@@ -34,18 +34,19 @@ template 'journal/index' => sub {
     $c->add_style( file => 'tasks' );
     $c->add_script( file => 'journal' );
 
-    my $day = $c->stash->{day};
+    my $day      = $c->stash->{day};
+    my $sessions = $c->stash->{sessions};
     $c->stash->{title} = 'Journal';
-    if (not $day->is_today($c->today)) {
+    if ($day->ymd ne $c->today->ymd) {
         $c->stash->{title} .= ' for ';
         $c->stash->{title} .= Qublog::DateTime->format_human_date(
-            $day->datestamp, $c->time_zone);
+            $day, $c->time_zone);
     }
 
     page {
         div { { class is 'journal' }
             show './bits/summary', $c;
-            show './bits/list', $c;
+            show './bits/sessions', $c;
         };
     } $c;
 };
@@ -136,6 +137,33 @@ template 'journal/bits/summary' => sub {
                 },
             ],
         },
+    };
+};
+
+=head2 journal/bits/sessions
+
+Show the session tabs and the list of items in the currently selected session.
+
+=cut
+
+template 'journal/bits/sessions' => sub {
+    my ($self, $c) = @_;
+
+    div { { id is 'session', class is 'sessions' }
+        ul { { class is 'choose' }
+            for my $session ($c->stash->{sessions}->all) {
+                li { { class is 'session name' }
+                    $session->name;
+                };
+            }
+            li { { class is 'session new' }
+                'New Session';
+            };
+        };
+
+        div { { class is 'session current' }
+            show './bits/list', $c;
+        };
     };
 };
 

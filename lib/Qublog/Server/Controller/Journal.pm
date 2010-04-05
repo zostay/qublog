@@ -102,12 +102,44 @@ sub day :Local :Args(1) {
 
     my $date = Qublog::DateTime->parse_human_datetime($date_str, $c->time_zone) 
             || $c->today;
-    my $sessions = $c->model('DB::JournalSession')->search_by_day($date);
+    my $sessions = $c->model('DB::JournalSession')
+        ->search({ owner => $c->user->get_object->id })
+        ->search_by_day($date);
 
     $c->stash->{day}      = $date;
     $c->stash->{sessions} = $sessions;
 
+    # See if a session has been picked
+    if ($c->session->{current_session_id}) {
+        SESSION: 
+        for my $session ($sessions->all) {
+            if ($session->id == $c->session->{current_session_id}) {
+                $c->stash->{session} = $session;
+                last SESSION;
+            }
+        }
+    }
+
+    # If one isn't already selected today, pick something
+    unless ($c->stash->{session}) {
+        delete $c->session->{current_session_id};
+        $c->stash->{session} = $sessions->first;
+    }
+
     $c->stash->{template} = '/journal/index';
+}
+
+=head2 select_session
+
+Select a session.
+
+=cut
+
+sub select_session :Path(session/select) :Args(2) {
+    my ($self, $c, $date_str, $id) = @_;
+
+    $c->session->{current_session_id} = $id;
+    $c->detach('/journal/day', $date_str);
 }
 
 =head1 AUTHOR

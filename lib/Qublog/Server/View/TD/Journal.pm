@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Qublog::DateTime;
-use Qublog::Server::View::Common qw( page );
+use Qublog::Server::View::Common qw( hyperlink page );
 use Qublog::Web;
 use Qublog::Web::Format;
 
@@ -45,7 +45,6 @@ template 'journal/index' => sub {
 
     page {
         div { { class is 'journal' }
-            show './bits/summary', $c;
             show './bits/sessions', $c;
         };
     } $c;
@@ -60,9 +59,12 @@ moment. This needs to be more configurable.
 
 template 'journal/bits/summary' => sub {
     my ($self, $c) = @_;
-    my $day = $c->stash->{day};
+    my $session = $c->stash->{session};
 
-    my $timers = $day->journal_timers;
+    # Nothing to do here without a session
+    return unless defined $session;
+
+    my $timers = $session->journal_timers;
 
     my $total_hours = 0;
     while (my $timer = $timers->next) {
@@ -72,7 +74,7 @@ template 'journal/bits/summary' => sub {
     my $hours_left = max(0, 8 - $total_hours);
 
     my $quitting_time;
-    my $is_today = $day->is_today($c->today);
+    my $is_today = $session->is_running;
     if ($is_today and $hours_left > 0) {
         my $planned_duration = DateTime::Duration->new( hours => $hours_left );
 
@@ -85,7 +87,7 @@ template 'journal/bits/summary' => sub {
 
     show '/journal_item/item', $c, {
         row => {
-            class      => 'day-summary',
+            class      => 'session-summary',
             attributes => {
                 load_time      => $load_time,
                 total_duration => $total_hours,
@@ -148,21 +150,34 @@ Show the session tabs and the list of items in the currently selected session.
 
 template 'journal/bits/sessions' => sub {
     my ($self, $c) = @_;
+    my $day = $c->stash->{day};
 
     div { { id is 'session', class is 'sessions' }
         ul { { class is 'choose' }
             for my $session ($c->stash->{sessions}->all) {
-                li { { class is 'session name' }
-                    $session->name;
+                my $selected = ' selected'
+                    if $session->id == $c->stash->{session}->id;
+
+                li { { class is 'session name' . $selected }
+                    hyperlink
+                        label => $session->name,
+                        goto  => join('/', '/journal/session/select',
+                                           $day->ymd, $session->id),
+                        ;
                 };
             }
             li { { class is 'session new' }
-                'New Session';
+                hyperlink
+                    label => 'New Session',
+                    goto  => '/journal/session/new',
+                    ;
             };
         };
 
+        show './summary', $c;
+
         div { { class is 'session current' }
-            show './bits/list', $c;
+            show './list', $c;
         };
     };
 };
@@ -176,17 +191,18 @@ for today.
 
 template 'journal/bits/list' => sub {
     my ($self, $c) = @_;
-    my $day = $c->stash->{day};
+    my $day     = $c->stash->{day};
+    my $session = $c->stash->{session};
 
     # Show the Go to form
     div { { id is 'goto_date' }
         form { { action is '/journal/goto', method is 'POST' }
             my $action = $c->action_form( server => 'GotoJournalDate', {
-                date => $day->datestamp,
+                date => $day,
             });
 
             # TODO I HAVE TO DO THIS BECAUSE SOMETHING IS BROKEN!!!
-            $action->controls->{date}->default_value($day->datestamp->ymd);
+            $action->controls->{date}->default_value($day->ymd);
 
             $action->globals->{from_page} = $c->request->uri;
             $action->setup_and_render(
@@ -202,7 +218,7 @@ template 'journal/bits/list' => sub {
     };
 
     show './new_comment_entry', $c;
-    show '/journal_item/items', $c, $day;
+    show '/journal_item/items', $c, $session;
 };
 
 =head2 journal/bits/new_comment_entry
@@ -213,12 +229,12 @@ Show the the form for adding new items to the journal.
 
 template 'journal/bits/new_comment_entry' => sub {
     my ($self, $c) = @_;
-    my $day = $c->stash->{day};
+    my $session = $c->stash->{session};
 
     # Initial button name
-    my $post_label = $day->journal_entries->count == 0 ? 'Start' : 'Post';
+    my $post_label = $session->journal_entries->count == 0 ? 'Start' : 'Post';
 
-    my $journal_entry = $day->journal_entries->search_by_running(1)->search({}, {
+    my $journal_entry = $session->journal_entries->search_by_running(1)->search({}, {
         order_by => { -desc => 'start_time' },
         rows     => 1,
     })->single;

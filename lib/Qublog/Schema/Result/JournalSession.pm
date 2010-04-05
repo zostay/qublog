@@ -94,6 +94,17 @@ sub list_journal_item_resultsets {
     return [ $entries ];
 }
 
+=head2 is_running
+
+Returns true if L</stop_time> is not set.
+
+=cut
+
+sub is_running {
+    my $self = shift;
+    return not defined $self->stop_time;
+}
+
 =head1 SEE ALSO
 
 L<Qublog::Schema::ResultSet::JournalSession>

@@ -9,13 +9,15 @@ CREATE TABLE journal_sessions(
 );
 
 INSERT INTO journal_sessions(name, owner, start_time, stop_time)
-    SELECT datestamp, COALESCE(journal_entries.owner, comments.owner), 
+    SELECT date(datestamp, 'start of day'), 
+           COALESCE(journal_entries.owner, comments.owner), 
            date(datestamp, 'start of day'),
-           date(datestamp, 'start of day', '+1 day')
+           date(datestamp, 'start of day')
       FROM journal_days 
  LEFT JOIN journal_entries ON (journal_days.id = journal_entries.journal_day)
  LEFT JOIN comments ON (journal_days.id = comments.journal_day)
-     WHERE COALESCE(journal_entries.owner, comments.owner) IS NOT NULL;
+     WHERE COALESCE(journal_entries.owner, comments.owner) IS NOT NULL
+  GROUP BY date(datestamp, 'start of day');
 
 ALTER TABLE journal_entries RENAME TO rev_1_0_2_journal_entries;
 CREATE TABLE journal_entries(

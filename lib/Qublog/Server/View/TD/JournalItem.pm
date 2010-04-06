@@ -193,6 +193,8 @@ Display a list of items associated with a schema object.
 template 'journal_item/items' => sub {
     my ($self, $c, $object) = @_;
 
+    return unless $object;
+
     my $items = $object->journal_items({
         user => $c->user,
     });

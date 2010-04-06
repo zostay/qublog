@@ -282,6 +282,51 @@ template 'form/edit_comment' => sub {
     };
 };
 
+=head2 new_session
+
+Form for creating a new journal session.
+
+=cut
+
+template 'form/new_session' => sub {
+    my ($self, $c) = @_;
+
+    form {
+        {
+            method is 'POST',
+            action is '/api/model/journal_session/create/new_session',
+        }
+
+        my $action = $c->action_form(schema => 'JournalSession::Create');
+        $action->setup_and_render(
+            moniker => 'new_session',
+            globals => {
+                origin => $c->request->uri_with({
+                    form       => 'new_session',
+                    form_place => 'Session-Summary',
+                    form_type  => 'replace',
+                }),
+                return_to => $c->request->uri_with({
+                    form       => undef,
+                    form_place => undef,
+                    form_type  => undef,
+                }),
+            },
+        );
+
+        div { { class is 'submit' }
+            $action->render_control(button => {
+                name  => 'submit',
+                label => 'Start',
+            });
+            $action->render_control(button => {
+                name  => 'cancel',
+                label => 'Cancel',
+            });
+        };
+    };
+};
+
 =head1 AUTHOR
 
 Andrew Sterling Hanenkamp, C<< <hanenkamp@cpan.org> >>

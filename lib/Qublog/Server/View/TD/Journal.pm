@@ -50,98 +50,6 @@ template 'journal/index' => sub {
     } $c;
 };
 
-=head2 journal/bits/summary
-
-Show a timer summary at the top. This is pretty specific to my own needs at the
-moment. This needs to be more configurable.
-
-=cut
-
-template 'journal/bits/summary' => sub {
-    my ($self, $c) = @_;
-    my $session = $c->stash->{session};
-
-    # Nothing to do here without a session
-    return unless defined $session;
-
-    my $timers = $session->journal_timers;
-
-    my $total_hours = 0;
-    while (my $timer = $timers->next) {
-        $total_hours += $timer->hours;
-    }
-
-    my $hours_left = max(0, 8 - $total_hours);
-
-    my $quitting_time;
-    my $is_today = $session->is_running;
-    if ($is_today and $hours_left > 0) {
-        my $planned_duration = DateTime::Duration->new( hours => $hours_left );
-
-        $quitting_time = $c->now + $planned_duration;
-    }
-
-    # Make some handy calculations
-    my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
-    my $load_time = $c->now->format_cldr($js_time_format);
-
-    show '/journal_item/item', $c, {
-        row => {
-            class      => 'session-summary',
-            attributes => {
-                load_time      => $load_time,
-                total_duration => $total_hours,
-            },
-        },
-        content => {
-            content => scalar span {
-                span { { class is 'unit' } 'Quitting time ' };
-                span { { class is 'time' }
-                    Qublog::DateTime->format_human_time(
-                        $quitting_time, $c->time_zone);
-                };
-            },
-            icon    => 'a-quit o-time',
-            format  => [
-                {
-                    format  => 'p',
-                    options => {
-                        class => 'quit',
-                    },
-                },
-            ],
-        },
-        info1 => {
-            content => scalar span {
-                span { { class is 'number' } sprintf '%.2f', $total_hours };
-                span { { class is 'unit' } 'hours so far' };
-            },
-            format  => [
-                {
-                    format  => 'p',
-                    options => {
-                        class => 'total',
-                    },
-                },
-            ],
-        },
-        info2 => {
-            content => scalar span {
-                span { { class is 'number' } sprintf '%.2f', $hours_left };
-                span { { class is 'unit' } 'hours to go' };
-            },
-            format => [
-                {
-                    format  => 'p',
-                    options => {
-                        class => 'remaining',
-                    },
-                },
-            ],
-        },
-    };
-};
-
 =head2 journal/bits/sessions
 
 Show the session tabs and the list of items in the currently selected session.
@@ -150,31 +58,117 @@ Show the session tabs and the list of items in the currently selected session.
 
 template 'journal/bits/sessions' => sub {
     my ($self, $c) = @_;
-    my $day = $c->stash->{day};
+    my $day     = $c->stash->{day};
+    my $session = $c->stash->{session};
 
     div { { id is 'session', class is 'sessions' }
-        ul { { class is 'choose' }
-            for my $session ($c->stash->{sessions}->all) {
-                my $selected = ' selected'
-                    if $session->id == $c->stash->{session}->id;
+        my @session_links;
+        for my $session ($c->stash->{sessions}->all) {
+            my $selected = ' selected'
+                if $session->id == $c->stash->{session}->id;
 
-                li { { class is 'session name' . $selected }
-                    hyperlink
-                        label => $session->name,
-                        goto  => join('/', '/journal/session/select',
-                                           $day->ymd, $session->id),
-                        ;
-                };
-            }
-            li { { class is 'session new' }
-                hyperlink
-                    label => 'New Session',
-                    goto  => '/journal/session/new',
-                    ;
+            push @session_links, {
+                label => $session->name,
+                goto  => join('/', '/journal/session/select',
+                                    $day->ymd, $session->id),
+                class => 'session name' . $selected,
             };
-        };
+        }
 
-        show './summary', $c;
+
+        my $total_hours = 0;
+
+        if ($session) {
+            my $timers = $session->journal_timers;
+            while (my $timer = $timers->next) {
+                $total_hours += $timer->hours;
+            }
+        }
+
+        my $hours_left = max(0, 8 - $total_hours);
+
+        my $quitting_time;
+        if ($session) {
+            my $is_today = $session->is_running;
+            if ($is_today and $hours_left > 0) {
+                my $planned_duration = DateTime::Duration->new( hours => $hours_left );
+
+                $quitting_time = $c->now + $planned_duration;
+            }
+        }
+
+        # Make some handy calculations
+        my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
+        my $load_time = $c->now->format_cldr($js_time_format);
+
+        show '/journal_item/item', $c, {
+            name => 'Session-Summary',
+            row => {
+                class      => 'session-summary',
+                attributes => {
+                    load_time      => $load_time,
+                    total_duration => $total_hours,
+                },
+            },
+            content => {
+                content => scalar span {
+                    span { { class is 'unit' } 'Quitting time ' };
+                    span { { class is 'time' }
+                        Qublog::DateTime->format_human_time(
+                            $quitting_time, $c->time_zone);
+                    };
+                },
+                icon    => 'a-quit o-time',
+                format  => [
+                    {
+                        format  => 'p',
+                        options => {
+                            class => 'quit',
+                        },
+                    },
+                ],
+            },
+            info1 => {
+                content => scalar span {
+                    span { { class is 'number' } sprintf '%.2f', $total_hours };
+                    span { { class is 'unit' } 'hours so far' };
+                },
+                format  => [
+                    {
+                        format  => 'p',
+                        options => {
+                            class => 'total',
+                        },
+                    },
+                ],
+            },
+            info2 => {
+                content => scalar span {
+                    span { { class is 'number' } sprintf '%.2f', $hours_left };
+                    span { { class is 'unit' } 'hours to go' };
+                },
+                format => [
+                    {
+                        format  => 'p',
+                        options => {
+                            class => 'remaining',
+                        },
+                    },
+                ],
+            },
+            links => [
+                @session_links,
+                {
+                    label => 'New Session',
+                    goto  => $c->request->uri_with({
+                        form       => 'new_session',
+                        form_place => 'Session-Summary',
+                        form_type  => 'replace',
+                    }),
+                    class => 'session new',
+                },
+            ],
+        };
 
         div { { class is 'session current' }
             show './list', $c;
@@ -230,6 +224,8 @@ Show the the form for adding new items to the journal.
 template 'journal/bits/new_comment_entry' => sub {
     my ($self, $c) = @_;
     my $session = $c->stash->{session};
+
+    return unless $session;
 
     # Initial button name
     my $post_label = $session->journal_entries->count == 0 ? 'Start' : 'Post';

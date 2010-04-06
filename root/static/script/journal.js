@@ -89,7 +89,7 @@ function updateActiveTimers() {
 
 $(document).ready(function() {
 
-    $('div.item').not('.timer')
+    $('div.item').not('.timer').not('.session-summary')
         .mouseover(function() {$('.links', this).css({ visibility: 'visible' })})
         .mouseout(function() {$('.links', this).css({ visibility: 'hidden' })})
         .find('.links').css({ visibility: 'hidden' });

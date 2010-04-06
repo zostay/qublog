@@ -240,14 +240,6 @@ template 'form/edit_comment' => sub {
     my ($self, $c) = @_;
     my $comment = $c->stash->{comment};
 
-    my $fields = $c->field_defaults({
-        created_on => Qublog::DateTime->format_human_time(
-            $comment->created_on, $c->time_zone),
-        name       => $comment->name,
-        return_to  => $c->request->uri_with({ form => undef }),
-        origin     => $c->request->uri_with({ form => undef }),
-    });
-
     form { 
         { 
             method is 'POST', 

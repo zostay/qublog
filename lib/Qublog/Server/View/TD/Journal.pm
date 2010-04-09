@@ -62,19 +62,34 @@ template 'journal/bits/sessions' => sub {
     my $session = $c->stash->{session};
 
     div { { id is 'session', class is 'sessions' }
-        my @session_links;
-        for my $session ($c->stash->{sessions}->all) {
-            my $selected = ' selected'
-                if $session->id == $c->stash->{session}->id;
+        ul { { class is 'tabs' }
+            my @session_links;
+            for my $session ($c->stash->{sessions}->all) {
+                my $selected = ' selected'
+                    if $session->id == $c->stash->{session}->id;
 
-            push @session_links, {
-                label => $session->name,
-                goto  => join('/', '/journal/session/select',
-                                    $day->ymd, $session->id),
-                class => 'session name' . $selected,
+                li { { class is 'tab' }
+                    hyperlink
+                        label => $session->name,
+                        goto  => join('/', '/journal/session/select',
+                                            $day->ymd, $session->id),
+                        class => 'session name' . $selected,
+                        ;
+                };
+            }
+
+            li { { class is 'tab' }
+                hyperlink
+                    label => 'New Session',
+                    goto  => $c->request->uri_with({
+                        form       => 'new_session',
+                        form_place => 'Session-Summary',
+                        form_type  => 'replace',
+                    }),
+                    class => 'session new',
+                    ;
             };
-        }
-
+        };
 
         my $total_hours = 0;
 
@@ -156,18 +171,6 @@ template 'journal/bits/sessions' => sub {
                     },
                 ],
             },
-            links => [
-                @session_links,
-                {
-                    label => 'New Session',
-                    goto  => $c->request->uri_with({
-                        form       => 'new_session',
-                        form_place => 'Session-Summary',
-                        form_type  => 'replace',
-                    }),
-                    class => 'session new',
-                },
-            ],
         };
 
         div { { class is 'session current' }

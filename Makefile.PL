@@ -2,6 +2,7 @@
 # IMPORTANT: if you delete this file your app will not work as
 # expected.  You have been warned.
 use inc::Module::Install;
+use 5.12.1;
 
 name 'Qublog-Server';
 all_from 'lib/Qublog/Server.pm';

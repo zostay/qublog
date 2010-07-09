@@ -105,6 +105,7 @@ my @JOURNAL_FORMS = qw(
     edit_comment
     edit_entry
     list_actions
+    new_session
 );
 
 template 'journal_item/item' => sub {

@@ -25,15 +25,18 @@ sub search_by_day {
     my ($self, $date) = @_;
     my $day = $date->clone->truncate( to => 'day' );
 
-    my $before = Qublog::DateTime->format_sql_date($day->clone);
-    my $after  = Qublog::DateTime->format_sql_date($day->clone->add( days => 1 ));
+    my $before = Qublog::DateTime->format_sql_datetime($day->clone);
+    my $after  = Qublog::DateTime->format_sql_datetime($day->clone->add( days => 1 ));
 
-    return $self->search([
+    my $search = $self->search([
         -or => [
             start_time => [ -and => { '>=', $before }, { '<',  $after  }, ],
             stop_time  => [ -and => { '>=', $before }, { '<',  $after  }, ],
+            [ -and => { stop_time => undef, start_time => { '<=', $after } } ],
         ],
     ]);
+
+    return $search->search;
 }
 
 =head1 AUTHOR

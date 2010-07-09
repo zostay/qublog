@@ -63,6 +63,7 @@ __PACKAGE__->add_columns(
     stop_time  => { data_type => 'datetime', timezone => 'UTC' },
 );
 __PACKAGE__->set_primary_key('id');
+__PACKAGE__->belongs_to( owner => 'Qublog::Schema::Result::User' );
 __PACKAGE__->has_many( journal_entries => 'Qublog::Schema::Result::JournalEntry', 'journal_session' );
 __PACKAGE__->many_to_many( journal_timers => journal_entries => 'journal_timers' );
 __PACKAGE__->has_many( comments => 'Qublog::Schema::Result::Comment', 'journal_session');

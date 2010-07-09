@@ -1,13 +1,15 @@
 package Qublog::Menu;
 use Moose;
+use MooseX::Types::URI qw( Uri );
 use Moose::Util::TypeConstraints;
 
 use Scalar::Util qw( blessed );
 
 has url => (
     is        => 'rw',
-    isa       => 'Str',
+    isa       => Uri,
     predicate => 'has_url',
+    coerce    => 1,
 );
 
 has label => (
@@ -20,6 +22,12 @@ has class => (
     is        => 'rw',
     isa       => 'Str',
     predicate => 'has_class',
+);
+
+has item_class => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_item_class',
 );
 
 has sort_order => (
@@ -43,6 +51,8 @@ has items => (
     required  => 1,
     default   => sub { {} },
 );
+
+no Moose::Util::TypeConstraints;
 
 sub BUILDARGS {
     my $class = shift;

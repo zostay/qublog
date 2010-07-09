@@ -108,16 +108,19 @@ p#footer {
 }
 
 /*
- * Masthead Content
+ * General Navigation
  */
 
-div#navigation {
-    background: white;
+/*** Main Navigation ***/
+
+div#main-navigation {
+    background-color: white;
     border-bottom: 1px solid #999;
     padding-top: 5px;
 }
 
-div#navigation li {
+div#main-navigation li {
+    background-color: #aaa;
     margin: 0;
     margin-left: 0.5em;
     list-style-type: none;
@@ -126,31 +129,79 @@ div#navigation li {
     border-right: 1px solid #666;
 }
 
-div#navigation li ul {
+div#main-navigation li ul {
     display: none;
 }
 
-div #navigation li a {
+div#main-navigation li a {
+    text-transform: lowercase;
     color: #333;
     background-color: #aaa;
     padding: 0 25px 0 25px;
-    text-transform: lowercase;
     border-top: 1px solid #999;
     border-bottom: 1px solid #999;
 }
 
-div#navigation a:hover {
+div#main-navigation a:hover {
     background-color: #ccc;
     color: #444;
 }
 
-div#navigation li.active a:link,
-div#navigation li.active a:visited,
-div#navigation li.active a:hover {
+div#main-navigation li.active a:link,
+div#main-navigation li.active a:visited,
+div#main-navigation li.active a:hover {
     background-color: #ccc;
     color: #444;
     border-bottom: none;
     padding-bottom: 1px;
+}
+
+/*** Page Navigation ***/
+
+div#page-navigation {
+    position: absolute;
+    bottom: 2px;
+    right: 200px;
+}
+
+div#page-navigation li {
+    white-space: nowrap;
+    background-color: #ccc;
+    border-left: 1px solid #999;
+    border-right: 1px solid #666;
+    list-style-type: none;
+    display: inline-block;
+    margin: 0;
+    margin-left: 0.25em;
+}
+
+div#page-navigation li a {
+    text-decoration: none;
+    color: #ccc;
+    background-color: #333;
+    padding: 0 25px 0 25px;
+    border-top: 1px solid #999;
+    border-bottom: 2px solid #333;
+}
+
+div#page-navigation a:hover {
+    background-color: #666;
+    color: #ddd;
+}
+
+div#page-navigation li.active a:link,
+div#page-navigation li.active a:visited,
+div#page-navigation li.active a:hover {
+    background-color: #666;
+    color: #ddd;
+}
+
+/*
+ * Masthead Content
+ */
+
+div#masthead {
+    position: relative;
 }
 
 div#masthead h1 {

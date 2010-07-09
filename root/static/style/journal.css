@@ -1,3 +1,50 @@
+/*** Session Tabs ***/
+
+div#page-navigation li.item.session.new {
+    width: 18px;
+    position: relative;
+    top: 6px;
+    margin-left: 0.75em;
+}
+
+div#page-navigation li.item.session.new a {
+    background-position: 4px 4px;
+    padding-right: 0;
+    display: inline-block;
+    width: 0;
+}
+
+div#session ul.tabs li {
+    margin: 0;
+    margin-left: 0.5em;
+    list-style-type: none;
+    display: inline-block;
+    border-left: 1px solid #999;
+    border-right: 1px solid #666;
+}
+
+div#session ul.tabs li a {
+    color: #ccc;
+    background-color: #333;
+    padding: 0 25px 0 25px;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+}
+
+div#sessions ul.tabs a:hover {
+    background-color: #666;
+    color: #ddd;
+}
+
+div#sessions ul.tabs li.active a:link,
+div#sessions ul.tabs li.active a:visited,
+div#sessions ul.tabs li.active a:hover {
+    background-color: #666;
+    color: #ddd;
+    border-bottom: none;
+    padding-bottom: 1px;
+}
+
 /*** Journal Day Form ***/
 
 #goto_date {

@@ -1,8 +1,6 @@
 package Qublog::Server::View::Common;
 use Template::Declare::Tags;
-
-use strict;
-use warnings;
+use 5.12.1;
 
 use Qublog::Menu;
 use Qublog::Server::Link;
@@ -135,7 +133,7 @@ sub render_menu_item($$) {
     return if $item->show_when eq 'anonymous' and     $c->user_exists;
     return if $item->show_when eq 'logged'    and not $c->user_exists;
 
-    my @classes = ('item');
+    my @classes = ('item', $item->item_class);
 
     # Dumb way of determining active
     my $active = 1;
@@ -192,11 +190,12 @@ This displays a menu and is typically only called from C</page>.
 
 =cut
 
-sub render_navigation($$) {
-    my ($c, $menu) = @_;
+sub render_navigation($$;$) {
+    my ($c, $menu, $which) = @_;
+    $which //= 'main';
 
     div {
-        { id is 'navigation' }
+        { class is 'navigation', id is "$which-navigation" }
         render_menu_items($c, $menu->items);
     };
 }
@@ -310,7 +309,10 @@ create_wrapper page => sub {
                     };
                 };
 
-                render_navigation( $c, Qublog::Menu->new($c, 'main') );
+                render_navigation( $c, Qublog::Menu->new($c, 'main'), 'main' );
+                render_navigation( $c, 
+                    Qublog::Menu->new($c->stash->{page_menu}), 'page' )
+                        if $c->stash->{page_menu};
 
                 h1 { $c->stash->{title} };
             };

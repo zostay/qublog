@@ -43,6 +43,38 @@ template 'journal/index' => sub {
             $day, $c->time_zone);
     }
 
+    my %session_links;
+    for my $session ($c->stash->{sessions}->all) {
+        my $id = $session->id;
+        my $selected;
+        $selected = ' selected'
+            if $id == $c->stash->{session}->id;
+
+        $session_links{"session_$id"} = {
+            label => $session->name,
+            class => 'session name' . $selected,
+            url   => join('/', '/journal/session/select',
+                                $day->ymd, $session->id),
+            sort_order => scalar(keys %session_links),
+        };
+    }
+
+    $session_links{"session_new"} = {
+        label => 'New Session',
+        class => 'icon only v-create o-session session new',
+        item_class => 'session new',
+        url   => $c->request->uri_with({
+            form       => 'new_session',
+            form_place => 'session-summary',
+            form_type  => 'replace',
+        }),
+        sort_order => scalar(keys %session_links),
+    };
+
+    $c->stash->{page_menu} = {
+        items => \%session_links,
+    };
+
     page {
         div { { class is 'journal' }
             show './bits/sessions', $c;
@@ -62,35 +94,6 @@ template 'journal/bits/sessions' => sub {
     my $session = $c->stash->{session};
 
     div { { id is 'session', class is 'sessions' }
-        ul { { class is 'tabs' }
-            my @session_links;
-            for my $session ($c->stash->{sessions}->all) {
-                my $selected = ' selected'
-                    if $session->id == $c->stash->{session}->id;
-
-                li { { class is 'tab' }
-                    hyperlink
-                        label => $session->name,
-                        goto  => join('/', '/journal/session/select',
-                                            $day->ymd, $session->id),
-                        class => 'session name' . $selected,
-                        ;
-                };
-            }
-
-            li { { class is 'tab' }
-                hyperlink
-                    label => 'New Session',
-                    goto  => $c->request->uri_with({
-                        form       => 'new_session',
-                        form_place => 'Session-Summary',
-                        form_type  => 'replace',
-                    }),
-                    class => 'session new',
-                    ;
-            };
-        };
-
         my $total_hours = 0;
 
         if ($session) {
@@ -117,7 +120,7 @@ template 'journal/bits/sessions' => sub {
         my $load_time = $c->now->format_cldr($js_time_format);
 
         show '/journal_item/item', $c, {
-            name => 'Session-Summary',
+            name => 'session-summary',
             row => {
                 class      => 'session-summary',
                 attributes => {

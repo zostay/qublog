@@ -4,7 +4,7 @@
     padding-left: 18px;
     background-repeat: no-repeat;
     background-position: 1px 1px;
-    /* background-image: url(/static/images/icons/shading.png); */
+    background-image: url(/static/images/icons/layer-shade.png);
 }
 
 input.button.icon {
@@ -47,6 +47,7 @@ h2.icon, h2.icon.left {
 .o-time    { background-image: url(/static/images/icons/clock.png) }
 .o-timer   { background-image: url(/static/images/icons/alarm-clock.png) }
 .o-user    { background-image: url(/static/images/icons/user.png) }
+.o-tab     { background-image: url(/static/images/icons/ui-tab.png) }
 
 /*** Icon Adjectives ***/
 
@@ -70,6 +71,7 @@ h2.icon, h2.icon.left {
 .v-cancel           { background-image: url(/static/images/icons/cross.png) }
 .v-collapse         { background-image: url(/static/images/icons/chevron-collapse.png) }
 .v-comment          { background-image: url(/static/images/icons/balloon--plus.png) }
+.v-create.o-session { background-image: url(/static/images/icons/ui-tab--plus.png) }
 .v-delete           { background-image: url(/static/images/icons/minus-circle-frame.png) }
 .v-delete.o-comment { background-image: url(/static/images/icons/balloon--minus.png) }
 .v-done             { background-image: url(/static/images/icons/tick-circle-frame.png) }

@@ -130,6 +130,8 @@ Helper to get form objects to rendering and processing actions.
         # Specially requested action attributes
         Class::MOP::load_class($class_name);
         my $meta = Class::MOP::class_of($class_name);
+        $args{journal_session} = $c->current_journal_session
+            if $meta->does_role('Qublog::Action::Role::WantsJournalSession');
         $args{time_zone} = $c->time_zone
             if $meta->does_role('Qublog::Action::Role::WantsTimeZone');
         $args{today} = $c->today
@@ -143,6 +145,39 @@ Helper to get form objects to rendering and processing actions.
 
         $c->form_interface->new_action($class_name => \%args);
     }
+}
+
+=head2 current_journal_session
+
+Finds a journal session for the user. Returns C<undef> if there are no available running sessions.
+
+=cut
+
+sub current_journal_session {
+    my ($c, $date) = @_;
+
+    my $date //= $c->today;
+    my $sessions = $c->model('DB::JournalSession')
+        ->search({ owner => $c->user->get_object->id })
+        ->search_by_day($date);
+
+    # See if a session has been picked
+    if ($c->session->{current_session_id}) {
+        SESSION: 
+        for my $session ($sessions->all) {
+            if ($session->id == $c->session->{current_session_id}) {
+                $c->stash->{session} = $session;
+                last SESSION;
+            }
+        }
+    }
+
+    # If one isn't already selected today, pick something
+    unless ($c->stash->{session}) {
+        delete $c->session->{current_session_id};
+        $c->stash->{session} = $sessions->first;
+    }
+
 }
 
 =head2 result_to_messages

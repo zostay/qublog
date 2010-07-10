@@ -46,13 +46,14 @@ template 'journal/index' => sub {
     my %session_links;
     for my $session ($c->stash->{sessions}->all) {
         my $id = $session->id;
-        my $selected;
-        $selected = ' selected'
+        my $selected = '';
+        $selected = 'active'
             if $id == $c->stash->{session}->id;
 
         $session_links{"session_$id"} = {
             label => $session->name,
-            class => 'session name' . $selected,
+            class => 'session name',
+            item_class => $selected,
             url   => join('/', '/journal/session/select',
                                 $day->ymd, $session->id),
             sort_order => scalar(keys %session_links),

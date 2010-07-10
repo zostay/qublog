@@ -3,6 +3,7 @@ use Form::Factory::Processor;
 
 with qw( 
     Qublog::Action::Role::WantsCurrentUser
+    Qublog::Action::Role::WantsJournalSession
     Qublog::Action::Role::WantsToday 
     Qublog::Action::Role::Secure
 );
@@ -51,12 +52,6 @@ has schema => (
     isa       => 'Qublog::Schema',
     required  => 1,
     handles   => [ qw( resultset ) ],
-);
-
-has journal_session => (
-    is        => 'rw',
-    isa       => 'Qublog::Schema::Result::JournalSession',
-    predicate => 'has_journal_session',
 );
 
 has journal_timer => (
@@ -308,5 +303,7 @@ sub may_run {
         $self->is_valid(0);
     }
 }
+
+__PACKAGE__->meta->make_immutable;
 
 1;

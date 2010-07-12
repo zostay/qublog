@@ -1,23 +1,11 @@
 package Qublog::Schema::Action::JournalSession::Create;
 use Form::Factory::Processor;
 
+extends qw( Qublog::Schema::Action::JournalSession::Store );
 with qw(
-    Qublog::Schema::Action::Role::Model::JournalSession
     Qublog::Schema::Action::Role::Lookup::New
-    Qublog::Schema::Action::Role::Do::Store
     Qublog::Action::Role::Secure::CheckOwner
     Qublog::Action::Role::WantsCurrentUser
-);
-
-has_control name => (
-    is        => 'rw',
-
-    control   => 'text',
-    traits    => [ 'Model::Column' ],
-    features  => {
-        required => 1,
-        trim     => 1,
-    },
 );
 
 has owner => (

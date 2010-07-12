@@ -156,7 +156,7 @@ Finds a journal session for the user. Returns C<undef> if there are no available
 sub current_journal_session {
     my ($c, $date) = @_;
 
-    my $date //= $c->today;
+    $date //= $c->today;
     my $sessions = $c->model('DB::JournalSession')
         ->search({ owner => $c->user->get_object->id })
         ->search_by_day($date);

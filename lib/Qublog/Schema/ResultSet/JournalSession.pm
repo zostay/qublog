@@ -31,7 +31,10 @@ sub search_by_day {
     my $search = $self->search([
         -or => [
             start_time => [ -and => { '>=', $before }, { '<',  $after  }, ],
-            stop_time  => [ -and => { '>=', $before }, { '<',  $after  }, ],
+            [ -and => { 
+                start_time => { '<=', $before }, 
+                stop_time => { '>', $before } 
+            } ],
             [ -and => { stop_time => undef, start_time => { '<=', $after } } ],
         ],
     ]);

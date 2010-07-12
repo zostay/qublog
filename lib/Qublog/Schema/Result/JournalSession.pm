@@ -95,6 +95,50 @@ sub list_journal_item_resultsets {
     return [ $entries ];
 }
 
+=head2 start_timer
+
+  $journal_session->start_timer
+
+Clears the stop time so that the session will be considered open again.
+
+=cut
+
+sub start_timer {
+    my $self = shift;
+
+    $self->stop_time(undef);
+    $self->update;
+
+    return $self;
+}
+
+=head2 stop_timer
+
+  $journal_session->stop_timer($c->now);
+
+Sets the stop time to right now. This will stop any running journal entries as well.
+
+=cut
+
+sub stop_timer {
+    my ($self, $now) = shift;
+    my $schema = $self->result_source->schema;
+
+    $schema->txn_do(sub {
+        my $entries = $self->journal_entries;
+
+        $now //= Qublog::DateTime->now;
+        while (my $entry = $entries->next) {
+            $entry->stop_timer($now);
+        }
+
+        $self->stop_time($now);
+        $self->update;
+    });
+
+    return $self;
+}
+
 =head2 is_running
 
 Returns true if L</stop_time> is not set.

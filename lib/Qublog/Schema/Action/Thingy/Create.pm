@@ -237,13 +237,13 @@ sub run {
 
         # Does the title match a running entry?
         {
-            my $entries = $matching_entries->search_by_running(1)->search({}, {
+            my $entries = $matching_entries->search_by_running(running => 1)->search({}, {
                 order_by => { -desc => 'start_time' },
                 rows     => 1,
             });
 
             if ($entries->count > 0) {
-                my $timer = $entries->single->journal_timers->search_by_running(1)
+                my $timer = $entries->single->journal_timers->search_by_running(running => 1)
                     ->search({}, {
                         order_by => { -desc => 'start_time' },
                         rows     => 1,

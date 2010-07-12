@@ -14,15 +14,30 @@ Helpers to the result set for journal entries.
 
 =head2 search_by_running
 
-Give it a boolean value. True indicates you want running entries. False indicates you want stopped entries.
+Takes a hash of options, including:
+
+=over
+
+=item running
+
+(Required.) Give it a boolean value. True indicates you want running entries. False indicates you want stopped entries.
+
+=item alias
+
+The table alias to use for the column. Defaults to "me".
+
+=back
 
 =cut
 
 sub search_by_running {
-    my ($self, $running) = @_;
+    my ($self, %options) = @_;
+    my $alias = $options{alias} // "me";
+
+    my $stop_time = "$alias.stop_time";
 
     return $self->search({ 
-        stop_time => { ($running ? '=' : '!='), undef },
+        $stop_time => { ($options{running} ? '=' : '!='), undef },
     });
 }
 

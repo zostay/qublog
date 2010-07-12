@@ -237,7 +237,7 @@ template 'journal/bits/new_comment_entry' => sub {
     # Initial button name
     my $post_label = $session->journal_entries->count == 0 ? 'Start' : 'Post';
 
-    my $journal_entry = $session->journal_entries->search_by_running(1)->search({}, {
+    my $journal_entry = $session->journal_entries->search_by_running(running => 1)->search({}, {
         order_by => { -desc => 'start_time' },
         rows     => 1,
     })->single;

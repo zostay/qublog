@@ -14,15 +14,30 @@ Time saving devices here.
 
 =head2 search_by_running
 
-Expects a boolean value. True returns running timers. False returns stopped timers.
+Takes a hash of options, including:
+
+=over
+
+=item running
+
+(Required.) Expects a boolean value. True returns running timers. False returns stopped timers.
+
+=item alias
+
+The table alias to use for the column. Defaults to "me".
+
+=back
 
 =cut
 
 sub search_by_running {
-    my ($self, $running) = @_;
+    my ($self, %options) = @_;
+    my $alias = $options{alias} // "me";
+
+    my $stop_time = "$alias.stop_time";
 
     return $self->search({ 
-        stop_time => { ($running ? '=' : '!='), undef },
+        $stop_time => { ($options{running} ? '=' : '!='), undef },
     });
 }
 

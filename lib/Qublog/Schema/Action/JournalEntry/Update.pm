@@ -93,4 +93,6 @@ has_control project => (
     },
 );
 
+__PACKAGE__->meta->make_immutable;
+
 1;

@@ -16,4 +16,6 @@ sub success_message {
     return sprintf('started the timer for %s', $self->record->name);
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;

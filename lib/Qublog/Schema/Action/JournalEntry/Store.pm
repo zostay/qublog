@@ -6,4 +6,6 @@ with qw(
     Qublog::Schema::Action::Role::Do::Store
 );
 
+__PACKAGE__->meta->make_immutable;
+
 1;

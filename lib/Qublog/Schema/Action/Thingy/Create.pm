@@ -205,8 +205,8 @@ sub run {
 
     # Is the nickname the title? Task comment create; no entry or timer
     if (defined $nickname and $nickname eq $title) {
-        $thingy = $schema->resultset('Task')->load_by_tag_name($short_nickname)
-               || $schema->resultset('Task')->new;
+        $thingy = $schema->resultset('Task')->find_by_tag_name($short_nickname)
+               // $schema->resultset('Task')->new({});
     }
 
     # Otherwise, we're trying to create an entry/timer/comment

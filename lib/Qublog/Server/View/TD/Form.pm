@@ -220,6 +220,68 @@ template 'form/list_actions' => sub {
     };
 };
 
+=head2 form/edit_session
+
+Edit the journal session name.
+
+Uses these stashed arguments:
+
+=over
+
+=item session
+
+This is the L<Qublog::Schema::Result::JournalSession> to edit.
+
+=back
+
+=cut
+
+template 'form/edit_session' => sub {
+    my ($self, $c) = @_;
+    my $session = $c->stash->{session};
+
+    form { 
+        { 
+            method is 'POST', 
+            action is '/api/model/journal_session/update/edit_session-'. $session->id,
+        }
+
+        my $action = $c->action_form(schema => 'JournalSession::Update' => {
+            record => $session,
+            id     => $session->id,
+        });
+        $action->prefill_from_record;
+        $action->setup_and_render(
+            moniker => 'edit_session-' . $session->id,
+            globals => {
+                origin => $c->request->uri_with({
+                    form       => 'edit_session',
+                    form_place => 'session-summary',
+                    form_type  => 'replace',
+                    session    => $session->id,
+                }),
+                return_to => $c->request->uri_with({
+                    form       => undef,
+                    form_place => undef,
+                    form_type  => undef,
+                    session    => undef,
+                }),
+            },
+        );
+
+        div { { class is 'submit' }
+            $action->render_control(button => {
+                name  => 'submit',
+                label => 'Save',
+            });
+            $action->render_control(button => {
+                name  => 'cancel',
+                value => 'Cancel',
+            });
+        };
+    };
+};
+
 =head2 form/edit_comment
 
 Edit the timer and text of a comment.

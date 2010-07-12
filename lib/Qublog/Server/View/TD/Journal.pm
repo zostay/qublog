@@ -120,6 +120,40 @@ template 'journal/bits/sessions' => sub {
         my $js_time_format = 'eee MMM dd HH:mm:ss zzz yyy';
         my $load_time = $c->now->format_cldr($js_time_format);
 
+        my @links;
+        if ($session and $session->is_running) {
+            push @links, {
+                label  => 'Close Session',
+                class  => 'icon v-stop o-session',
+                action => $c->uri_for('/api/model/journal_session/stop/stop_session-' . $session->id, {
+                    id        => $session->id,
+                    return_to => $c->request->uri,
+                    origin    => $c->request->uri,
+                }),
+            };
+            push @links, {
+                label  => 'Edit Session',
+                class  => 'icon v-edit o-session',
+                goto   => $c->request->uri_with({
+                    form       => 'edit_session',
+                    form_place => 'session-summary',
+                    form_type  => 'replace',
+                    session    => $session->id,
+                }),
+            };
+        }
+        elsif ($session) {
+            push @links, {
+                label  => 'Re-Open Session',
+                class  => 'icon v-start o-session',
+                action => $c->uri_for('/api/model/journal_session/start/start_session-' . $session->id, {
+                    id        => $session->id,
+                    return_to => $c->request->uri,
+                    origin    => $c->request->uri,
+                }),
+            };
+        }            
+
         show '/journal_item/item', $c, {
             name => 'session-summary',
             row => {
@@ -129,6 +163,7 @@ template 'journal/bits/sessions' => sub {
                     total_duration => $total_hours,
                 },
             },
+            links => \@links,
             content => {
                 content => scalar span {
                     span { { class is 'unit' } 'Quitting time ' };

@@ -23,7 +23,7 @@ Check for login.
 
 sub begin :Private {
     my ($self, $c) = @_;
-    $self->forward('/user/login');
+    $c->forward('/user/login');
 }
 
 =head2 index

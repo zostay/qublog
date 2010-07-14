@@ -74,40 +74,6 @@ has project => (
     default   => sub { shift->schema->resultset('Task')->project_none },
 );
 
-sub _process_task {
-    my ($self, $task, $nickname, $short_nickname) = @_;
-
-    # Add a comment to an existing task
-    if ($task->in_storage) {
-        $self->_process_comment;
-
-        $task->create_related(task_logs => {
-            type    => 'note',
-            message => $self->comment,
-        });
-
-        $self->success(
-            sprintf('added a comment to task #%s', $task->tag)
-        );
-    }
-
-    else {
-        $task->name($self->detail);
-        $task->owner($self->current_user);
-        $task->task_type('action');
-        $task->status('open');
-        $task->parent($self->schema('Task')->project_none);
-        $task->insert;
-
-        $task->add_tag($nickname) if $nickname;
-
-        $self->success(
-            sprintf('added a new task #%s to project #%s',
-                $task->tag, $task->project->tag)
-        );
-    }
-}
-
 sub _process_timer {
     my ($self, $timer, $nickname, $short_nickname) = @_;
 
@@ -203,72 +169,59 @@ sub run {
 
     my $thingy;
 
-    # Is the nickname the title? Task comment create; no entry or timer
-    if (defined $nickname and $nickname eq $title) {
-        $thingy = $schema->resultset('Task')->find_by_tag_name($short_nickname)
-               // $schema->resultset('Task')->new({});
-    }
+    my $session;
 
-    # Otherwise, we're trying to create an entry/timer/comment
-    else {
+    # Were we given a journal session to work with? Use it
+    if ($self->has_journal_session) {
+        $session = $self->journal_session;
 
-        my $session;
-
-        # Were we given a journal session to work with? Use it
-        if ($self->has_journal_session) {
-            $session = $self->journal_session;
-
-            # Make sure the session is running
-            unless ($session->is_running) {
-                $self->failure('cannot modify a closed session, please select a different session or open a new one');
-                return;
-            }
-        }
-
-        # Otherwise, fail...
-        else {
-            $self->failure('please select a session or open a new one');
+        # Make sure the session is running
+        unless ($session->is_running) {
+            $self->failure('cannot modify a closed session, please select a different session or open a new one');
             return;
         }
+    }
 
-        my $matching_entries = $session->search_related(journal_entries => {
-            name => $title,
+    # Otherwise, fail...
+    else {
+        $self->failure('please select a session or open a new one');
+        return;
+    }
+
+    my $matching_entries = $session->search_related(journal_entries => {
+        name => $title,
+    });
+
+    # Does the title match a running entry?
+    {
+        my $entries = $matching_entries->search_by_running(running => 1)->search({}, {
+            order_by => { -desc => 'start_time' },
+            rows     => 1,
         });
 
-        # Does the title match a running entry?
-        {
-            my $entries = $matching_entries->search_by_running(running => 1)->search({}, {
-                order_by => { -desc => 'start_time' },
-                rows     => 1,
-            });
+        if ($entries->count > 0) {
+            my $timer = $entries->single->journal_timers->search_by_running(running => 1)
+                ->search({}, {
+                    order_by => { -desc => 'start_time' },
+                    rows     => 1,
+                })->single;
 
-            if ($entries->count > 0) {
-                my $timer = $entries->single->journal_timers->search_by_running(running => 1)
-                    ->search({}, {
-                        order_by => { -desc => 'start_time' },
-                        rows     => 1,
-                    })->single;
-
-                $thingy = $timer if $timer;
-            }
+            $thingy = $timer if $timer;
         }
+    }
 
-        # If we're still looking, does the title match an existing entry?
-        unless ($thingy) {
-            my $entries = $matching_entries->search({}, {
-                order_by => { -desc => 'start_time' },
-                rows     => 1,
-            });
+    # If we're still looking, does the title match an existing entry?
+    unless ($thingy) {
+        my $entries = $matching_entries->search({}, {
+            order_by => { -desc => 'start_time' },
+            rows     => 1,
+        });
 
-            $thingy = $entries->single || $entries->new({});
-        }
+        $thingy = $entries->single || $entries->new({});
     }
 
     my @args = ($thingy, $nickname, $short_nickname);
-    if ($thingy->isa('Qublog::Schema::Result::Task')) {
-        $self->_process_task(@args);
-    }
-    elsif ($thingy->isa('Qublog::Schema::Result::JournalTimer')) {
+    if ($thingy->isa('Qublog::Schema::Result::JournalTimer')) {
         $self->_process_timer(@args);
     }
     elsif ($thingy->isa('Qublog::Schema::Result::JournalEntry')) {

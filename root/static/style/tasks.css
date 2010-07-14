@@ -20,6 +20,7 @@
 
 .task .subject {
     margin: 0;
+    padding-right: 70px;
 }
 
 .task h2.subject {
@@ -34,17 +35,20 @@
     font-weight: bold;
 }
 
-.task h4.subject { }
-
 .subject p {
     display: inline;
 }
 
 .task .actions {
-    float: right;
+    position: absolute;
+    right: 5px;
     width: 70px;
     font-size: 0.8em;
     padding: 0.1em;
+}
+
+.task .actions a {
+    min-height: 18px;
 }
 
 .group:hover {

@@ -45,7 +45,7 @@ Converts emoticons to smileys.
 sub smileyize($) {
     my $text = shift;
 
-    my $emoticons = Qublog::Web::Emoticon->new;
+    my $emoticons = Qublog::Web::Emoticon->new( strict => 1 );
     return $emoticons->filter($text);
 }
 

@@ -77,7 +77,7 @@ template 'tag/view' => sub {
         };
 
         div { { class is 'journal' }
-            show '/journal/bits/items', $c, $tag;
+            show '/journal_item/items', $c, $tag;
         };
     } $c;
 };

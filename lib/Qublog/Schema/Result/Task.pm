@@ -158,9 +158,19 @@ sub new {
                                        unless defined $args->{created_on};
     $args->{order_by}       = 0        unless defined $args->{order_by};
 
+    if ($task_type eq 'project') {
+        my $none = $self->result_source->resultset->project_none;
+
+        $args->{project} = $none;
+    }
+
     my $self = $class->next::method($args);
 
-    if (not $self->project and not $self->parent) {
+    if ($task_type eq 'project') {
+        $self->project($self);
+    }
+
+    elsif (not $self->project and not $self->parent) {
         my $none = $self->result_source->resultset->project_none;
 
         $self->project($none);

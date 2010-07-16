@@ -103,7 +103,7 @@ around do => sub {
                 $task->update(\%arguments);
             }
             else {
-                $arguments{project} = $self->project;
+                $arguments{project} = $self->record->journal_timer->journal_entry->project;
                 $task = $self->schema->resultset('Task')->create(\%arguments);
             }
 

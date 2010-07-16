@@ -97,8 +97,18 @@ sub _process_entry {
     # Create and start a new entry
     else {
         my $schema = $self->schema;
-        my $task = $schema->resultset('Task')->find_by_tag_name($nickname);
-           $task = $schema->resultset('Task')->project_none unless $task;
+
+        # Load the task... if not found, create it
+        my $task = $schema->resultset('Task')->find_by_tag_name($short_nickname);
+        if (not defined $task) {
+            my $none = $schema->resultset('Task')->project_none;
+            $task = $schema->resultset('Task')->create({
+                name      => $self->title,
+                owner     => $self->current_user,
+                task_type => 'project',
+            });
+            $task->add_tag($short_nickname);
+        }
 
         $entry->journal_session($self->journal_session);
         $entry->name($self->title);

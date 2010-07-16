@@ -235,11 +235,11 @@ Returns the most recently assigned tag name.
 
 sub tag {
     my $self = shift;
-    my $tag = $self->tags({}, { 
+    my $task_tag = $self->task_tags({}, { 
         rows     => 1, 
-        order_by => { -desc => 'tag.id' }, 
+        order_by => { -desc => 'me.id' }, 
     })->single;
-    return $tag->name if $tag;
+    return $task_tag->tag->name if $task_tag;
     die "no tag found for task";
 }
 

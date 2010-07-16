@@ -46,9 +46,10 @@ sub format {
                             $log->log_type, $old_task->task_type,
                             $old_task->status;
 
-                my $url  = '/project/edit/'.$task->tag;
+                my $tag_name = $task->tag;
+                my $url  = '/project/edit/'.$tag_name;
                 my $name = $task->name;
-                $output .= qq{<a href="$url" class="icon task-reference v-view $classes o-task">#$nickname: $name</a>};
+                $output .= qq{<a href="$url" class="icon task-reference v-view $classes o-task">#$tag_name: $name</a>};
             }
 
             else {

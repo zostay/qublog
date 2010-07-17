@@ -122,7 +122,7 @@ sub select_session :Path(session/select) :Args(2) {
     my ($self, $c, $date_str, $id) = @_;
 
     $c->session->{current_session_id} = $id;
-    $c->detach('/journal/day', $date_str);
+    $c->response->redirect( $c->uri_for('/journal/day', $date_str) );
 }
 
 =head1 AUTHOR

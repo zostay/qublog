@@ -50,12 +50,19 @@ template 'journal/index' => sub {
         $selected = 'active'
             if $id == $c->stash->{session}->id;
 
+        my $uri = URI->new('/api/action/select_session/select_session-'
+            . $session->id);
+        $uri->query_form(
+            session_id => $session->id,
+            return_to  => $c->request->uri,
+            origin     => $c->request->uri,
+        );
+
         $session_links{"session_$id"} = {
-            label => $session->name,
-            class => 'session name',
+            label      => $session->name,
+            class      => 'session name',
             item_class => $selected,
-            url   => join('/', '/journal/session/select',
-                                $day->ymd, $session->id),
+            url        => "$uri",
             sort_order => scalar(keys %session_links),
         };
     }
@@ -152,7 +159,7 @@ template 'journal/bits/sessions' => sub {
                     origin    => $c->request->uri,
                 }),
             };
-        }            
+        }
 
         show '/journal_item/item', $c, {
             name => 'session-summary',

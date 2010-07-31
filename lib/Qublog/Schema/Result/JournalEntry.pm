@@ -138,7 +138,12 @@ sub hours {
 
     my $hours = 0;
     my $timers = $self->journal_timers;
-    $timers = $timers->search_by_running(running => 0) if $args{stopped_only};
+
+    $timers = $timers->search_by_running(
+        alias   => 'journal_timers', 
+        running => 0,
+    ) if $args{stopped_only};
+
     while (my $timer = $timers->next) {
         $hours += $timer->hours;
     }
@@ -184,7 +189,11 @@ sub start_timer {
     my $timer;
     $schema->txn_do(sub {
         my $running_entries 
-            = $self->journal_session->journal_entries->search_by_running(running => 1);
+            = $self->journal_session->journal_entries
+                ->search_by_running(
+                    running => 1,
+                );
+
         $running_entries = $running_entries->search({
             id => { '!=', $self->id },
         });
@@ -220,7 +229,11 @@ sub stop_timer {
 
     my $timer;
     $schema->txn_do(sub {
-        my $timers = $self->journal_session->journal_timers->search_by_running(running => 1);
+        my $timers = $self->journal_session->journal_timers
+            ->search_by_running(
+                alias   => 'journal_timers', 
+                running => 1,
+            );
 
         $now //= Qublog::DateTime->now;
         while ($timer = $timers->next) {

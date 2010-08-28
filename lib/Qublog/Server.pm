@@ -158,7 +158,8 @@ sub current_journal_session {
 
     $date //= $c->today;
     my $sessions = $c->model('DB::JournalSession')
-        ->search({ owner => $c->user->get_object->id })
+        ->search({ owner => $c->user->get_object->id }, 
+                 { order_by => { -desc => 'start_time' } })
         ->search_by_day($date);
 
     # See if a session has been picked
